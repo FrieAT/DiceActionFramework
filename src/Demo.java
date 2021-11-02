@@ -1,9 +1,14 @@
+
 import java.util.Arrays;
 
 public class Demo {
 
     public static void main (String[] args) {
+    	
+    	
         AbstractManager diceManager = new DiceManager();
+        
+
 
         GameObject g1 = new GameObject(1, "Backgammon");
 
@@ -19,5 +24,7 @@ public class Demo {
         }
 
         System.out.println(g1.getComponents());
+      
+     
     }
 }

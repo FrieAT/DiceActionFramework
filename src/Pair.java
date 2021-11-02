@@ -1,3 +1,4 @@
+
 import java.util.Objects;
 
 public class Pair<F, S> {
@@ -7,8 +8,9 @@ public class Pair<F, S> {
     public Pair(F first, S second) {
         this.first = first;
         this.second = second;
+        
     }
-
+//
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Pair)) {

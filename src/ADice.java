@@ -1,6 +1,7 @@
+
 import java.util.Arrays;
 
-public abstract class ADice implements IComponent {
+public abstract class ADice extends AbstractComponent {
 
     // use Object [Object, IGraphic]
 
@@ -8,6 +9,8 @@ public abstract class ADice implements IComponent {
     protected final int MAX_FACES = 10;
 
     public ADice() {
+        super();
+        
         this.diceFaces = new Object[0][2];
     }
 

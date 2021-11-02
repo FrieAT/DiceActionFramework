@@ -1,3 +1,4 @@
+
 public class ClassicDice extends ADice {
 
     public ClassicDice() {

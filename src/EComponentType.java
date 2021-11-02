@@ -1,6 +1,8 @@
+
 public enum EComponentType {
+    Undefined,
     IDice,
-    IGraphic,
+    AGraphic,
     IPlayer,
-    MaxItem;
+    MaxItem
 }
