@@ -27,10 +27,12 @@ public class GameObject {
     }
 
     public boolean addComponent(AbstractComponent iComponent) {
+        iComponent.setGameObject(this);
         return this.components.add(iComponent);
     }
 
     public boolean removeComponent(AbstractComponent iComponent) {
+        iComponent.setGameObject(null);
         return this.components.remove(iComponent);
     }
 
