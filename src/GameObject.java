@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-
 import java.lang.reflect.Array;
-=======
->>>>>>> ad6e96f0ef091867c5818385c8f4bb234e5d5b36
 import java.util.ArrayList;
 import java.util.Iterator;
 
