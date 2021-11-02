@@ -1,3 +1,7 @@
 public interface IComponent {
-    public String toString();
+    public EComponentType getType();
+
+    public GameObject getGameObject();
+
+    public void setGameObject(GameObject owner);
 }

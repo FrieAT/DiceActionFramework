@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,7 +6,7 @@ public class GameObject {
     private int id;
     private String name;
 
-    private ArrayList<IComponent> components;
+    private ArrayList<AbstractComponent> components;
 
     public GameObject() {
         super();
@@ -27,26 +26,26 @@ public class GameObject {
         return this.name;
     }
 
-    public boolean addComponent(IComponent iComponent) {
+    public boolean addComponent(AbstractComponent iComponent) {
         return this.components.add(iComponent);
     }
 
-    public boolean removeComponent(IComponent iComponent) {
+    public boolean removeComponent(AbstractComponent iComponent) {
         return this.components.remove(iComponent);
     }
 
-    public ArrayList<IComponent> getComponents() {
+    public ArrayList<AbstractComponent> getComponents() {
         return this.components;
     }
 
-    public IComponent getComponent(EComponentType eComponentType) {
-        Iterator<IComponent> it = components.iterator();
+    public AbstractComponent getComponent(EComponentType eComponentType) {
+        Iterator<AbstractComponent> it = components.iterator();
         while (it.hasNext()) {
             if (it.next().equals(eComponentType))
                 return it.next();
         }
 
-        for (IComponent ic : components) {
+        for (AbstractComponent ic : components) {
             System.out.println(ic.getClass());
         }
 
