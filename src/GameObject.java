@@ -66,14 +66,10 @@ public class GameObject {
     }
 
     public AbstractComponent getComponent(EComponentType eComponentType) {
-        Iterator<AbstractComponent> it = components.iterator();
-        while (it.hasNext()) {
-            if (it.next().equals(eComponentType))
-                return it.next();
-        }
-
-        for (AbstractComponent ic : components) {
-            System.out.println(ic.getClass());
+        for(AbstractComponent c : components) {
+            if(c.getType() == eComponentType) {
+                return c;
+            }
         }
 
         return null;

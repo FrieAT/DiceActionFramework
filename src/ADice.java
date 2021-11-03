@@ -11,6 +11,8 @@ public abstract class ADice extends AbstractComponent {
     public ADice() {
         super();
         
+        this.type = EComponentType.IDice;
+
         this.diceFaces = new Object[0][2];
     }
 
