@@ -2,7 +2,7 @@
 
 import java.io.File;
 
-public class LabelGraphicJavaFXRenderer extends AGraphicRenderer {
+public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 
 	public void render(AGraphic g) {
 		if((LabelGraphic)g != null) {

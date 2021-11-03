@@ -2,15 +2,10 @@
 import java.util.ArrayList;
 
 public class AbstractManager {
-
-    private static AbstractManager _instance = null;
-
     ArrayList<GameObject> gameObjects;
 
-    public static AbstractManager getInstance() {
-        if (AbstractManager._instance == null)
-            AbstractManager._instance = new AbstractManager();
-        return AbstractManager._instance;
+    protected AbstractManager() {
+        this.gameObjects = new ArrayList<>();
     }
 
     public boolean add(GameObject gameObject) {
@@ -19,5 +14,13 @@ public class AbstractManager {
 
     public boolean remove(GameObject gameObject) {
         return gameObjects.remove(gameObject);
+    }
+
+    public void init() {
+
+    }
+
+    public void update() {
+
     }
 }

@@ -3,8 +3,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DiceManager extends AbstractManager {
+    protected static DiceManager _instance;
+    public static DiceManager getInstance() {
+        if (_instance == null)
+            _instance = new DiceManager();
+        return _instance;
+    }
 
-    public DiceManager () {
+    protected DiceManager () {
+        super();
+
         this.gameObjects = new ArrayList<>();
     }
 
