@@ -2,12 +2,25 @@
 
 import java.io.File;
 
-public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
+import javafx.scene.Node;
 
-	public void render(AGraphic g) {
-		if((LabelGraphic)g != null) {
-			//Update Model in Client?
-			// Das Rendern erfolgt ja eingentlich erst im Client / View.
+public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
+	@Override
+	public Node renderNode(AGraphic g) {
+		LabelGraphic labelGraphic;
+		try {
+			labelGraphic = (LabelGraphic)g;
+		} catch(ClassCastException e) {
+			return null;
 		}
+
+		//TODO: Implement how to create a LabelGraphic for JavaFX.
+
+		return null; //TODO: replace with correct JavaFX Node type.
+	}
+
+	@Override
+	public void render(AGraphic g) {
+		throw new NullPointerException("Need a Window to render in it, can't be alone called.");
 	}
 }

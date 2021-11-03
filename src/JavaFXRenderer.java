@@ -16,7 +16,7 @@ public class JavaFXRenderer extends AGraphicRenderer {
 		JavaFXThread thread = new JavaFXThread(this);
 		
 		this._guiThread = thread;
-
+		
 		thread.start();
 	}
 
@@ -28,6 +28,10 @@ public class JavaFXRenderer extends AGraphicRenderer {
 	public void render(AGraphic g) {
 		JavaFXWindow window = this._guiThread.getGuiWindow();
 		
+		if(window == null || !window.isRendered()) {
+			return;
+		}
+
 		window.clearNodes();
 		
 		for (AGraphicRenderer renderer : this._graphicRenderer) {
