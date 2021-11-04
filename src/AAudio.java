@@ -1,7 +1,4 @@
-
-import java.io.File;
-
-public abstract class AAudio implements IComponent {
+public abstract class AAudio extends AbstractComponent {
 
 	String filePath;
 	Boolean repeat;

@@ -5,8 +5,15 @@ public class InputManager extends AbstractManager
 {
     private ArrayList<AInputDefinition> _inputs;
 
-    private InputManager() {
+    protected static InputManager _instance;
+    public static InputManager getInstance() {
+        if (_instance == null)
+            _instance = new InputManager();
+        return _instance;
+    }
 
+    protected InputManager() {
+        super();
     }
 
     public void setInputForPlayer(int playerNo, AInputDefinition input) {

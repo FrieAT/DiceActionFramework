@@ -1,8 +1,27 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class GameObject {
+
+    private static LinkedList<GameObject> _gameObjects;
+
+    public static void startAll() {
+        if(_gameObjects != null) {
+            for(GameObject g : _gameObjects) {
+                g.start();
+            }
+        }
+    }
+
+    public static void updateAll() {
+        if(_gameObjects != null) {
+            for(GameObject g : _gameObjects) {
+                g.update();
+            }
+        }
+    }
 
     private int id;
     private String name;
@@ -10,10 +29,15 @@ public class GameObject {
     private ArrayList<AbstractComponent> components;
 
     public GameObject() {
-        super();
+        if(_gameObjects == null) {
+            _gameObjects = new LinkedList<>();
+        }
+        _gameObjects.add(this);
     }
 
     public GameObject (int id, String name) {
+        this();
+
         this.id = id;
         this.name = name;
         this.components = new ArrayList<>();
@@ -42,14 +66,10 @@ public class GameObject {
     }
 
     public AbstractComponent getComponent(EComponentType eComponentType) {
-        Iterator<AbstractComponent> it = components.iterator();
-        while (it.hasNext()) {
-            if (it.next().equals(eComponentType))
-                return it.next();
-        }
-
-        for (AbstractComponent ic : components) {
-            System.out.println(ic.getClass());
+        for(AbstractComponent c : components) {
+            if(c.getType() == eComponentType) {
+                return c;
+            }
         }
 
         return null;
@@ -60,4 +80,15 @@ public class GameObject {
         return types;
     }
 
+    public void start() {
+        for(AbstractComponent c : components) {
+            c.start();
+        }
+    }
+
+    public void update() {
+        for(AbstractComponent c : components) {
+            c.update();
+        }
+    }
 }

@@ -1,10 +1,13 @@
-
-import java.io.File;
-
-public abstract class AGraphic implements IComponent {
+public abstract class AGraphic extends AbstractComponent {
 
 	Integer RenderingLayer;
 	
+	@Override
+	public void start() {
+		this.type = EComponentType.AGraphic;
+
+		RenderManager.getInstance().add(this);
+	}
 
 	public Integer getRenderingLayer() {
 		return RenderingLayer;

@@ -1,6 +1,3 @@
-
-import java.io.File;
-
 public class Audio extends AAudio {
 	
 	Audio(String filePath) {
