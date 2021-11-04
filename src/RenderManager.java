@@ -1,6 +1,10 @@
 public class RenderManager extends AbstractManager {
 	private AGraphicRenderer renderer;
 
+    private long _lastRenderedTime;
+
+    private long _currentRenderedTime;
+
     protected static RenderManager _instance;
     public static RenderManager getInstance() {
         if (_instance == null)
@@ -13,10 +17,25 @@ public class RenderManager extends AbstractManager {
         super();
         
         this.renderer = null;
+        this._lastRenderedTime = 0;
+        this._currentRenderedTime = 0;
     }
 
     public void setRenderer(AGraphicRenderer renderer) {
         this.renderer = renderer;
+    }
+
+    public void setRenderedTime(long now) {
+        if(_lastRenderedTime == 0) {
+            _lastRenderedTime = now;
+        } else {
+            _lastRenderedTime = _currentRenderedTime;
+        }
+        _currentRenderedTime = now;
+    }
+
+    public float getDeltaTime() {
+        return (float) ((_currentRenderedTime - _lastRenderedTime) / 1e9);
     }
 
     @Override

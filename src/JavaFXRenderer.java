@@ -1,13 +1,4 @@
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-
-import javafx.application.Application;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class JavaFXRenderer extends AGraphicRenderer {
 	private JavaFXThread _guiThread;
@@ -16,8 +7,12 @@ public class JavaFXRenderer extends AGraphicRenderer {
 		JavaFXThread thread = new JavaFXThread(this);
 		
 		this._guiThread = thread;
-		
+
 		thread.start();
+	}
+
+	public void clearNode() {
+
 	}
 
 	public Node renderNode(AGraphic g) {
@@ -31,9 +26,9 @@ public class JavaFXRenderer extends AGraphicRenderer {
 		if(window == null || !window.isRendered()) {
 			return;
 		}
-
-		window.clearNodes();
 		
+		window.clearNodes();
+
 		for (AGraphicRenderer renderer : this._graphicRenderer) {
 			JavaFXRenderer fxRenderer = (JavaFXRenderer)renderer;
 			

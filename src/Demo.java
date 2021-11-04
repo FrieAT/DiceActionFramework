@@ -24,11 +24,12 @@ public class Demo {
 
         PictureGraphic bgImage = new PictureGraphic();
         bgImage.setPicturePath("images/gameboard.png");
-        bgImage.setHeight(320);
-        bgImage.setWidth(320);
-        bgImage.setLeft(0);
-        bgImage.setTop(0);
+        bgImage.setHeight(1024);
+        bgImage.setWidth(768);
+        bgImage.setLeft(1024/2);
+        bgImage.setTop(768/2);
         background.addComponent(bgImage);
+        background.addComponent(new StupidComponent());
 
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         

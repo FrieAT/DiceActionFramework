@@ -1,45 +1,42 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.sql.Time;
+import java.time.Clock;
+import java.time.Instant;
 
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class JavaFXWindow extends Application
 {
-    public static final int MAX_FPS = 30;
+    public static final double MAX_FPS = 33.3;
 
-	private LinkedList<Node> _nodesBufferA;
-
-    private LinkedList<Node> _nodesBufferB;
+	private StackPane _nodesBuffer;
 
 	private boolean _notifyChanged;
 
-    private Scene[] _scenes;
-
-    private int _oldBuffer = 0;
-
-    private int _newBuffer = 1;
+    private Scene _scene;
 
     private Stage _window = null;
 
     private boolean _didRender = false;
 
+    private Instant _clock;
+
 	public JavaFXWindow() {
 		JavaFXWindow._instance = this;
 
-		this._nodesBufferA = new LinkedList<>();
-        this._nodesBufferB = new LinkedList<>();
+		this._nodesBuffer = new StackPane();
+        
+        Clock clock = Clock.systemDefaultZone();
+        this._clock = clock.instant();
 	}
 
 	private static JavaFXWindow _instance;
@@ -53,6 +50,8 @@ public class JavaFXWindow extends Application
     public synchronized void notifyRendered() {
         this._didRender = true;
         this._notifyChanged = false;
+
+        RenderManager.getInstance().setRenderedTime(this._clock.getNano());
     }
 
     public synchronized boolean isRendered() { 
@@ -66,30 +65,28 @@ public class JavaFXWindow extends Application
 		return this._notifyChanged;
 	}
 
-	public void clearNodes() {
-        if(_newBuffer == 0) {
-            this._nodesBufferA = new LinkedList<>();
-        } else {
-            this._nodesBufferB = new LinkedList<>();
-        }
+	public synchronized void clearNodes() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                _nodesBuffer.getChildren().clear();
+            }
+        });
 	}
 
-	public void renderNode(Node n) {
-        if(_newBuffer == 0) {
-            this._nodesBufferA.push(n);
-        } else {
-            this._nodesBufferB.push(n);
-        }
+	public synchronized void renderNode(Node n) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                _nodesBuffer.getChildren().add(n);
+            }
+        });
+
 	}
 
     @Override
     public void init() {
-        int buffers = 2;
-        _scenes = new Scene[buffers];
-
-        for(int i = 0; i < buffers; i++) {
-            _scenes[i] = null;
-        }
+        _scene = new Scene(this._nodesBuffer, 1024, 768);
     }
 
 	@Override
@@ -98,33 +95,26 @@ public class JavaFXWindow extends Application
 
         notifyRendered();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000 / MAX_FPS), e -> refresh()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(MAX_FPS), e -> refresh()));
         timeline.setCycleCount(Animation.INDEFINITE); // loop forever
         timeline.play();
+
+        _window.setScene(_scene);
 
         _window.show();
 	}
 
+    /**
+     * Our frame limiter for rendering the elements.
+     * The limit is based on MAX_FPS.
+     * Here we calculate the nano seconds from the last frame.
+     */
     public void refresh() {
         if(!isChanged()) {
             return;
         }
 
-        // Make new scene for next frame.
-        StackPane root = new StackPane();
         
-        if(_oldBuffer == 0) {
-            root.getChildren().addAll(this._nodesBufferA);
-        } else {
-            root.getChildren().addAll(this._nodesBufferB);
-        }
-
-        _scenes[_newBuffer] = new Scene(root, 640, 480);
-
-        _window.setScene(_scenes[_newBuffer]);
-
-        _oldBuffer = _newBuffer;
-        _newBuffer = (_newBuffer + 1) % 2;
 
         notifyRendered();
     }
