@@ -20,7 +20,7 @@ public class Demo {
 
         System.out.println(g1.getComponents());
 
-        /*
+        
         GameObject background = new GameObject(2, "MainBackground");
 
         
@@ -32,16 +32,17 @@ public class Demo {
         bgImage.setTop(0);
         background.addComponent(bgImage);
         background.addComponent(new StupidComponent());
-        */
+
         
         GameObject gameName = new GameObject(2, "GameName");
         LabelGraphic gameNameLabel = new LabelGraphic();
-        gameNameLabel.setLeft(0);
+        gameNameLabel.setLeft(400);
         gameNameLabel.setTop(0);
         gameNameLabel.setFontSize(20);
         gameNameLabel.setBold(true);
         gameNameLabel.setLabelText("Man, Don't Get Angry");
-        gameName.addComponent(new StupidComponent());
+        gameName.addComponent(gameNameLabel);
+        
         
         
 

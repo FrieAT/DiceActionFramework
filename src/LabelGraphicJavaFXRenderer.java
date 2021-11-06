@@ -18,7 +18,7 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 		}
 
 		
-		// JavaFX Label
+		
 	    Label label = new Label();
 	    label.setText(labelGraphic.labelText);
 	    label.setLayoutX(labelGraphic.left);
@@ -28,9 +28,7 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 	    if (labelGraphic.bold) {
 	    	label.setStyle("-fx-font-weight: bold;");
 	    }
-
-	    System.out.println("test");
-	    
+  
 		return label;
 	}
 
