@@ -1,61 +1,46 @@
-
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public abstract class ADice extends AbstractComponent {
 
     // use Object [Object, IGraphic]
 
-    protected Object[][] diceFaces;
-    protected final int MAX_FACES = 10;
+    protected ArrayList<Face> diceFaces;
+    protected final int MAX_FACES = 20;
 
     public ADice() {
-        super();
-        
-        this.type = EComponentType.IDice;
-
-        this.diceFaces = new Object[0][2];
+        this.diceFaces = new ArrayList<>();
     }
 
-    public ADice(Object[][] diceFaces) {
+    public ADice(ArrayList<Face> diceFaces) {
         this.diceFaces = diceFaces;
     }
 
     // returns dice sides and the graphics of its key
-    public Object[][] getDiceFaces() {
+    public ArrayList<Face> getDiceFaces() {
         return this.diceFaces;
     }
 
-    public boolean addFace(Object value, Object graphics) {
-        if (diceFaces.length == 10)
+    public boolean addFace(int value) {
+        if (diceFaces.size() == 10)
             return false;
-        Object[][] newDiceFaces = new Object[diceFaces.length + 1][2];
 
-        if (diceFaces.length > 0) {
-            for (int i = 0; i < diceFaces.length; i++) {
-                newDiceFaces[i][0] = diceFaces[i][0];
-                newDiceFaces[i][1] = diceFaces[i][1];
-            }
-        }
-
-        newDiceFaces[diceFaces.length][0] = value;
-        newDiceFaces[diceFaces.length][1] = graphics;
-        this.diceFaces = newDiceFaces;
+        diceFaces.add(new Face(value));
         return true;
     }
 
-    public Object[] getFace(int idx) {
-        return diceFaces[idx];
+    public Face getFace(int idx) {
+        return diceFaces.get(idx);
     }
 
     // returns an array of length 2 which contains the rolled result
-    public Object[] roll() {
-        return diceFaces[(int) (Math.random() * diceFaces.length)];
+    public ArrayList<Face> roll() {
+        ArrayList<Face> faces = new ArrayList<>();
+        faces.add(diceFaces.get((int) (Math.random() * diceFaces.size())));
+        return faces;
     }
 
     @Override
     public String toString() {
-        return Arrays.deepToString(diceFaces);
+        return diceFaces.toString();
     }
-
-
 }

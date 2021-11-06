@@ -12,7 +12,7 @@ public class Demo {
         //System.out.println(classicDice.getDiceSides());
 
         ADice test_dice = new ClassicDice();
-        System.out.println(Arrays.deepToString(test_dice.getDiceFaces()));
+        System.out.println(test_dice.getDiceFaces());
 
         for (int i = 0; i < 20; i++) {
             System.out.println(Arrays.toString(test_dice.roll()));
