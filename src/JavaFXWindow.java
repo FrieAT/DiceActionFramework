@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -18,7 +19,7 @@ public class JavaFXWindow extends Application
 {
     public static final double MAX_FPS = 33.3;
 
-	private StackPane _nodesBuffer;
+	private Pane _nodesBuffer;
 
 	private boolean _notifyChanged;
 
@@ -33,7 +34,7 @@ public class JavaFXWindow extends Application
 	public JavaFXWindow() {
 		JavaFXWindow._instance = this;
 
-		this._nodesBuffer = new StackPane();
+		this._nodesBuffer = new Pane();
         
         Clock clock = Clock.systemDefaultZone();
         this._clock = clock.instant();
@@ -88,6 +89,7 @@ public class JavaFXWindow extends Application
     public void init() {
         _scene = new Scene(this._nodesBuffer, 1024, 768);
     }
+
 
 	@Override
 	public void start(Stage stage) {
