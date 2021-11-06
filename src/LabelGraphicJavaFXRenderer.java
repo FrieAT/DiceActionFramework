@@ -3,6 +3,9 @@
 import java.io.File;
 
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 	@Override
@@ -14,9 +17,21 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 			return null;
 		}
 
-		//TODO: Implement how to create a LabelGraphic for JavaFX.
+		
+		// JavaFX Label
+	    Label label = new Label();
+	    label.setText(labelGraphic.labelText);
+	    label.setLayoutX(labelGraphic.left);
+	    label.setLayoutY(labelGraphic.top);
+	    label.setFont(new Font(labelGraphic.fontSize));
+	    
+	    if (labelGraphic.bold) {
+	    	label.setStyle("-fx-font-weight: bold;");
+	    }
 
-		return null; //TODO: replace with correct JavaFX Node type.
+	    System.out.println("test");
+	    
+		return label;
 	}
 
 	@Override

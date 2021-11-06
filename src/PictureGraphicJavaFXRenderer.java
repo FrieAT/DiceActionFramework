@@ -33,16 +33,14 @@ public class PictureGraphicJavaFXRenderer extends JavaFXRenderer {
 			image = new Image(new File(pictureGraphic.getPicturePath()).toURI().toString(), true);
 		}
 
+		
 		ImageView imageView = new ImageView();
 		imageView.setImage(image);
-		imageView.setViewport(
-			new Rectangle2D(
-				pictureGraphic.getLeft(),
-				pictureGraphic.getTop(),
-				pictureGraphic.getWidth(),
-				pictureGraphic.getHeight()
-			)
-		);
+		imageView.setFitWidth(pictureGraphic.getWidth());
+		imageView.setFitHeight(pictureGraphic.getHeight());
+		imageView.setX(pictureGraphic.getLeft());	
+		imageView.setY(pictureGraphic.getTop());	
+		
 
 		return imageView;
 	}
