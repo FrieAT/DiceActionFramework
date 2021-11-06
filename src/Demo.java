@@ -20,16 +20,31 @@ public class Demo {
 
         System.out.println(g1.getComponents());
 
+        
         GameObject background = new GameObject(2, "MainBackground");
 
+        
         PictureGraphic bgImage = new PictureGraphic();
         bgImage.setPicturePath("images/gameboard.png");
-        bgImage.setHeight(1024);
-        bgImage.setWidth(768);
-        bgImage.setLeft(1024/2);
-        bgImage.setTop(768/2);
+        bgImage.setWidth(1024);
+        bgImage.setHeight(768);
+        bgImage.setLeft(0);
+        bgImage.setTop(0);
         background.addComponent(bgImage);
         background.addComponent(new StupidComponent());
+
+        
+        GameObject gameName = new GameObject(2, "GameName");
+        LabelGraphic gameNameLabel = new LabelGraphic();
+        gameNameLabel.setLeft(400);
+        gameNameLabel.setTop(0);
+        gameNameLabel.setFontSize(20);
+        gameNameLabel.setBold(true);
+        gameNameLabel.setLabelText("Man, Don't Get Angry");
+        gameName.addComponent(gameNameLabel);
+        
+        
+        
 
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         

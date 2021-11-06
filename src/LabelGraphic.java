@@ -1,24 +1,13 @@
-
 import java.io.File;
 
 public class LabelGraphic extends AGraphic {
 
-	Integer width, height, top, left, fontSize;
-	Boolean bold;
-	String labelText;
+	Integer top = 0, 
+			left = 0, 
+			fontSize = 12;
+	Boolean bold = false;
+	String labelText ="Example Text";
 	
-	public Integer getWidth() {
-		return width;
-	}
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-	public Integer getHeight() {
-		return height;
-	}
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
 	public Integer getTop() {
 		return top;
 	}
