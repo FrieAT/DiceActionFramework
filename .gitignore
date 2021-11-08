@@ -2,6 +2,7 @@ lib/*
 lib/**/*
 # Compiled class file
 *.class
+.DS_Store
 
 # Log file
 *.log
