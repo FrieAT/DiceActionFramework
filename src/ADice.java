@@ -2,45 +2,61 @@ import java.util.ArrayList;
 
 public abstract class ADice extends AbstractComponent {
 
-    // use Object [Object, IGraphic]
-
+    /**
+     *
+     */
     protected ArrayList<Face> diceFaces;
-    protected final int MAX_FACES = 20;
+    private Face currentFace;
+    private final int MAX_FACES = 20;
 
     public ADice() {
         this.diceFaces = new ArrayList<>();
-    }
-
-    public ADice(ArrayList<Face> diceFaces) {
-        this.diceFaces = diceFaces;
+        this.currentFace = null;
     }
 
     // returns dice sides and the graphics of its key
-    public ArrayList<Face> getDiceFaces() {
-        return this.diceFaces;
+    public Face getCurrentFace() {
+        return this.currentFace;
     }
 
-    public boolean addFace(int value) {
-        if (diceFaces.size() == 10)
+    public boolean addFace(Face face) {
+        if (diceFaces.size() == MAX_FACES)
             return false;
+        if (currentFace == null)
+            currentFace = face;
+        return diceFaces.add(face);
+    }
 
-        diceFaces.add(new Face(value));
-        return true;
+    public boolean removeFace(Face face) {
+        return diceFaces.remove(face);
     }
 
     public Face getFace(int idx) {
         return diceFaces.get(idx);
     }
 
-    // returns an array of length 2 which contains the rolled result
-    public ArrayList<Face> roll() {
-        ArrayList<Face> faces = new ArrayList<>();
-        faces.add(diceFaces.get((int) (Math.random() * diceFaces.size())));
-        return faces;
+    public void roll() {
+        this.currentFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
     }
 
     @Override
     public String toString() {
         return diceFaces.toString();
+    }
+
+    @Override
+    public void start() {
+        this.type = EComponentType.ADice;
+
+        DiceManager.getInstance().add(this);
+    }
+
+    @Override
+    public void update() {
+        PictureGraphic g = (PictureGraphic)this.getGameObject().getComponent(EComponentType.AGraphic);
+        if(g != null) {
+            g.top = (g.top + 1) % 50;
+            g.left = (g.left - 1) % 50;
+        }
     }
 }

@@ -8,12 +8,21 @@ public class ADiceBag extends ADice {
     }
 
     @Override
-    public ArrayList<Face> roll() {
-        ArrayList<Face> faces = new ArrayList<>();
-        for (ADice dice : dices) {
-            faces.add(diceFaces.get((int) (Math.random() * diceFaces.size())));
-        }
-        return faces;
+    public void roll() {
+        for (ADice dice : dices)
+            dice.roll();
+    }
+
+    public boolean add(ADice dice) {
+        return dices.add(dice);
+    }
+
+    public boolean remove(ADice dice) {
+        return dices.remove(dice);
+    }
+
+    public ArrayList<ADice> getDices () {
+        return this.dices;
     }
 
     @Override
