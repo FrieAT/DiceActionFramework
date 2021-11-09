@@ -2,23 +2,45 @@ import java.io.File;
 
 public class LabelGraphic extends AGraphic {
 
-	Integer top = 0, 
-			left = 0, 
-			fontSize = 12;
+	private Integer top = 0;
+	private Integer left = 0;
+	private Integer fontSize = 12;
 	Boolean bold = false;
 	String labelText ="Example Text";
 	
+	@Override
+	public void start() {
+		super.start();
+
+		this.setTop(this.top);
+		this.setLeft(this.left);
+	}
+
 	public Integer getTop() {
-		return top;
+		if(this.getTransform() == null) {
+			return this.top;
+		}
+		return this.getTransform().getPosition().y;
 	}
 	public void setTop(Integer top) {
-		this.top = top;
+		if(this.getTransform() == null) {
+			this.top = top;
+			return;
+		}
+		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
 	}
 	public Integer getLeft() {
-		return left;
+		if(this.getTransform() == null) {
+			return this.left;
+		}
+		return this.getTransform().getPosition().x;
 	}
 	public void setLeft(Integer left) {
-		this.left = left;
+		if(this.getTransform() == null) {
+			this.left = left;
+			return;
+		}
+		this.getTransform().setPosition(new Vector2(left, this.getTop()));
 	}
 	public Integer getFontSize() {
 		return fontSize;

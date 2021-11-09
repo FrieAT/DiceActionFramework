@@ -30,7 +30,10 @@ public class PictureGraphicJavaFXRenderer extends JavaFXRenderer {
 		
 		Image image = this._cachedImages.get(imagePath);
 		if(image == null) {
-			image = new Image(new File(pictureGraphic.getPicturePath()).toURI().toString(), true);
+			String path = pictureGraphic.getPicturePath();
+			if(path != null) {
+				image = new Image(new File(pictureGraphic.getPicturePath()).toURI().toString(), true);
+			}
 		}
 
 		

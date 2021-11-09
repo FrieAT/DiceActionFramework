@@ -4,5 +4,6 @@ public enum EComponentType {
     ADice,
     AGraphic,
     IPlayer,
+    Transform,
     MaxItem
 }
