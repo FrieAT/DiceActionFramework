@@ -34,7 +34,6 @@ public class MouseJavaFXHandler extends AInputHandler {
         scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                System.out.println("mouse click detected! " + mouseEvent.getSource());
                 MouseInputEvent event = new MouseInputEvent(
                     KeyState.Down,
                     new Vector2((int)mouseEvent.getX(), (int)mouseEvent.getY()),
