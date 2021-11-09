@@ -70,7 +70,7 @@ public class RenderManager extends AbstractManager {
     	for (GameObject gameObject: gameObjects) {
     	    if (!gameObject.isEnabled())
     	        continue;
-    		AGraphic graphic = (AGraphic)gameObject.getComponent(EComponentType.AGraphic);
+    		AGraphic graphic = gameObject.getComponent(AGraphic.class);
 
             if(graphic == null) {
                 //TODO: Exception if not an AGraphic component.

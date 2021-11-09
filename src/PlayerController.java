@@ -1,8 +1,10 @@
 public class PlayerController extends AbstractComponent implements IController, IInputListener {
+    private static int playerCounter = 1; //FIXME: Better player id handling.
+    
     private int _playerNo;
 
-    public PlayerController(int playerNo) {
-        this._playerNo = playerNo;
+    public PlayerController() {
+        this._playerNo = playerCounter++;
     }
 
     @Override
@@ -20,6 +22,10 @@ public class PlayerController extends AbstractComponent implements IController, 
         return 0;
     }
 
+    public void setPlayerNo(int playerNo) {
+        this._playerNo = playerNo;
+    }
+
     public int getPlayerNo() {
         return this._playerNo;
     }
@@ -29,7 +35,7 @@ public class PlayerController extends AbstractComponent implements IController, 
         if(mouseEvent != null && mouseEvent.getKeyState() == KeyState.Up) {
             Vector2 newPosition = mouseEvent.getPosition();
             
-            PictureGraphic graphic = (PictureGraphic)this.getGameObject().getComponent(EComponentType.AGraphic);
+            PictureGraphic graphic = this.getGameObject().getComponent(PictureGraphic.class);
             if(graphic != null) {
                 newPosition = new Vector2(
                     newPosition.x - graphic.getWidth()/2,

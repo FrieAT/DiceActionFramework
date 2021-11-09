@@ -3,20 +3,27 @@
 public abstract class AbstractComponent implements IComponent {
     protected GameObject owner;
 
-    protected EComponentType type;
-
+    /**
+     * Instantiate an component of type AbstractComponent.
+     * Warning: Components may only be allowed to have an empty public constructor,
+     * due to the current restrictions in GameObject.addComponent(Class<AbstractComponent>).
+     */
     public AbstractComponent() {
         this.owner = null;
-        this.type = EComponentType.Undefined;
     }
 
-    public void start() {
-    }
+    /**
+     * Optional callback which gets called once at engine initialization.
+     * Default behavior is empty, because it is optional to implement it.
+     * FIXME: Call it also on runtime initialization.
+     */
+    public void start() { }
 
-    public void update() {
-    }
-
-    public EComponentType getType() { return this.type; }
+    /**
+     * Optional callback which gets called after every engine-tick.
+     * Default behavior is empty, because it is optional to implement it.
+     */
+    public void update() { }
 
     public GameObject getGameObject() { return this.owner; }
 

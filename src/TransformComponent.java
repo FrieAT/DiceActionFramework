@@ -9,8 +9,6 @@ public class TransformComponent extends AbstractComponent {
     public TransformComponent() {
         super();
 
-        this.type = EComponentType.Transform;
-        
         this._position = Vector2.Zero;
         this._scale = Vector2.One;
         this._zRotation = 0.0;
@@ -34,7 +32,7 @@ public class TransformComponent extends AbstractComponent {
             return null;
         }
         
-        TransformComponent parentTransform = (TransformComponent)parent.getComponent(EComponentType.Transform);
+        TransformComponent parentTransform = parent.getComponent(TransformComponent.class);
         if(parentTransform == null) {
             return null;
         }

@@ -4,8 +4,6 @@ public abstract class AGraphic extends AbstractComponent {
 	
 	@Override
 	public void start() {
-		this.type = EComponentType.AGraphic;
-
 		RenderManager.getInstance().add(this);
 	}
 

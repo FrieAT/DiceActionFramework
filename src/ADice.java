@@ -44,8 +44,6 @@ public abstract class ADice extends AbstractComponent implements IDice {
 
     @Override
     public void start() {
-        this.type = EComponentType.ADice;
-
         DiceManager.getInstance().add(this);
     }
 

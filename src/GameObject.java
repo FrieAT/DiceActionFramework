@@ -1,4 +1,5 @@
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -105,40 +106,48 @@ public class GameObject {
         this.enabled = val;
     }
 
-    public boolean addComponent(AbstractComponent iComponent) {
-        iComponent.setGameObject(this);
-        return this.components.add(iComponent);
+    public <T extends AbstractComponent> T addComponent(Class<T> componentClass) {
+        T component = null;
+        try {
+            component = componentClass.getDeclaredConstructor().newInstance();
+        }
+        catch(Exception e) {
+            throw new NullPointerException(e.getMessage());
+        }
+        component.setGameObject(this);
+        this.components.add(component);
+        return component;
     }
 
-    public boolean removeComponent(AbstractComponent iComponent) {
-        iComponent.setGameObject(null);
-        return this.components.remove(iComponent);
+    public <T extends AbstractComponent> boolean removeComponent(Class<T> componentClass) {
+        for(AbstractComponent otherComponent : this.components) {
+            if(otherComponent.getClass() == componentClass) {
+                otherComponent.setGameObject(null);
+                return this.components.remove(otherComponent);
+            }
+        }
+        return false;
     }
 
     public ArrayList<AbstractComponent> getComponents() {
         return this.components;
     }
 
-    public AbstractComponent getComponent(EComponentType eComponentType) {
-        for(AbstractComponent c : components) {
-            if(c.getType() == eComponentType) {
-                return c;
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractComponent> T getComponent(Class<T> componentClass) {
+        for(AbstractComponent otherComponent : components) {
+            if(componentClass.isAssignableFrom(otherComponent.getClass())) {
+                return (T)otherComponent;
             }
         }
-
         return null;
     }
 
-    public ArrayList<EComponentType> containsDice() {
-        ArrayList<EComponentType> types = new ArrayList<>();
-        return types;
-    }
-
     public void start() {
-        TransformComponent transform = (TransformComponent)this.getComponent(EComponentType.Transform);
+        TransformComponent transform = this.getComponent(TransformComponent.class);
         if(transform == null) {
             transform = new TransformComponent();
-            this.addComponent(transform);
+            this.addComponent(TransformComponent.class);
         }
         this.transform = transform;
 
