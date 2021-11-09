@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 public class DiceManager extends AbstractManager {
 
-    private IPlayer player;
-
     protected static DiceManager _instance;
 
     public static DiceManager getInstance() {

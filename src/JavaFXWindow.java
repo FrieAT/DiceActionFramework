@@ -1,6 +1,8 @@
+
 import java.sql.Time;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.EventListener;
 import java.util.LinkedList;
 
 import javafx.animation.Animation;
@@ -9,8 +11,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -79,6 +85,8 @@ public class JavaFXWindow extends Application
 	public synchronized void renderNode(Node n) {
         this._buffer.add(n);
 	}
+
+    public Scene getScene() { return this._scene; }
 
     @Override
     public void init() {

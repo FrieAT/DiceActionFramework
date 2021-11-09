@@ -43,6 +43,7 @@ public class GameObject {
     public GameObject() {
         this.parent = null;
         this.transform = null;
+        this.components = new ArrayList<>();
 
         if(_gameObjects == null) {
             _gameObjects = new LinkedList<>();
@@ -55,7 +56,6 @@ public class GameObject {
 
         this.id = _gameObjectCounter++;
         this.name = name;
-        this.components = new ArrayList<>();
     }
 
     public GameObject(String name, TransformComponent transform) {

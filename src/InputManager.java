@@ -1,9 +1,9 @@
-import java.lang.*;
+import java.lang.instrument.ClassDefinition;
 import java.util.ArrayList;
 
 public class InputManager extends AbstractManager
 {
-    private ArrayList<AInputDefinition> _inputs;
+    private ArrayList<AInputHandler> _inputs;
 
     protected static InputManager _instance;
     public static InputManager getInstance() {
@@ -14,23 +14,34 @@ public class InputManager extends AbstractManager
 
     protected InputManager() {
         super();
+
+        this._inputs = new ArrayList<>();
     }
 
-    public void setInputForPlayer(int playerNo, AInputDefinition input) {
-
+    public void addInputHandler(AInputHandler handler) {
+        this._inputs.add(handler);
     }
 
-    public void OnFrameUpdate() {
-        
+    @Override
+    public void init() {
+        for(AInputHandler handler : this._inputs) {
+            handler.init();
+        }
     }
 
     @Override
     public boolean add(GameObject gameObject) {
         throw new NullPointerException("Please add an IController object and not a gameObject itself.");
     }
-
-    public boolean add(IController controller) {
-        return super.add(controller.getGameObject());
+    
+    public <T extends AInputEvent> boolean add(Class<T> clazz, IInputListener listener) {
+        for(AInputHandler handler : this._inputs) {
+            if(handler.getInputEventType() == clazz) {
+                handler.registerListener(listener);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -39,6 +50,6 @@ public class InputManager extends AbstractManager
     }
 
     public boolean remove(IController controller) {
-        return super.add(controller.getGameObject());
+        throw new NullPointerException("Not implemented function.");
     }
 }

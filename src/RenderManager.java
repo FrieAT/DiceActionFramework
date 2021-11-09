@@ -83,5 +83,9 @@ public class RenderManager extends AbstractManager {
         this.renderer.afterRender();
     }
 
+    public AGraphicRenderer getRenderer() {
+        return this.renderer;
+    }
+
     
 }

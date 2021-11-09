@@ -56,14 +56,27 @@ public class Demo {
         gameNameLabel.setBold(true);
         gameNameLabel.setLabelText("Okay?");
         gameName2.addComponent(gameNameLabel2);
+
+        GameObject player1 = new GameObject("PlayerOne");
+        PictureGraphic playerGraphic = new PictureGraphic();
+        playerGraphic.setPicturePath("images/player2.png");
+        playerGraphic.setWidth(50);
+        playerGraphic.setHeight(75);
+        playerGraphic.setLeft(480);
+        playerGraphic.setTop(550);
+        player1.addComponent(playerGraphic);
+        player1.addComponent(new PlayerController(1));
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         
         //Pre-initialization.
-        AGraphicRenderer renderer = new JavaFXRenderer();
+        JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         RenderManager.getInstance().setRenderer(renderer);
+
+        AInputHandler input = new MouseJavaFXHandler();
+        InputManager.getInstance().addInputHandler(input);
 
         //Adding the managers.
         _managers.add(RenderManager.getInstance());

@@ -5,17 +5,21 @@ import javafx.scene.Node;
 public class JavaFXRenderer extends AGraphicRenderer {
 	private JavaFXThread _guiThread;
 
-	public void Init() {
-		JavaFXThread thread = new JavaFXThread(this);
-		
-		this._guiThread = thread;
+	public JavaFXRenderer() {
+		super();
 
-		thread.start();
+		this._guiThread = new JavaFXThread(this);;
+	}
+
+	public void Init() {
+		this._guiThread.start();
 	}
 
 	public void clearNode() {
-
+		
 	}
+
+	public JavaFXWindow getWindow() { return this._guiThread.getGuiWindow(); }
 
 	public Node renderNode(AGraphic g) {
 		throw new NullPointerException("JavaFXRenderer can't render a Node class.");
@@ -23,7 +27,7 @@ public class JavaFXRenderer extends AGraphicRenderer {
 
 	@Override
 	public boolean beforeRender() {
-		JavaFXWindow window = this._guiThread.getGuiWindow();
+		JavaFXWindow window = this.getWindow();
 		
 		if(window == null || !window.isRendered()) {
 			return false;
@@ -36,7 +40,7 @@ public class JavaFXRenderer extends AGraphicRenderer {
 
 	@Override
 	public void render(AGraphic g) {
-		JavaFXWindow window = this._guiThread.getGuiWindow();
+		JavaFXWindow window = this.getWindow();
 
 		for (AGraphicRenderer renderer : this._graphicRenderer) {
 			JavaFXRenderer fxRenderer = (JavaFXRenderer)renderer;
@@ -57,7 +61,7 @@ public class JavaFXRenderer extends AGraphicRenderer {
 
 	@Override
 	public boolean afterRender() {
-		JavaFXWindow window = this._guiThread.getGuiWindow();
+		JavaFXWindow window = this.getWindow();
 
 		window.notifyChanged();
 
