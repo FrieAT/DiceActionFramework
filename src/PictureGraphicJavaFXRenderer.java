@@ -57,8 +57,11 @@ public class PictureGraphicJavaFXRenderer extends JavaFXRenderer {
 			}
 		}
 
-		imageView.setFitWidth(pictureGraphic.getWidth());
-		imageView.setFitHeight(pictureGraphic.getHeight());
+		Vector2 scale = g.getTransform().getScale();
+		double rotation = g.getTransform().getRotation();
+		imageView.setFitWidth(pictureGraphic.getWidth() * scale.x);
+		imageView.setFitHeight(pictureGraphic.getHeight() * scale.y);
+		imageView.setRotate(rotation);
 		imageView.setX(pictureGraphic.getLeft());	
 		imageView.setY(pictureGraphic.getTop());	
 

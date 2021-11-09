@@ -1,16 +1,14 @@
 
 
 public abstract class AbstractComponent implements IComponent {
-    protected GameObject owner;
+    protected GameObject owner = null;
 
     /**
      * Instantiate an component of type AbstractComponent.
      * Warning: Components may only be allowed to have an empty public constructor,
      * due to the current restrictions in GameObject.addComponent(Class<AbstractComponent>).
      */
-    public AbstractComponent() {
-        this.owner = null;
-    }
+    public AbstractComponent() { }
 
     /**
      * Optional callback which gets called once at engine initialization.

@@ -95,7 +95,7 @@ public class GameObject {
     }
 
     public TransformComponent getTransform() {
-        return this.transform;
+        return this.instantiateTransform();
     }
 
     public boolean isEnabled() {
@@ -143,13 +143,8 @@ public class GameObject {
         return null;
     }
 
-    public void start() {
-        TransformComponent transform = this.getComponent(TransformComponent.class);
-        if(transform == null) {
-            transform = new TransformComponent();
-            this.addComponent(TransformComponent.class);
-        }
-        this.transform = transform;
+    public void start() {  
+        this.instantiateTransform();
 
         for(AbstractComponent c : components) {
             c.start();
@@ -160,5 +155,20 @@ public class GameObject {
         for(AbstractComponent c : components) {
             c.update();
         }
+    }
+
+    private TransformComponent instantiateTransform() {
+        if(this.transform != null) {
+            return this.transform;
+        }
+
+        TransformComponent transform = this.getComponent(TransformComponent.class);
+        if(transform == null) {
+            transform = this.addComponent(TransformComponent.class);
+        }
+
+        this.transform = transform;
+        
+        return transform;
     }
 }

@@ -43,6 +43,7 @@ public class Demo {
         gameNameLabel.setFontSize(20);
         gameNameLabel.setBold(true);
         gameNameLabel.setLabelText("Man, Don't Get Angry");
+        gameName.getTransform().setPosition(new Vector2(400, 20));
 
         GameObject gameName2 = new GameObject("GameName(2)");
         LabelGraphic gameNameLabel2 = gameName2.addComponent(LabelGraphic.class);
@@ -51,6 +52,7 @@ public class Demo {
         gameNameLabel.setFontSize(20);
         gameNameLabel.setBold(true);
         gameNameLabel.setLabelText("Okay?");
+        gameName2.getTransform().setPosition(new Vector2(400, 50));
 
         GameObject player1 = new GameObject("PlayerOne");
         PictureGraphic playerGraphic = player1.addComponent(PictureGraphic.class);
@@ -59,6 +61,7 @@ public class Demo {
         playerGraphic.setHeight(75);
         playerGraphic.setLeft(480);
         playerGraphic.setTop(550);
+        player1.getTransform().setScale(new Vector2(2, 2));
         player1.addComponent(PlayerController.class);
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();

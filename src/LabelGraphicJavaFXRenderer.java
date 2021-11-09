@@ -17,12 +17,16 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 			return null;
 		}
 
-		
-		
+		Vector2 scale = g.getTransform().getScale();
+		double rotation = g.getTransform().getRotation();
+
 	    Label label = new Label();
 	    label.setText(labelGraphic.labelText);
 	    label.setLayoutX(labelGraphic.getLeft());
 	    label.setLayoutY(labelGraphic.getTop());
+		label.setScaleX(scale.x);
+		label.setScaleY(scale.y);
+		label.setRotate(rotation);
 	    label.setFont(new Font(labelGraphic.getFontSize()));
 	    
 	    if (labelGraphic.bold) {

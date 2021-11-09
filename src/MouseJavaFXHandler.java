@@ -36,7 +36,7 @@ public class MouseJavaFXHandler extends AInputHandler {
             public void handle(MouseEvent mouseEvent) {
                 MouseInputEvent event = new MouseInputEvent(
                     KeyState.Down,
-                    new Vector2((int)mouseEvent.getX(), (int)mouseEvent.getY()),
+                    new Vector2(mouseEvent.getX(), mouseEvent.getY()),
                     mouseEvent.getButton().ordinal()
                 );
                 
@@ -51,7 +51,7 @@ public class MouseJavaFXHandler extends AInputHandler {
             public void handle(MouseEvent mouseEvent) {
                 MouseInputEvent event = new MouseInputEvent(
                     KeyState.Up,
-                    new Vector2((int)mouseEvent.getX(), (int)mouseEvent.getY()),
+                    new Vector2(mouseEvent.getX(), mouseEvent.getY()),
                     mouseEvent.getButton().ordinal()
                 );
                 
