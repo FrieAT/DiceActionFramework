@@ -1,7 +1,7 @@
-public class Face {
+public class Face extends GameObject {
     private int value;
 
-    private Face(){
+    private Face() {
 
     }
 

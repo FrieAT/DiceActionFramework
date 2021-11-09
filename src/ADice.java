@@ -1,29 +1,26 @@
 import java.util.ArrayList;
 
-public abstract class ADice extends AbstractComponent {
+public abstract class ADice extends AbstractComponent implements IDice {
 
-    /**
-     *
-     */
     protected ArrayList<Face> diceFaces;
-    private Face currentFace;
+    private Face topFace;
     private final int MAX_FACES = 20;
 
     public ADice() {
         this.diceFaces = new ArrayList<>();
-        this.currentFace = null;
+        this.topFace = null;
     }
 
     // returns dice sides and the graphics of its key
-    public Face getCurrentFace() {
-        return this.currentFace;
+    public Face getTopFace() {
+        return this.topFace;
     }
 
     public boolean addFace(Face face) {
         if (diceFaces.size() == MAX_FACES)
             return false;
-        if (currentFace == null)
-            currentFace = face;
+        if (topFace == null)
+            topFace = face;
         return diceFaces.add(face);
     }
 
@@ -35,8 +32,9 @@ public abstract class ADice extends AbstractComponent {
         return diceFaces.get(idx);
     }
 
+    @Override
     public void roll() {
-        this.currentFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
+        this.topFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
     }
 
     @Override
@@ -53,6 +51,10 @@ public abstract class ADice extends AbstractComponent {
 
     @Override
     public void update() {
-        super.update();
+        for (Face face: diceFaces) {
+            if (face.equals(topFace))
+                face.setEnabled(true);
+            face.setEnabled(false);
+        }
     }
 }

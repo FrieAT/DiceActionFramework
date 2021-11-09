@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class ADiceBag extends ADice {
+public class ADiceBag extends ADice implements IDice {
     private ArrayList<ADice> dices;
 
     public ADiceBag () {
