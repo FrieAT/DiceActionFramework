@@ -27,7 +27,7 @@ public class Demo {
         bgImage.setLeft(0);
         bgImage.setTop(0);
         background.addComponent(bgImage);
-        background.addComponent(new StupidComponent());
+        //background.addComponent(new StupidComponent());
         
         GameObject gameName = new GameObject("GameName");
         LabelGraphic gameNameLabel = new LabelGraphic();
