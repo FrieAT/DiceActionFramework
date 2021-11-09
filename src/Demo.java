@@ -2,26 +2,21 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import javafx.scene.transform.Transform;
+
 public class Demo {
 
     public static void main (String[] args) {
-        GameObject g1 = new GameObject("Backgammon");
-
-        g1.addComponent(ClassicDice.class);
-        g1.addComponent(ClassicDice.class);
+        //g1.addComponent(ClassicDice.class);
         //System.out.println(classicDice.getDiceSides());
 
+        /*
         GameObject g2 = new GameObject("BackgammonDice");
         ADiceBag bag = new ADiceBag();
         bag.add(new ClassicDice());
         bag.add(new ClassicDice());
-        PictureGraphic faceImage = g2.addComponent(PictureGraphic.class);
-        faceImage.setPicturePath("images/classic_dice_1.png");
-        faceImage.setWidth(20);
-        faceImage.setHeight(20);
-        faceImage.setLeft(0);
-        faceImage.setTop(0);
         System.out.println(g2.getComponents());
+        */
 
         
         GameObject background = new GameObject("MainBackground");
@@ -54,6 +49,19 @@ public class Demo {
         gameNameLabel.setLabelText("Okay?");
         gameName2.getTransform().setPosition(new Vector2(400, 50));
 
+        GameObject g1 = new GameObject("Wuerfel");
+        g1.addComponent(ClassicDice.class);
+        g1.getTransform().setPosition(new Vector2(600, 600));
+        g1.getTransform().setScale(new Vector2(4, 4));
+
+        GameObject rollButton = new GameObject("Roll_Button");
+        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
+        buttonG.setLabelText("Würfeln!");
+        buttonG.setWidth(300);
+        buttonG.setHeight(50);
+        rollButton.getTransform().setPosition(new Vector2(800, 600));
+        rollButton.addComponent(RollDiceButtonController.class);
+
         GameObject player1 = new GameObject("PlayerOne");
         PictureGraphic playerGraphic = player1.addComponent(PictureGraphic.class);
         playerGraphic.setPicturePath("images/player2.png");
@@ -61,7 +69,7 @@ public class Demo {
         playerGraphic.setHeight(75);
         playerGraphic.setLeft(480);
         playerGraphic.setTop(550);
-        player1.getTransform().setScale(new Vector2(2, 2));
+        player1.getTransform().setScale(new Vector2(0.5, 0.5));
         player1.addComponent(PlayerController.class);
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
@@ -70,6 +78,7 @@ public class Demo {
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
+        renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().setRenderer(renderer);
 
         AInputHandler input = new MouseJavaFXHandler();

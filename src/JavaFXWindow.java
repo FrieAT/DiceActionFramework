@@ -36,7 +36,7 @@ public class JavaFXWindow extends Application
 
     private boolean _didRender = false;
 
-    private Instant _clock;
+    private Clock _clock;
 
     private LinkedList<Node> _buffer;
 
@@ -47,8 +47,7 @@ public class JavaFXWindow extends Application
 
         this._buffer = new LinkedList<>();
         
-        Clock clock = Clock.systemDefaultZone();
-        this._clock = clock.instant();
+        this._clock = Clock.systemDefaultZone();
 	}
 
 	private static JavaFXWindow _instance;
@@ -121,8 +120,9 @@ public class JavaFXWindow extends Application
         
         _nodesBuffer.getChildren().clear();
         _nodesBuffer.getChildren().addAll(this._buffer);
+        
+        RenderManager.getInstance().setRenderedTime(_clock.instant().getNano());
 
-        RenderManager.getInstance().setRenderedTime(this._clock.getNano());
         notifyRendered();
     }
 }

@@ -25,7 +25,7 @@ public class RenderManager extends AbstractManager {
         this.renderer = renderer;
     }
 
-    public void setRenderedTime(long now) {
+    public synchronized void setRenderedTime(long now) {
         if(_lastRenderedTime == 0) {
             _lastRenderedTime = now;
         } else {
@@ -34,8 +34,14 @@ public class RenderManager extends AbstractManager {
         _currentRenderedTime = now;
     }
 
-    public float getDeltaTime() {
-        return (float) ((_currentRenderedTime - _lastRenderedTime) / 1e9);
+    public double getDeltaTime() {
+        double deltaTime = (double) ((_currentRenderedTime - _lastRenderedTime) / 1e9);
+        if(deltaTime < 0) {
+            //TODO: Calculate correct deltatime if negative
+            //TODO: Or avoid negative deltaTime.
+            deltaTime *= -1;
+        }
+        return deltaTime;
     }
 
     @Override

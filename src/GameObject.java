@@ -14,6 +14,15 @@ public class GameObject {
 
     private boolean enabled = true;
 
+    public static GameObject find(String name) {
+        for(GameObject g : _gameObjects) {
+            if(g.getName().equals(name)) {
+                return g;
+            }
+        }
+        return null;
+    }
+
     public static void startAll() {
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
@@ -104,6 +113,12 @@ public class GameObject {
 
     public void setEnabled(boolean val) {
         this.enabled = val;
+    }
+
+    public AbstractComponent addComponent(AbstractComponent component) {
+        component.setGameObject(this);
+        this.components.add(component);
+        return component;
     }
 
     public <T extends AbstractComponent> T addComponent(Class<T> componentClass) {

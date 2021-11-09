@@ -24,13 +24,13 @@ public class PictureGraphic extends AGraphic {
 		this.height = height;
 	}
 	public Integer getTop() {
-		return (int)this.getTransform().getPosition().y;
+		return (int)this.getTransform().getGlobalPosition().y;
 	}
 	public void setTop(Integer top) {
 		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
 	}
 	public Integer getLeft() {
-		return (int)this.getTransform().getPosition().x;
+		return (int)this.getTransform().getGlobalPosition().x;
 	}
 	public void setLeft(Integer left) {
 		this.getTransform().setPosition(new Vector2(left, this.getTop()));

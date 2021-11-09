@@ -6,6 +6,8 @@ public abstract class ADice extends AbstractComponent implements IDice {
     private Face topFace;
     private final int MAX_FACES = 20;
 
+    private double accumulatedTime = 0.0;
+
     public ADice() {
         this.diceFaces = new ArrayList<>();
         this.topFace = null;
@@ -19,12 +21,33 @@ public abstract class ADice extends AbstractComponent implements IDice {
     public boolean addFace(Face face) {
         if (diceFaces.size() == MAX_FACES)
             return false;
+        
+        GameObject faceObject = new GameObject("Face", this.getGameObject());
+        faceObject.addComponent(face.getPictureGraphic());
+        faceObject.setEnabled(false);
+
         if (topFace == null)
-            topFace = face;
+            this.setTopFace(face);
+        
         return diceFaces.add(face);
     }
 
+    public void setTopFace(Face face) {
+        //Deactivate old face.
+        if(topFace != null) {
+            topFace.getPictureGraphic().getGameObject().setEnabled(false);
+        }
+        
+        topFace = face;
+        
+        //Activate old face.
+        if(topFace != null) {
+            topFace.getPictureGraphic().getGameObject().setEnabled(true);
+        }
+    }
+
     public boolean removeFace(Face face) {
+        //TODO: Delete GameObject.
         return diceFaces.remove(face);
     }
 
@@ -34,7 +57,8 @@ public abstract class ADice extends AbstractComponent implements IDice {
 
     @Override
     public void roll() {
-        this.topFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
+        Face rolledFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
+        this.setTopFace(rolledFace);
     }
 
     @Override
@@ -45,14 +69,5 @@ public abstract class ADice extends AbstractComponent implements IDice {
     @Override
     public void start() {
         DiceManager.getInstance().add(this);
-    }
-
-    @Override
-    public void update() {
-        for (Face face: diceFaces) {
-            if (face.equals(topFace))
-                face.setEnabled(true);
-            face.setEnabled(false);
-        }
     }
 }

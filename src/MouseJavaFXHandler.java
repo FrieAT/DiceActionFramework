@@ -17,10 +17,14 @@ public class MouseJavaFXHandler extends AInputHandler {
         }
         
         JavaFXWindow window = null;
+        Scene scene = null;
 
-        while(window == null) {
+        while(window == null || scene == null) {
             window = renderer.getWindow();
-
+            if(window != null) {
+                scene = window.getScene();
+            }
+            
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -28,8 +32,6 @@ public class MouseJavaFXHandler extends AInputHandler {
                 e.printStackTrace();
             }
         }
-
-        Scene scene = window.getScene();
 
         scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
