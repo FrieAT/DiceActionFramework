@@ -21,7 +21,7 @@ public class Demo {
         System.out.println(g1.getComponents());
 
         
-        GameObject background = new GameObject(2, "MainBackground");
+        GameObject background = new GameObject(1, "MainBackground");
 
         
         PictureGraphic bgImage = new PictureGraphic();
@@ -32,7 +32,6 @@ public class Demo {
         bgImage.setTop(0);
         background.addComponent(bgImage);
         background.addComponent(new StupidComponent());
-
         
         GameObject gameName = new GameObject(2, "GameName");
         LabelGraphic gameNameLabel = new LabelGraphic();
@@ -42,6 +41,15 @@ public class Demo {
         gameNameLabel.setBold(true);
         gameNameLabel.setLabelText("Man, Don't Get Angry");
         gameName.addComponent(gameNameLabel);
+
+        GameObject gameName2 = new GameObject(3, "GameName(2)");
+        LabelGraphic gameNameLabel2 = new LabelGraphic();
+        gameNameLabel.setLeft(400);
+        gameNameLabel.setTop(50);
+        gameNameLabel.setFontSize(20);
+        gameNameLabel.setBold(true);
+        gameNameLabel.setLabelText("Okay?");
+        gameName2.addComponent(gameNameLabel2);
         
         
         
