@@ -11,6 +11,8 @@ public class GameObject {
 
     private static int _gameObjectCounter = 0;
 
+    private boolean enabled = true;
+
     public static void startAll() {
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
@@ -22,6 +24,8 @@ public class GameObject {
     public static void updateAll() {
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
+                if (!g.enabled)
+                    continue;
                 g.update();
             }
         }
@@ -85,8 +89,20 @@ public class GameObject {
         return this.parent;
     }
 
+    public void setParent(GameObject parent) {
+        this.parent = parent;
+    }
+
     public TransformComponent getTransform() {
         return this.transform;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean val) {
+        this.enabled = val;
     }
 
     public boolean addComponent(AbstractComponent iComponent) {
