@@ -1,3 +1,5 @@
+import javax.swing.text.html.HTMLDocument.BlockElement;
+
 import javafx.scene.Node;
 
 public class JavaFXRenderer extends AGraphicRenderer {
@@ -20,14 +22,21 @@ public class JavaFXRenderer extends AGraphicRenderer {
 	}
 
 	@Override
-	public void render(AGraphic g) {
+	public boolean beforeRender() {
 		JavaFXWindow window = this._guiThread.getGuiWindow();
 		
 		if(window == null || !window.isRendered()) {
-			return;
+			return false;
 		}
-		
+
 		window.clearNodes();
+
+		return true;
+	}
+
+	@Override
+	public void render(AGraphic g) {
+		JavaFXWindow window = this._guiThread.getGuiWindow();
 
 		for (AGraphicRenderer renderer : this._graphicRenderer) {
 			JavaFXRenderer fxRenderer = (JavaFXRenderer)renderer;
@@ -44,7 +53,14 @@ public class JavaFXRenderer extends AGraphicRenderer {
 				window.renderNode(n);
 			}
 		}
-		
-		window.notifyChanged(true);
-	}	
+	}
+
+	@Override
+	public boolean afterRender() {
+		JavaFXWindow window = this._guiThread.getGuiWindow();
+
+		window.notifyChanged();
+
+		return true;
+	}
 }

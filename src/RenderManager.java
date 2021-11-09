@@ -62,7 +62,11 @@ public class RenderManager extends AbstractManager {
     }
     
     @Override
-    public void update() {		
+    public void update() {
+        if(!this.renderer.beforeRender()) {
+            return;
+        }
+        
     	for (GameObject gameObject: gameObjects) {
     		AGraphic graphic = (AGraphic)gameObject.getComponent(EComponentType.AGraphic);
 
@@ -73,6 +77,8 @@ public class RenderManager extends AbstractManager {
             
             this.renderer.render(graphic);
     	}
+
+        this.renderer.afterRender();
     }
 
     

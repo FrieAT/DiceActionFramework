@@ -21,9 +21,9 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 		
 	    Label label = new Label();
 	    label.setText(labelGraphic.labelText);
-	    label.setLayoutX(labelGraphic.left);
-	    label.setLayoutY(labelGraphic.top);
-	    label.setFont(new Font(labelGraphic.fontSize));
+	    label.setLayoutX(labelGraphic.getLeft());
+	    label.setLayoutY(labelGraphic.getTop());
+	    label.setFont(new Font(labelGraphic.getFontSize()));
 	    
 	    if (labelGraphic.bold) {
 	    	label.setStyle("-fx-font-weight: bold;");

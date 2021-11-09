@@ -20,5 +20,12 @@ public abstract class AbstractComponent implements IComponent {
 
     public GameObject getGameObject() { return this.owner; }
 
+    public TransformComponent getTransform() {
+        if(this.owner == null) {
+            return null;
+        }
+        return this.owner.getTransform();
+    }
+
     public void setGameObject(GameObject owner) { this.owner = owner; }
 }

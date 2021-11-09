@@ -24,7 +24,15 @@ public abstract class AGraphicRenderer {
 		this._graphicRenderer.remove(g);	
 	}
 
-	void render(AGraphic g) {
+	public void render(AGraphic g) {
 		throw new NullPointerException("a");		
-	}	
+	}
+	
+	public boolean beforeRender() {
+		return true;
+	}
+
+	public boolean afterRender() {
+		return true;
+	}
 }

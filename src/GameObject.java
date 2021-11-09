@@ -3,9 +3,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javafx.scene.transform.Transform;
+
 public class GameObject {
 
     private static LinkedList<GameObject> _gameObjects;
+
+    private static int _gameObjectCounter = 0;
 
     public static void startAll() {
         if(_gameObjects != null) {
@@ -26,21 +30,47 @@ public class GameObject {
     private int id;
     private String name;
 
+    private GameObject parent;
+
+    private TransformComponent transform;
+
     private ArrayList<AbstractComponent> components;
 
     public GameObject() {
+        this.parent = null;
+        this.transform = null;
+
         if(_gameObjects == null) {
             _gameObjects = new LinkedList<>();
         }
         _gameObjects.add(this);
     }
 
-    public GameObject (int id, String name) {
+    public GameObject (String name) {
         this();
 
-        this.id = id;
+        this.id = _gameObjectCounter++;
         this.name = name;
         this.components = new ArrayList<>();
+    }
+
+    public GameObject(String name, TransformComponent transform) {
+        this(name);
+
+        this.transform = transform;
+    }
+
+    public GameObject(String name, GameObject parent) {
+        this(name);
+
+        this.parent = parent;
+    }
+
+    public GameObject(String name, GameObject parent, TransformComponent transform) {
+        this(name);
+
+        this.transform = transform;
+        this.parent = parent;
     }
 
     public int getId(){
@@ -49,6 +79,14 @@ public class GameObject {
 
     public String getName() {
         return this.name;
+    }
+
+    public GameObject getParent() {
+        return this.parent;
+    }
+
+    public TransformComponent getTransform() {
+        return this.transform;
     }
 
     public boolean addComponent(AbstractComponent iComponent) {
@@ -81,6 +119,13 @@ public class GameObject {
     }
 
     public void start() {
+        TransformComponent transform = (TransformComponent)this.getComponent(EComponentType.Transform);
+        if(transform == null) {
+            transform = new TransformComponent();
+            this.addComponent(transform);
+        }
+        this.transform = transform;
+
         for(AbstractComponent c : components) {
             c.start();
         }

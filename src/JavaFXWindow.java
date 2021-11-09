@@ -1,6 +1,7 @@
 import java.sql.Time;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.LinkedList;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
@@ -31,10 +32,14 @@ public class JavaFXWindow extends Application
 
     private Instant _clock;
 
+    private LinkedList<Node> _buffer;
+
 	public JavaFXWindow() {
 		JavaFXWindow._instance = this;
 
 		this._nodesBuffer = new Pane();
+
+        this._buffer = new LinkedList<>();
         
         Clock clock = Clock.systemDefaultZone();
         this._clock = clock.instant();
@@ -43,16 +48,14 @@ public class JavaFXWindow extends Application
 	private static JavaFXWindow _instance;
 	public static JavaFXWindow getInstance() { return _instance; }
 
-	public synchronized void notifyChanged(boolean isChanged) {
-        this._notifyChanged = isChanged;
+	public synchronized void notifyChanged() {
+        this._notifyChanged = true;
         this._didRender = false;
 	}
 
     public synchronized void notifyRendered() {
         this._didRender = true;
         this._notifyChanged = false;
-
-        RenderManager.getInstance().setRenderedTime(this._clock.getNano());
     }
 
     public synchronized boolean isRendered() { 
@@ -63,26 +66,18 @@ public class JavaFXWindow extends Application
     }
 
 	public synchronized boolean isChanged() {
+        if(this._window == null) {
+            return false;
+        }
 		return this._notifyChanged;
 	}
 
 	public synchronized void clearNodes() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                _nodesBuffer.getChildren().clear();
-            }
-        });
+        this._buffer.clear();
 	}
 
 	public synchronized void renderNode(Node n) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                _nodesBuffer.getChildren().add(n);
-            }
-        });
-
+        this._buffer.add(n);
 	}
 
     @Override
@@ -111,13 +106,15 @@ public class JavaFXWindow extends Application
      * The limit is based on MAX_FPS.
      * Here we calculate the nano seconds from the last frame.
      */
-    public void refresh() {
+    public synchronized void refresh() {
         if(!isChanged()) {
             return;
         }
-
         
+        _nodesBuffer.getChildren().clear();
+        _nodesBuffer.getChildren().addAll(this._buffer);
 
+        RenderManager.getInstance().setRenderedTime(this._clock.getNano());
         notifyRendered();
     }
 }
