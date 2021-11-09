@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class DiceManager extends AbstractManager {
 
-    private ArrayList<ADice> _dices;
+    private IPlayer player;
 
     protected static DiceManager _instance;
 
@@ -16,7 +16,6 @@ public class DiceManager extends AbstractManager {
 
     protected DiceManager () {
         super();
-        this._dices = new ArrayList<>();
     }
 
     @Override
@@ -37,7 +36,13 @@ public class DiceManager extends AbstractManager {
         return super.remove(dice.getGameObject());
     }
 
+    @Override
     public void update() {
 
+        for (GameObject gameObject : gameObjects) {
+            if (!gameObject.isEnabled())
+                continue;
+            gameObject.update();
+        }
     }
 }
