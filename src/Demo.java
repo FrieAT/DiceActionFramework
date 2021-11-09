@@ -12,9 +12,17 @@ public class Demo {
         //System.out.println(classicDice.getDiceSides());
 
         GameObject g2 = new GameObject(3, "BackgammonDice");
-        g2.addComponent(new ClassicDice());
-        g2.addComponent(new ClassicDice());
-        g2.addComponent(new PictureGraphic());
+        ADiceBag bag = new ADiceBag();
+        bag.add(new ClassicDice());
+        bag.add(new ClassicDice());
+        PictureGraphic faceImage = new PictureGraphic();
+        faceImage.setPicturePath("images/classic_dice_1.png");
+        faceImage.setWidth(20);
+        faceImage.setHeight(20);
+        faceImage.setLeft(0);
+        faceImage.setTop(0);
+        g2.addComponent(faceImage);
+        System.out.println(g2.getComponents());
 
         
         GameObject background = new GameObject(2, "MainBackground");
@@ -29,7 +37,7 @@ public class Demo {
         background.addComponent(bgImage);
         background.addComponent(new StupidComponent());
 
-        
+
         GameObject gameName = new GameObject(2, "GameName");
         LabelGraphic gameNameLabel = new LabelGraphic();
         gameNameLabel.setLeft(400);

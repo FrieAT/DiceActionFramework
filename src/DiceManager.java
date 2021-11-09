@@ -37,7 +37,4 @@ public class DiceManager extends AbstractManager {
         return super.remove(dice.getGameObject());
     }
 
-    public void update() {
-
-    }
 }
