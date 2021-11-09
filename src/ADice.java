@@ -1,61 +1,62 @@
-
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public abstract class ADice extends AbstractComponent {
 
-    // use Object [Object, IGraphic]
-
-    protected Object[][] diceFaces;
-    protected final int MAX_FACES = 10;
+    /**
+     *
+     */
+    protected ArrayList<Face> diceFaces;
+    private Face currentFace;
+    private final int MAX_FACES = 20;
 
     public ADice() {
-        super();
-        
-        this.type = EComponentType.IDice;
-
-        this.diceFaces = new Object[0][2];
-    }
-
-    public ADice(Object[][] diceFaces) {
-        this.diceFaces = diceFaces;
+        this.diceFaces = new ArrayList<>();
+        this.currentFace = null;
     }
 
     // returns dice sides and the graphics of its key
-    public Object[][] getDiceFaces() {
-        return this.diceFaces;
+    public Face getCurrentFace() {
+        return this.currentFace;
     }
 
-    public boolean addFace(Object value, Object graphics) {
-        if (diceFaces.length == 10)
+    public boolean addFace(Face face) {
+        if (diceFaces.size() == MAX_FACES)
             return false;
-        Object[][] newDiceFaces = new Object[diceFaces.length + 1][2];
-
-        if (diceFaces.length > 0) {
-            for (int i = 0; i < diceFaces.length; i++) {
-                newDiceFaces[i][0] = diceFaces[i][0];
-                newDiceFaces[i][1] = diceFaces[i][1];
-            }
-        }
-
-        newDiceFaces[diceFaces.length][0] = value;
-        newDiceFaces[diceFaces.length][1] = graphics;
-        this.diceFaces = newDiceFaces;
-        return true;
+        if (currentFace == null)
+            currentFace = face;
+        return diceFaces.add(face);
     }
 
-    public Object[] getFace(int idx) {
-        return diceFaces[idx];
+    public boolean removeFace(Face face) {
+        return diceFaces.remove(face);
     }
 
-    // returns an array of length 2 which contains the rolled result
-    public Object[] roll() {
-        return diceFaces[(int) (Math.random() * diceFaces.length)];
+    public Face getFace(int idx) {
+        return diceFaces.get(idx);
+    }
+
+    public void roll() {
+        this.currentFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
     }
 
     @Override
     public String toString() {
-        return Arrays.deepToString(diceFaces);
+        return diceFaces.toString();
     }
 
+    @Override
+    public void start() {
+        this.type = EComponentType.ADice;
 
+        DiceManager.getInstance().add(this);
+    }
+
+    @Override
+    public void update() {
+        PictureGraphic g = (PictureGraphic)this.getGameObject().getComponent(EComponentType.AGraphic);
+        if(g != null) {
+            g.top = (g.top + 1) % 50;
+            g.left = (g.left - 1) % 50;
+        }
+    }
 }

@@ -11,14 +11,10 @@ public class Demo {
         g1.addComponent(new ClassicDice());
         //System.out.println(classicDice.getDiceSides());
 
-        ADice test_dice = new ClassicDice();
-        System.out.println(Arrays.deepToString(test_dice.getDiceFaces()));
-
-        for (int i = 0; i < 20; i++) {
-            System.out.println(Arrays.toString(test_dice.roll()));
-        }
-
-        System.out.println(g1.getComponents());
+        GameObject g2 = new GameObject(3, "BackgammonDice");
+        g2.addComponent(new ClassicDice());
+        g2.addComponent(new ClassicDice());
+        g2.addComponent(new PictureGraphic());
 
         
         GameObject background = new GameObject(1, "MainBackground");
@@ -52,8 +48,7 @@ public class Demo {
         gameName2.addComponent(gameNameLabel2);
         
         
-        
-
+        /*
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         
         //Pre-initialization.
@@ -85,5 +80,7 @@ public class Demo {
 
             GameObject.updateAll();
         }
+
+         */
     }
 }
