@@ -26,6 +26,7 @@ public class GameObject {
     }
 
     public static void startAll() {
+        //TODO: Add gameobjects from start() method later.
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
                 g.initialize();
@@ -34,6 +35,7 @@ public class GameObject {
     }
 
     public static void updateAll() {
+        //TODO: Add gameobjects from update() method later.
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
                 if (!g.initialized)
