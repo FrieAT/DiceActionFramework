@@ -14,6 +14,8 @@ public class GameObject {
 
     private boolean enabled = true;
 
+    private boolean initialized = false;
+
     public static GameObject find(String name) {
         for(GameObject g : _gameObjects) {
             if(g.getName().equals(name)) {
@@ -26,7 +28,7 @@ public class GameObject {
     public static void startAll() {
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
-                g.start();
+                g.initialize();
             }
         }
     }
@@ -34,6 +36,8 @@ public class GameObject {
     public static void updateAll() {
         if(_gameObjects != null) {
             for(GameObject g : _gameObjects) {
+                if (!g.initialized)
+                    g.initialize();
                 if (!g.enabled)
                     continue;
                 g.update();
@@ -156,6 +160,14 @@ public class GameObject {
             }
         }
         return null;
+    }
+
+    private void initialize() {
+        if (!this.initialized)
+            return;
+
+        this.initialized = true;
+        this.start();
     }
 
     public void start() {  
