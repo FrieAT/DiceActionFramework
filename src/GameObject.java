@@ -163,7 +163,7 @@ public class GameObject {
     }
 
     private void initialize() {
-        if (!this.initialized)
+        if (this.initialized)
             return;
 
         this.initialized = true;
