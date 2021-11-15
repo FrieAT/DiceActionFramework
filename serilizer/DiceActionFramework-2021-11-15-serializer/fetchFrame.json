@@ -1,0 +1,26 @@
+{
+	"@type": "PictureGraphic",
+	"parent": "PlayerOne",
+	"gameObject": {
+		"name": "PlayerOne",
+		"id": "0"
+	},
+	"transform": {
+		"@type": "TransformComponent",
+		"position": {
+			"@type": "Vector2",
+			"x": 650.0,
+			"y": 550.0
+		},
+		"scale": {
+			"@type": "Vector2",
+			"x": 0.5,
+			"y": 0.5
+		},
+		"zRotation": 0
+	},
+	"picturePath": "images/player2.png",
+	"width": 50,
+	"height": 75,
+	"renderingLayer": 2
+}
