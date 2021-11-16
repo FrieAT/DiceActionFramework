@@ -8,7 +8,9 @@ import Socket.HttpSocket.HttpServerSocket;
 import Socket.HttpSocket.HttpResourceExistsException;
 import Socket.HttpSocket.Resource.DirectoryResource;
 import Socket.HttpSocket.Resource.GifFileResource;
+import Socket.HttpSocket.Resource.HttpResource;
 import Socket.HttpSocket.Resource.JpegFileResource;
+import Socket.HttpSocket.Resource.JsonBufferResource;
 import Socket.HttpSocket.Resource.PngFileResource;
 import javafx.scene.transform.Transform;
 
@@ -89,10 +91,30 @@ public class Demo {
             dir.addResource(JpegFileResource.class);
             dir.addResource(PngFileResource.class);
             dir.addResource(GifFileResource.class);
+
+            socket.addResource(JsonBufferResource.class, "/bier");
         }
         catch(HttpServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    JsonBufferResource resource = new JsonBufferResource(socket, "/bier", "{ \"example\": \"Hello World\" }");
+                    
+                    socket.transmitBufferedResource(resource, true);
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 
         //Pre-initialization.
         JavaFXRenderer renderer = new JavaFXRenderer();

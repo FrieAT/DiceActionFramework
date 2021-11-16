@@ -7,7 +7,7 @@ import Socket.HttpSocket.HttpServerSocket;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class PngFileResource extends FileResource
+public class PngFileResource extends AFileResource
 {
     protected PngFileResource() {
         super();

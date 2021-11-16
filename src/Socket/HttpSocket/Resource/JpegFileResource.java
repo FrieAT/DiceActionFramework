@@ -7,7 +7,7 @@ import Socket.HttpSocket.HttpServerSocket;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class JpegFileResource extends FileResource
+public class JpegFileResource extends AFileResource
 {
     protected JpegFileResource() {
         super();

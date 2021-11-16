@@ -2,8 +2,6 @@ package Socket.HttpSocket.Resource;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
@@ -13,8 +11,6 @@ import Socket.HttpSocket.HttpServerSocket;
 
 public abstract class HttpResource implements HttpHandler
 {
-    private Queue<HttpResource> _buffer;
-
     protected byte[] _data;
 
     private String _path;
@@ -22,7 +18,6 @@ public abstract class HttpResource implements HttpHandler
     private HttpServerSocket _server;
 
     protected HttpResource() {
-        this._buffer = new LinkedList<>();
         this._data = new byte[0];
         this._server = null;
     }
@@ -44,17 +39,8 @@ public abstract class HttpResource implements HttpHandler
 
     public HttpServer getServerContext() { return this._server.getSocket(); }
 
-    public void writeBuffer(HttpResource resource) {
-        this._buffer.add(resource);
-    }
-
     public byte[] getBufferedData() {
         byte[] data = this._data;
-
-        /*while(!this._buffer.isEmpty()) {
-            String appendData = this._buffer.poll().getBufferedData();
-            this._data += appendData;
-        }*/
 
         return data;
     }

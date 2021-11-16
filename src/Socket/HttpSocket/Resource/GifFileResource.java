@@ -4,7 +4,7 @@ import java.io.File;
 
 import Socket.HttpSocket.HttpServerSocket;
 
-public class GifFileResource extends FileResource
+public class GifFileResource extends AFileResource
 {
     protected GifFileResource() {
         super();

@@ -11,6 +11,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 import Socket.IServerSocket;
 import Socket.ISocketListener;
+import Socket.HttpSocket.Resource.ABufferResource;
+import Socket.HttpSocket.Resource.AFileResource;
 import Socket.HttpSocket.Resource.HttpResource;
 
 public class HttpServerSocket implements IServerSocket
@@ -52,7 +54,7 @@ public class HttpServerSocket implements IServerSocket
         this._server = null;
     }
 
-    public <T extends HttpResource>
+    public <T extends AFileResource>
     HttpResource addResource(Class<T> resourceClass, String uri, File localPath) throws HttpResourceExistsException
     {
         if(this._resources.containsKey(uri)) {
@@ -84,6 +86,36 @@ public class HttpServerSocket implements IServerSocket
         return resource;
     }
 
+    public <T extends ABufferResource>
+    HttpResource addResource(Class<T> resourceClass, String uri) throws HttpResourceExistsException
+    {
+        if(this._resources.containsKey(uri)) {
+            throw new HttpResourceExistsException("Resource "+uri+" is already in use.");
+        }
+
+        HttpResource resource = null;
+
+        try {
+            resource = resourceClass
+                .getConstructor(
+                    HttpServerSocket.class,
+                    String.class
+                )
+                .newInstance(
+                    this,
+                    uri
+                );
+        }
+        catch(Exception e)
+        {
+            throw new IllegalArgumentException("An error occured adding a ressource path.", e);
+        }
+
+        this._resources.put(uri, resource);
+
+        return resource;
+    }
+
     public void deleteResource(String uri) throws HttpResourceExistsException {
         if(!this._resources.containsKey(uri)) {
             throw new HttpResourceExistsException("Resource "+uri+" is undefined.");
@@ -94,14 +126,24 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmitBufferedResource(HttpResource data) {
+    public void transmitBufferedResource(HttpResource data, boolean clear) {
         HttpResource resource = this._resources.get(data.getResourcePath());
 
         if(resource == null) {
             throw new IllegalArgumentException("Resource "+data.getResourcePath()+" is undefined.");
         }
 
-        resource.writeBuffer(data);
+        ABufferResource bufferResource = (ABufferResource)resource;
+
+        if(bufferResource == null) {
+            throw new IllegalArgumentException("Only on buffered resources is a tramission allowed. Other Resources may only have disk-changes, not memory-changes.");
+        }
+
+        if(clear) {
+            bufferResource.clearBuffer();
+        }
+
+        bufferResource.writeBuffer(data);
     }
     
     public void receiveData(HttpExchange exchange) {

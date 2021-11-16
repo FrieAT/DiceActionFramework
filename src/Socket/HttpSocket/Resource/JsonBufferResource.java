@@ -1,27 +1,26 @@
 package Socket.HttpSocket.Resource;
 
-import java.io.File;
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import Socket.HttpSocket.HttpServerSocket;
 
-public class JsonFileResource extends AFileResource
-{
-    protected JsonFileResource() {
-        super();
+public class JsonBufferResource extends ABufferResource {
+    public JsonBufferResource(HttpServerSocket server, String path) {
+        super(server, path);
+
+        this._buffer = "";
     }
 
-    public JsonFileResource(HttpServerSocket server, String path, File file) {
-        super(server, path, file);
+    public JsonBufferResource(HttpServerSocket server, String path, String data) {
+        super(server, path);
+        
+        this._buffer = data;
     }
-
+    
     @Override
     public String getContentType() { return "application/json"; }
-
-    @Override
-    public String[] getFileExtension() { return new String[]{ ".json" }; }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException{

@@ -9,11 +9,11 @@ import Socket.HttpSocket.HttpServerSocket;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class DirectoryResource extends FileResource
+public class DirectoryResource extends AFileResource
 {
-    protected LinkedList<FileResource> _filterResources;
+    protected LinkedList<AFileResource> _filterResources;
 
-    protected HashMap<String, FileResource> _fileList;
+    protected HashMap<String, AFileResource> _fileList;
 
     private File _localPath;
 
@@ -39,7 +39,7 @@ public class DirectoryResource extends FileResource
     @Override
     public String getContentType() { return "text/html"; }
 
-    public <T extends FileResource>
+    public <T extends AFileResource>
     void addResource(Class<T> resource)
     {
         try {
@@ -92,11 +92,11 @@ public class DirectoryResource extends FileResource
                 
                 this._fileList.put(f.getName(), resource);   
             } else {
-                for(FileResource check : this._filterResources) {
+                for(AFileResource check : this._filterResources) {
                     for(String fileExtension : check.getFileExtension()) {
                         if(f.getName().endsWith(fileExtension)) {
                             try {
-                                FileResource resource = check.getClass()
+                                AFileResource resource = check.getClass()
                                     .getConstructor(
                                         HttpServerSocket.class,
                                         String.class,

@@ -6,15 +6,15 @@ import java.nio.file.Files;
 
 import Socket.HttpSocket.HttpServerSocket;
 
-public class FileResource extends HttpResource
+public abstract class AFileResource extends HttpResource
 {
     private File _file;
 
-    protected FileResource() {
+    protected AFileResource() {
         super();
     }
 
-    public FileResource(HttpServerSocket server, String path, File file) {
+    public AFileResource(HttpServerSocket server, String path, File file) {
         super(server, path);
 
         this._file = file;
