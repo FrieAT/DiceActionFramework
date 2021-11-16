@@ -1,9 +1,14 @@
 
 import java.io.File;
 
+@Serializable
 public class PictureGraphic extends AGraphic {
+
+	@JsonElement
 	private Integer width = 0;
+	@JsonElement
 	private Integer height = 0;
+	@JsonElement
 	String picturePath;
 	
 	@Override
@@ -24,21 +29,27 @@ public class PictureGraphic extends AGraphic {
 		this.height = height;
 	}
 	public Integer getTop() {
-		return (int)this.getTransform().getGlobalPosition().y;
+		return (int)this.getTransform().getGlobalPosition().y.intValue();
 	}
 	public void setTop(Integer top) {
 		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
 	}
 	public Integer getLeft() {
-		return (int)this.getTransform().getGlobalPosition().x;
+		return this.getTransform().getGlobalPosition().x.intValue();
 	}
 	public void setLeft(Integer left) {
-		this.getTransform().setPosition(new Vector2(left, this.getTop()));
+		this.getTransform().setPosition(new Vector2(left.doubleValue(), this.getTop().doubleValue()));
 	}
 	public String getPicturePath() {
 		return picturePath;
 	}
 	public void setPicturePath(String picturePath) {
 		this.picturePath = picturePath;
+	}
+
+
+	@Init
+	private void initValues() {
+
 	}
 }

@@ -1,8 +1,12 @@
 import java.io.File;
 
+@Serializable
 public class LabelGraphic extends AGraphic {
+	@JsonElement
 	private Integer fontSize = 12;
+	@JsonElement
 	Boolean bold = false;
+	@JsonElement
 	String labelText ="Example Text";
 	
 	@Override
@@ -11,13 +15,13 @@ public class LabelGraphic extends AGraphic {
 	}
 
 	public Integer getTop() {
-		return (int)this.getTransform().getPosition().y;
+		return this.getTransform().getPosition().y.intValue();
 	}
 	public void setTop(Integer top) {
 		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
 	}
 	public Integer getLeft() {
-		return (int)this.getTransform().getPosition().x;
+		return this.getTransform().getPosition().x.intValue();
 	}
 	public void setLeft(Integer left) {
 		this.getTransform().setPosition(new Vector2(left, this.getTop()));

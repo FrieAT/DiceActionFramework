@@ -1,9 +1,16 @@
+@Serializable
 public class ButtonGraphic extends AGraphic {
+    @JsonElement
     private Integer fontSize = 12;
+    @JsonElement
     private Integer width = 0;
+    @JsonElement
     private Integer height = 0;
+    @JsonElement
     String picturePath;
+    @JsonElement
     Boolean bold = false;
+    @JsonElement
 	String labelText ="Example Text";
     
     @Override
@@ -24,13 +31,13 @@ public class ButtonGraphic extends AGraphic {
         this.height = height;
     }
     public Integer getTop() {
-        return (int)this.getTransform().getGlobalPosition().y;
+        return this.getTransform().getGlobalPosition().y.intValue();
     }
     public void setTop(Integer top) {
         this.getTransform().setPosition(new Vector2(this.getLeft(), top));
     }
     public Integer getLeft() {
-        return (int)this.getTransform().getGlobalPosition().x;
+        return this.getTransform().getGlobalPosition().x.intValue();
     }
     public void setLeft(Integer left) {
         this.getTransform().setPosition(new Vector2(left, this.getTop()));
