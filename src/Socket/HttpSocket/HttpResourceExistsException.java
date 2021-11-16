@@ -2,7 +2,7 @@ package Socket.HttpSocket;
 
 import java.io.IOException;
 
-class HttpResourceExistsException extends IOException
+public class HttpResourceExistsException extends IOException
 {
     public HttpResourceExistsException(String message) { super(message); }
 

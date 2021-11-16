@@ -1,5 +1,6 @@
 package Socket.HttpSocket;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
@@ -53,7 +54,8 @@ public class HttpServerSocket implements IServerSocket
         this._server = null;
     }
 
-    public void addResource(Class<HttpResource> resourceClass, String uri) throws HttpResourceExistsException
+    public <T extends HttpResource>
+    HttpResource addResource(Class<T> resourceClass, String uri, File localPath) throws HttpResourceExistsException
     {
         if(this._resources.containsKey(uri)) {
             throw new HttpResourceExistsException("Resource "+uri+" is already in use.");
@@ -62,14 +64,26 @@ public class HttpServerSocket implements IServerSocket
         HttpResource resource = null;
 
         try {
-            resource = resourceClass.getConstructor(this.getClass(), String.class).newInstance(this, uri);
+            resource = resourceClass
+                .getConstructor(
+                    HttpServerSocket.class,
+                    String.class,
+                    File.class
+                )
+                .newInstance(
+                    this,
+                    uri,
+                    localPath
+                );
         }
-        catch(NoSuchMethodException|SecurityException|InstantiationException|IllegalAccessException|InvocationTargetException e)
+        catch(Exception e)
         {
             throw new IllegalArgumentException("An error occured adding a ressource path.", e);
         }
 
         this._resources.put(uri, resource);
+
+        return resource;
     }
 
     public void deleteResource(String uri) throws HttpResourceExistsException {

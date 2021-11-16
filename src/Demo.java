@@ -1,7 +1,15 @@
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import Socket.HttpSocket.HttpServerException;
+import Socket.HttpSocket.HttpServerSocket;
+import Socket.HttpSocket.HttpResourceExistsException;
+import Socket.HttpSocket.Resource.DirectoryResource;
+import Socket.HttpSocket.Resource.GifFileResource;
+import Socket.HttpSocket.Resource.JpegFileResource;
+import Socket.HttpSocket.Resource.PngFileResource;
 import javafx.scene.transform.Transform;
 
 public class Demo {
@@ -74,6 +82,18 @@ public class Demo {
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         
+        HttpServerSocket socket = new HttpServerSocket("localhost:1337");
+        try {
+            socket.bind();
+            DirectoryResource dir = (DirectoryResource)socket.addResource(DirectoryResource.class, "/images", new File("images/"));
+            dir.addResource(JpegFileResource.class);
+            dir.addResource(PngFileResource.class);
+            dir.addResource(GifFileResource.class);
+        }
+        catch(HttpServerException|HttpResourceExistsException e) {
+            throw new NullPointerException(e.getMessage());
+        }
+
         //Pre-initialization.
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());

@@ -3,6 +3,7 @@ package Socket.HttpSocket.Resource;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import com.sun.net.httpserver.HttpServer;
@@ -15,22 +16,16 @@ public abstract class HttpResource implements HttpHandler
 {
     private Queue<HttpResource> _buffer;
 
-    private String _data;
+    protected byte[] _data;
 
     private String _path;
 
     private HttpServerSocket _server;
 
-    private HttpResource() {
+    protected HttpResource() {
         this._buffer = new LinkedList<>();
-        this._data = "";
+        this._data = new byte[0];
         this._server = null;
-    }
-
-    public HttpResource(String path, String data) {
-        this();
-
-        this._path = path;
     }
 
     public HttpResource(HttpServerSocket server, String path) {
@@ -39,9 +34,11 @@ public abstract class HttpResource implements HttpHandler
         this._path = path;
         this._server = server;
 
-        server.getSocket().createContext(path, this);
+        if(server != null) {
+            server.getSocket().createContext(path, this);
+        }
     }
-    
+
     public String getResourcePath() { return this._path; }
 
     public HttpServerSocket getSocket() { return this._server; }
@@ -52,12 +49,13 @@ public abstract class HttpResource implements HttpHandler
         this._buffer.add(resource);
     }
 
-    public String getBufferedData() {
-        String data = this._data;
+    public byte[] getBufferedData() {
+        byte[] data = this._data;
 
-        while(!this._buffer.isEmpty()) {
-            data += this._buffer.poll().getBufferedData();
-        }
+        /*while(!this._buffer.isEmpty()) {
+            String appendData = this._buffer.poll().getBufferedData();
+            this._data += appendData;
+        }*/
 
         return data;
     }
@@ -67,9 +65,14 @@ public abstract class HttpResource implements HttpHandler
     }
 
     public void handle(HttpExchange exchange) throws IOException {
+        byte[] response = getBufferedData();
+
+        exchange.getResponseHeaders().add("Content-type", this.getContentType()); 
+        
+        exchange.sendResponseHeaders(200, response.length);
         try(BufferedOutputStream buffer = new BufferedOutputStream(exchange.getResponseBody()))
         {
-            buffer.write(getBufferedData().getBytes());
+            buffer.write(response);
         }
 
         this.getSocket().receiveData(exchange);
