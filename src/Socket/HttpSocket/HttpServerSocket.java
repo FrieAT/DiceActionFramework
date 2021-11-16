@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Queue;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
@@ -81,8 +82,14 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmitData(String data) {
+    public void transmitData(HttpResource data) {
+        HttpResource resource = this._resources.get(data.getResourcePath());
 
+        if(resource == null) {
+            throw new IllegalArgumentException("Resource "+data.getResourcePath()+" is undefined.");
+        }
+
+        resource.writeBuffer(data);
     }
     
     public void receiveData(HttpExchange exchange) {

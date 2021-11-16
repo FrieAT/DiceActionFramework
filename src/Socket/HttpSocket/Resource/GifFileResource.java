@@ -14,9 +14,4 @@ public class GifFileResource extends FileResource
 
     @Override
     public String getContentType() { return "image/gif"; }
-
-    @Override
-    public void handle(HttpExchange exchange) throws IOException{
-        
-    }
 }

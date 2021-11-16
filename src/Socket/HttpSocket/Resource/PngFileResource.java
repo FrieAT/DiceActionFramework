@@ -17,6 +17,6 @@ public class PngFileResource extends FileResource
 
     @Override
     public void handle(HttpExchange exchange) throws IOException{
-        
+        super.handle(exchange);
     }
 }
