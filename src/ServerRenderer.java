@@ -1,14 +1,19 @@
 import javafx.scene.Node;
 
+import java.util.ArrayList;
+
 public class ServerRenderer extends AGraphicRenderer {
 
-    private ISerializer serializer;
+    private ASerializer serializer;
 
-    public ServerRenderer(ISerializer serializer) {
+    StringBuilder fetchFrame;
+
+    public ServerRenderer(ASerializer serializer) {
+        this.fetchFrame = new StringBuilder();
         this.serializer = serializer;
     }
 
-    public ISerializer getSerializer() {
+    public ASerializer getSerializer() {
         return this.serializer;
     }
 
@@ -19,30 +24,33 @@ public class ServerRenderer extends AGraphicRenderer {
 
     @Override
     public void render(AGraphic g) {
-        ISerializer serializer = this.getSerializer();
 
         for (AGraphicRenderer renderer : this._graphicRenderer) {
-            ServerRenderer fxRenderer = (ServerRenderer) renderer;
+            ServerRenderer serverRenderer = (ServerRenderer) renderer;
 
-            if (fxRenderer == null) {
+            if (serverRenderer == null) {
                 System.out.println("WARNING: " + renderer.getClass().getName() + " != " + this.getClass().getName());
                 continue;
             }
 
-            Node n = fxRenderer.renderAsSerialized(g);
-
-            // TODO there should not be a serializer
-            if (n != null)
-                serializer.serialize(g);
+            fetchFrame.append(serializer.serialize(g)).append(",");
 
         }
     }
 
     @Override
     public boolean afterRender() {
-
-        ISerializer serializer;
+        fetchFrame.replace(fetchFrame.length() - 1, fetchFrame.length(), "");
+        fetchFrame.append("]");
+        System.out.println(fetchFrame.toString());
+        fetchFrame = new StringBuilder("");
+        Init();
         return true;
+    }
+
+    @Override
+    public void Init() {
+        fetchFrame.append("[");
     }
 
     public Node renderAsSerialized(AGraphic g) {

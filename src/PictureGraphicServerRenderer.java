@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class PictureGraphicServerRenderer extends ServerRenderer {
 
 
-    public PictureGraphicServerRenderer(ISerializer serializer) {
+    public PictureGraphicServerRenderer(ASerializer serializer) {
         super(serializer);
     }
 

@@ -1,9 +1,11 @@
+@Serializable
 public class TransformComponent extends AbstractComponent {
-    
+
+    @JsonElement(key = "position")
     private Vector2 _position;
-
+    @JsonElement(key = "scale")
     private Vector2 _scale;
-
+    @JsonElement(key = "zRotation")
     private double _zRotation;
 
     public TransformComponent() {

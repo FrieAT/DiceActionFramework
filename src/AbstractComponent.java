@@ -1,6 +1,7 @@
 
-
+@Serializable
 public abstract class AbstractComponent implements IComponent {
+    @JsonElement
     protected GameObject owner = null;
 
     /**

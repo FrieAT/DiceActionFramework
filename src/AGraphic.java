@@ -1,6 +1,8 @@
+@Serializable
 public abstract class AGraphic extends AbstractComponent {
 
-	Integer RenderingLayer;
+	@JsonElement
+	Integer RenderingLayer = 1;
 	
 	@Override
 	public void start() {
@@ -10,9 +12,14 @@ public abstract class AGraphic extends AbstractComponent {
 	public Integer getRenderingLayer() {
 		return RenderingLayer;
 	}
-	
 
 	public void setRenderingLayer(Integer level) {
 		this.RenderingLayer = level;		
 	}
+
+	@Init
+	private void initValues() {
+		this.RenderingLayer = 0;
+	}
 }
+
