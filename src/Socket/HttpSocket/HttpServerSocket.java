@@ -2,11 +2,9 @@ package Socket.HttpSocket;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
 
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
@@ -96,7 +94,7 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmitData(HttpResource data) {
+    public void transmitBufferedResource(HttpResource data) {
         HttpResource resource = this._resources.get(data.getResourcePath());
 
         if(resource == null) {

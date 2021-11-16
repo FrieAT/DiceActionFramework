@@ -2,8 +2,6 @@ package Socket.HttpSocket.Resource;
 
 import java.io.IOException;
 
-import Socket.HttpSocket.HttpServerSocket;
-
 import com.sun.net.httpserver.HttpExchange;
 
 public class JsonFileResource extends FileResource
