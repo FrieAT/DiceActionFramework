@@ -1,5 +1,8 @@
+import java.util.ArrayList;
+
 public class RenderManager extends AbstractManager {
-	private AGraphicRenderer renderer;
+	
+	private ArrayList<AGraphicRenderer> renderer;
 
     private long _lastRenderedTime;
 
@@ -16,13 +19,13 @@ public class RenderManager extends AbstractManager {
     public RenderManager() { // JavaFXRenderer
         super();
         
-        this.renderer = null;
+    	this.renderer = new ArrayList<>();
         this._lastRenderedTime = 0;
         this._currentRenderedTime = 0;
     }
 
     public void setRenderer(AGraphicRenderer renderer) {
-        this.renderer = renderer;
+    	this.renderer.add(renderer);
     }
 
     public synchronized void setRenderedTime(long now) {
@@ -64,34 +67,47 @@ public class RenderManager extends AbstractManager {
 
     @Override
     public void init() {
-        this.renderer.Init();
+
+        
+    	for (AGraphicRenderer graphicRenderer : renderer) {
+        	graphicRenderer.Init();
+    	}
     }
     
     @Override
     public void update() {
-        if(!this.renderer.beforeRender()) {
-            return;
-        }
-        
-    	for (GameObject gameObject: gameObjects) {
-    	    if (!gameObject.isEnabled())
-    	        continue;
-    		AGraphic graphic = gameObject.getComponent(AGraphic.class);
-
-            if(graphic == null) {
-                //TODO: Exception if not an AGraphic component.
-                continue;
+    	for (AGraphicRenderer graphicRenderer : renderer) {
+            if(!graphicRenderer.beforeRender()) {
+                return;
             }
             
-            this.renderer.render(graphic);
-    	}
+        	for (GameObject gameObject: gameObjects) {
+        	    if (!gameObject.isEnabled())
+        	        continue;
+        		AGraphic graphic = gameObject.getComponent(AGraphic.class);
 
-        this.renderer.afterRender();
+                if(graphic == null) {
+                    //TODO: Exception if not an AGraphic component.
+                    continue;
+                }
+                
+                graphicRenderer.render(graphic);
+        	}
+
+        	graphicRenderer.afterRender();
+    	}
     }
 
-    public AGraphicRenderer getRenderer() {
+    public ArrayList<AGraphicRenderer> getRenderer() { //
         return this.renderer;
     }
 
-    
+    public AGraphicRenderer getSpecificJavaFXRenderer() { //To do
+    	for (AGraphicRenderer graphicRenderer : renderer) {
+    		if (graphicRenderer instanceof JavaFXRenderer) {
+    			return graphicRenderer;
+    		}
+    	}
+		return null;
+    }  
 }

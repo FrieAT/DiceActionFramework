@@ -75,24 +75,25 @@ public class Demo {
         LinkedList<AbstractManager> _managers = new LinkedList<>();
         
         //Pre-initialization.
-        /*
+        
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
-        RenderManager.getInstance().setRenderer(renderer);
 
-         */
+
+         
         ASerializer jsonSerializer = new JsonSerializer();
         ServerRenderer serverRenderer = new ServerRenderer(jsonSerializer);
         serverRenderer.add(new ServerRenderer(jsonSerializer));
         RenderManager.getInstance().setRenderer(serverRenderer);
+        RenderManager.getInstance().setRenderer(renderer);
 
-        /*
+        
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
-
-         */
+      
+         
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());
