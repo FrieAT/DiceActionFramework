@@ -117,15 +117,24 @@ public class Demo {
         }).start();
 
         //Pre-initialization.
+        /*
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().setRenderer(renderer);
 
+         */
+        ASerializer jsonSerializer = new JsonSerializer();
+        ServerRenderer serverRenderer = new ServerRenderer(jsonSerializer);
+        serverRenderer.add(new ServerRenderer(jsonSerializer));
+        RenderManager.getInstance().setRenderer(serverRenderer);
+
+        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
 
+         */
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());
@@ -151,7 +160,7 @@ public class Demo {
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

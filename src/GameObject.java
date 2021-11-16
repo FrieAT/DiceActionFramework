@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import javafx.scene.transform.Transform;
 
+@Serializable
 public class GameObject {
 
     private static LinkedList<GameObject> _gameObjects;
@@ -41,11 +42,14 @@ public class GameObject {
         }
     }
 
+    @JsonElement
     private int id;
+    @JsonElement
     private String name;
 
     private GameObject parent;
 
+    @JsonElement
     private TransformComponent transform;
 
     private ArrayList<AbstractComponent> components;

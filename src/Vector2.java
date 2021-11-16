@@ -1,7 +1,9 @@
+@Serializable
 public class Vector2 {
-    public double x;
-
-    public double y;
+    @JsonElement
+    public Double x;
+    @JsonElement
+    public Double y;
 
     public Vector2(double x, double y) {
         this.x = x;
