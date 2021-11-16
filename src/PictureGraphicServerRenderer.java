@@ -4,11 +4,6 @@ import java.util.HashMap;
 
 public class PictureGraphicServerRenderer extends ServerRenderer {
 
-
-    public PictureGraphicServerRenderer(ASerializer serializer) {
-        super(serializer);
-    }
-
     @Override
     public Node renderAsSerialized(AGraphic g) {
         PictureGraphic pictureGraphic;

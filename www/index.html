@@ -1,0 +1,183 @@
+
+
+
+<!doctype html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+
+
+    <script>
+        let frameid = 0; // deleteMe
+        function confirmRenderdFrame(frameID) {
+
+                        $.ajax({
+                                url: "api/JSONRenderConfirmationGenerator.php?last_frame_renderd_ID="+frameID,
+                                type: "GET",//type of posting the data
+                                success: function (data) {
+                                        //what to do in success
+                        },
+                                error: function(xhr, ajaxOptions, thrownError){
+                                        //what to do in error
+                        },
+                                timeout : 0//timeout of the ajax call
+                        });
+        }
+
+
+        var interval = 1000;  // Get new Frame from server every [invterval]  milliseconds
+        function doAjax() {
+            $.ajax({
+                    type: 'POST',
+                    url: 'api/fetchFrame.json',
+                    AGraphics: $(this).serialize(),
+                    dataType: 'json',
+                    success: function (AGraphicArray) {     
+                        // document.getElementById("scene").innerHTML = ""; // Delete all elements in the scene.                 
+                            for(var i = 0; i < AGraphicArray.length; i++){ // < or <=
+                                 console.log(AGraphicArray[i]); // Object
+                                 render(AGraphicArray[i]);                      
+                            }
+
+                            confirmRenderdFrame(++frameid) //   //[To do?] Send server message that it was renderd using real frameID                          
+                    },
+                    complete: function (AGraphics) {
+                            // Schedule the next
+                            setTimeout(doAjax, interval);
+                    }
+
+                  
+            });
+        }
+        setTimeout(doAjax, interval);
+        </script>
+
+
+
+  </head>
+  <body>
+        <div id="scene" style="outline: solid; width: 1024px; height: 768px; position: relative;"></div> <!-- get width and height through json?-->
+  </body>
+
+  <script>
+          function ObjectAlreadyExists(ObjectId) {  
+                var elementExists = !!document.getElementById(ObjectId);
+                return elementExists;
+        }
+        
+        function setPosition(HTMLelement,AGraphic) {
+                HTMLelement.style.position = 'absolute';
+                HTMLelement.style.left = AGraphic.owner.transform.position.x+'px';
+                HTMLelement.style.top = AGraphic.owner.transform.position.y+'px';
+                HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
+                HTMLelement.style.zIndex = AGraphic.renderingLayer
+                HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x;
+                HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y;
+        }
+        
+        function renderPictureGraphic(pictureGraphic) {  
+                if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
+                        var htmlImageElement = new Image(0, 0);
+                        document.getElementById("scene").appendChild(htmlImageElement); 
+                } else {
+                        var htmlImageElement = document.getElementById(pictureGraphic.owner.id);
+                }
+
+                htmlImageElement.src = pictureGraphic.picturePath;      
+                htmlImageElement.id = pictureGraphic.owner.id;
+                setPosition(htmlImageElement,pictureGraphic);
+        }
+
+        //Wie funktioniert skalierung bei Text? Was ist x-skalierung / y-skalierung bei text?
+        function renderLabelGraphic(labelGraphic) {
+                if (!ObjectAlreadyExists(labelGraphic.owner.id)) {
+                        var p = document.createElement('p');
+                        document.getElementById('scene').appendChild(p);
+                } else {
+                        var p = document.getElementById(labelGraphic.owner.id);
+                }
+
+                p.innerHTML = labelGraphic.labelText;
+                var bold;
+                if (labelGraphic.bold) {
+                        bold = "bold";   
+                } else {
+                        bold = "";  
+                }
+                p.id = labelGraphic.owner.id;
+                p.style.fontWeight = bold;
+                p.style.fontSize = labelGraphic.fontsize+'px';
+                setPosition(p,labelGraphic);      
+        }
+
+        // [To do] picturepath, scale.
+        function renderButtonGraphic(buttonGraphic) {
+                if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
+                        var button = document.createElement('button');
+                        document.getElementById('scene').appendChild(button);
+                } else {
+                        var button = document.getElementById(buttonGraphic.owner.id);
+                }
+
+                var bold;
+                if (buttonGraphic.bold) {
+                        bold = "bold";   
+                } else {
+                        bold = "";  
+                }
+
+                button.style.fontWeight = bold;
+                button.innerHTML = buttonGraphic.labelText;
+                button.type = "button";
+                button.id = buttonGraphic.owner.id;
+                setPosition(button,buttonGraphic);
+        }
+
+        
+</script>
+
+<script>
+        function render(AGraphic) {
+                if (AGraphic["@type"] == "PictureGraphic") { //
+                        renderPictureGraphic(AGraphic);
+                }
+                if (AGraphic["@type"] == "LabelGraphic") { //
+                        renderLabelGraphic(AGraphic);
+                }
+                if (AGraphic["@type"] == "ButtonGraphic") { //
+                        renderButtonGraphic(AGraphic);
+                }
+        }
+</script>
+
+<script>
+         //Überlegung: Anstatt die Mausposition / Click übertragen, übertragen auf welche AGraphic gegklickt wurde (und mit welcher Maustaste)? Anhand Gameobject ID identifizieren.
+scene.addEventListener('click', function(event) {
+     var rect = scene.getBoundingClientRect();
+     var x = event.pageX - rect.left,
+     y = event.pageY - rect.top;
+     console.log("x =" +x +" y ="+y);
+
+     $.ajax({
+       url: "api/JSONEventGenerator.php?x="+x+"&y="+y+"&keycode="+"1",
+       type: "GET",//type of posting the data
+       success: function (data) {
+         //what to do in success
+       },
+       error: function(xhr, ajaxOptions, thrownError){
+          //what to do in error
+       },
+       timeout : 15000//timeout of the ajax call
+  });
+
+
+
+
+}, false);
+
+
+</script>
+
+</html>

@@ -1,9 +1,13 @@
 package Socket;
 
-import Socket.HttpSocket.Resource.HttpResource;
+import Socket.HttpSocket.SocketServerException;
 
 public interface IServerSocket {
-    void transmitBufferedResource(HttpResource data, boolean clear);
+    void transmit(IResource data, boolean clear);
     
-    void addReceiveDataListener(String uri, ISocketListener listener);
+    void addListener(String uri, ISocketListener listener);
+
+    void bind() throws SocketServerException;
+
+    void close() throws SocketServerException;
 }

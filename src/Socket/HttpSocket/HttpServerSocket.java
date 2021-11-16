@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
 
+import Socket.IResource;
 import Socket.IServerSocket;
 import Socket.ISocketListener;
 import Socket.HttpSocket.Resource.ABufferResource;
@@ -32,23 +33,23 @@ public class HttpServerSocket implements IServerSocket
         this._listeners = new HashMap<>();
     }
 
-    public void bind() throws HttpServerException {
+    public void bind() throws SocketServerException {
         if(this._server != null) {
-            throw new HttpServerException("Server has been already binded.");
+            throw new SocketServerException("Server has been already binded.");
         }
         try {
             String[] bindAddressPort = this._bindAddress.split(":");
             this._server = HttpServer.create(new InetSocketAddress(bindAddressPort[0], Integer.parseInt(bindAddressPort[1])), 0);
         }
         catch(IOException|NumberFormatException e) {
-            throw new HttpServerException(this.getClass().getName()+" initialization failed", e);
+            throw new SocketServerException(this.getClass().getName()+" initialization failed", e);
         }
         this._server.start();
     }
 
-    public void close() throws HttpServerException {
+    public void close() throws SocketServerException {
         if(this._server == null) {
-            throw new HttpServerException("Server hasn't been binded.");
+            throw new SocketServerException("Server hasn't been binded.");
         }
         this._server.stop(2);
         this._server = null;
@@ -126,7 +127,7 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmitBufferedResource(HttpResource data, boolean clear) {
+    public void transmit(IResource data, boolean clear) {
         HttpResource resource = this._resources.get(data.getResourcePath());
 
         if(resource == null) {
@@ -158,7 +159,7 @@ public class HttpServerSocket implements IServerSocket
         }
     }
 
-    public void addReceiveDataListener(String uri, ISocketListener listener) {
+    public void addListener(String uri, ISocketListener listener) {
         if(!this._resources.containsKey(uri)) {
             throw new IllegalArgumentException("Resource "+uri+" is undefined.");
         }

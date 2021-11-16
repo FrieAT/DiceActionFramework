@@ -3,7 +3,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import Socket.HttpSocket.HttpServerException;
+import Socket.HttpSocket.SocketServerException;
 import Socket.HttpSocket.HttpServerSocket;
 import Socket.HttpSocket.HttpResourceExistsException;
 import Socket.HttpSocket.Resource.DirectoryResource;
@@ -83,6 +83,15 @@ public class Demo {
         player1.addComponent(PlayerController.class);
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
+
+        //Pre-initialization.
+        JavaFXRenderer renderer = new JavaFXRenderer();
+        renderer.add(new PictureGraphicJavaFXRenderer());
+        renderer.add(new LabelGraphicJavaFXRenderer());
+        renderer.add(new ButtonGraphicJavaFXRenderer());
+        RenderManager.getInstance().addRenderer(renderer);
+
+        ASerializer jsonSerializer = new JsonSerializer();
         
         HttpServerSocket socket = new HttpServerSocket("localhost:1337");
         try {
@@ -94,47 +103,18 @@ public class Demo {
 
             socket.addResource(JsonBufferResource.class, "/bier");
         }
-        catch(HttpServerException|HttpResourceExistsException e) {
+        catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true) {
-                    JsonBufferResource resource = new JsonBufferResource(socket, "/bier", "{ \"example\": \"Hello World\" }");
-                    
-                    socket.transmitBufferedResource(resource, true);
+        ServerRenderer serverRenderer = new ServerRenderer();
+        serverRenderer.setSerializer(jsonSerializer);
+        serverRenderer.setSocket(socket);
+        RenderManager.getInstance().addRenderer(serverRenderer);
 
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-
-        //Pre-initialization.
-        /*
-        JavaFXRenderer renderer = new JavaFXRenderer();
-        renderer.add(new PictureGraphicJavaFXRenderer());
-        renderer.add(new LabelGraphicJavaFXRenderer());
-        renderer.add(new ButtonGraphicJavaFXRenderer());
-        RenderManager.getInstance().setRenderer(renderer);
-
-         */
-        ASerializer jsonSerializer = new JsonSerializer();
-        ServerRenderer serverRenderer = new ServerRenderer(jsonSerializer);
-        serverRenderer.add(new ServerRenderer(jsonSerializer));
-        RenderManager.getInstance().setRenderer(serverRenderer);
-
-        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
 
-         */
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());

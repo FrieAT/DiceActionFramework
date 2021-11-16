@@ -2,20 +2,31 @@ import javafx.scene.Node;
 
 import java.util.ArrayList;
 
+import Socket.IServerSocket;
+import Socket.ISocketListener;
+import Socket.HttpSocket.SocketServerException;
+
 public class ServerRenderer extends AGraphicRenderer {
 
     private ASerializer serializer;
 
     StringBuilder fetchFrame;
 
-    public ServerRenderer(ASerializer serializer) {
+    private IServerSocket _socket;
+
+    public ServerRenderer() {
         this.fetchFrame = new StringBuilder();
-        this.serializer = serializer;
+        this.serializer = null;
+        this._socket = null;
     }
 
-    public ASerializer getSerializer() {
-        return this.serializer;
-    }
+    public ASerializer getSerializer() { return this.serializer; }
+
+    public void setSerializer(ASerializer serializer) { this.serializer = serializer; }
+
+    public IServerSocket getSocket() { return this._socket; }
+
+    public void setSocket(IServerSocket socket) { this._socket = socket; }
 
     @Override
     public boolean beforeRender() {
@@ -50,6 +61,16 @@ public class ServerRenderer extends AGraphicRenderer {
 
     @Override
     public void Init() {
+        if(this._socket == null) {
+            throw new NullPointerException("Please set a "+IServerSocket.class.getName()+" for "+this.getClass().getName());
+        }
+
+        if(this.serializer == null) {
+            throw new NullPointerException("Please set a "+ASerializer.class.getName()+" for "+this.getClass().getName());
+        }
+
+        //FIXME: Shouldn't be the socket bind-ed here?
+
         fetchFrame.append("[");
     }
 

@@ -1,5 +1,7 @@
+import java.util.LinkedList;
+
 public class RenderManager extends AbstractManager {
-	private AGraphicRenderer renderer;
+	private LinkedList<AGraphicRenderer> renderer;
 
     private long _lastRenderedTime;
 
@@ -16,13 +18,13 @@ public class RenderManager extends AbstractManager {
     public RenderManager() { // JavaFXRenderer
         super();
         
-        this.renderer = null;
+        this.renderer = new LinkedList<>();
         this._lastRenderedTime = 0;
         this._currentRenderedTime = 0;
     }
 
-    public void setRenderer(AGraphicRenderer renderer) {
-        this.renderer = renderer;
+    public void addRenderer(AGraphicRenderer renderer) {
+        this.renderer.add(renderer);
     }
 
     public synchronized void setRenderedTime(long now) {
@@ -64,33 +66,43 @@ public class RenderManager extends AbstractManager {
 
     @Override
     public void init() {
-        this.renderer.Init();
+        for(AGraphicRenderer renderer : this.renderer) {
+            renderer.Init();
+        }
     }
     
     @Override
     public void update() {
-        if(!this.renderer.beforeRender()) {
-            return;
-        }
-        
-    	for (GameObject gameObject: gameObjects) {
-    	    if (!gameObject.isEnabled())
-    	        continue;
-    		AGraphic graphic = gameObject.getComponent(AGraphic.class);
-
-            if(graphic == null) {
-                //TODO: Exception if not an AGraphic component.
-                continue;
+        for(AGraphicRenderer renderer : this.renderer) {
+            if(!renderer.beforeRender()) {
+                return;
             }
             
-            this.renderer.render(graphic);
-    	}
-
-        this.renderer.afterRender();
+            for (GameObject gameObject: gameObjects) {
+                if (!gameObject.isEnabled())
+                    continue;
+                AGraphic graphic = gameObject.getComponent(AGraphic.class);
+    
+                if(graphic == null) {
+                    //TODO: Exception if not an AGraphic component.
+                    continue;
+                }
+                
+                renderer.render(graphic);
+            }
+    
+            renderer.afterRender();
+        }
     }
 
-    public AGraphicRenderer getRenderer() {
-        return this.renderer;
+    @SuppressWarnings("unchecked")
+    public <T extends AGraphicRenderer> T getRenderer(Class<T> rendererClass) {
+        for(AGraphicRenderer otherRenderer : this.renderer) {
+            if(rendererClass.isAssignableFrom(otherRenderer.getClass())) {
+                return (T)otherRenderer;
+            }
+        }
+        return null;
     }
 
     

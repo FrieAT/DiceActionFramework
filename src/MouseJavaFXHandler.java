@@ -11,7 +11,7 @@ public class MouseJavaFXHandler extends AInputHandler {
     
     @Override
     public void init() {
-        JavaFXRenderer renderer = (JavaFXRenderer)RenderManager.getInstance().getRenderer();
+        JavaFXRenderer renderer = RenderManager.getInstance().getRenderer(JavaFXRenderer.class);
         if(renderer == null) {
             throw new NullPointerException(this.getClass().getName()+" benötigt einen JavaFXRenderer.");
         }

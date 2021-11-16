@@ -3,12 +3,13 @@ package Socket.HttpSocket.Resource;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import Socket.IResource;
 import Socket.HttpSocket.HttpServerSocket;
 
 public abstract class ABufferResource extends HttpResource {
     protected String _buffer;
     
-    private Queue<HttpResource> _bufferList;
+    private Queue<IResource> _bufferList;
 
     protected ABufferResource() {
         this._bufferList = new LinkedList<>();
@@ -32,7 +33,7 @@ public abstract class ABufferResource extends HttpResource {
         return data.getBytes();
     }
 
-    public void writeBuffer(HttpResource resource) {
+    public void writeBuffer(IResource resource) {
         this._bufferList.add(resource);
     }
 
