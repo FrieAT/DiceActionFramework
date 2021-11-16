@@ -167,10 +167,10 @@ public class HttpServerSocket implements IServerSocket
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         //FIXME: What if key already exists and was defined as null?
         if(list == null) {
-            list = this._listeners.put(uri, new LinkedList<>());
+            this._listeners.put(uri, new LinkedList<>());
         }
 
-        list.add(listener);
+        this._listeners.get(uri).add(listener);
     }
 
     public HttpServer getSocket() { return this._server; }

@@ -1,12 +1,10 @@
-import javafx.scene.Node;
-
-import java.util.ArrayList;
-
+import Socket.IResource;
 import Socket.IServerSocket;
 import Socket.ISocketListener;
-import Socket.HttpSocket.SocketServerException;
+import Socket.HttpSocket.HttpServerSocket;
+import Socket.HttpSocket.Resource.JsonBufferResource;
 
-public class ServerRenderer extends AGraphicRenderer {
+public class ServerRenderer extends AGraphicRenderer implements ISocketListener {
 
     private ASerializer serializer;
 
@@ -30,32 +28,26 @@ public class ServerRenderer extends AGraphicRenderer {
 
     @Override
     public boolean beforeRender() {
+        fetchFrame.append("[");
         return true;
     }
 
     @Override
     public void render(AGraphic g) {
-
-        for (AGraphicRenderer renderer : this._graphicRenderer) {
-            ServerRenderer serverRenderer = (ServerRenderer) renderer;
-
-            if (serverRenderer == null) {
-                System.out.println("WARNING: " + renderer.getClass().getName() + " != " + this.getClass().getName());
-                continue;
-            }
-
-            fetchFrame.append(serializer.serialize(g)).append(",");
-
-        }
+        fetchFrame.append(serializer.serialize(g)).append(",");
     }
 
     @Override
     public boolean afterRender() {
-        fetchFrame.replace(fetchFrame.length() - 1, fetchFrame.length(), "");
+        if(fetchFrame.length() > 0) {
+            fetchFrame.replace(fetchFrame.length() - 1, fetchFrame.length(), "");
+        }
         fetchFrame.append("]");
-        System.out.println(fetchFrame.toString());
+
+        JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._socket, "/api/fetchFrame.json", fetchFrame.toString());
+        this._socket.transmit(jsonBuffer, false);
+
         fetchFrame = new StringBuilder("");
-        Init();
         return true;
     }
 
@@ -71,10 +63,12 @@ public class ServerRenderer extends AGraphicRenderer {
 
         //FIXME: Shouldn't be the socket bind-ed here?
 
+        this._socket.addListener("/api/fetchFrame.json", this);
+
         fetchFrame.append("[");
     }
 
-    public Node renderAsSerialized(AGraphic g) {
-        throw new NullPointerException("Not implemented, implement this in derived subclass.");
+    public void onSocketTransmission(IResource resource) {
+
     }
 }

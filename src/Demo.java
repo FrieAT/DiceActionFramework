@@ -8,6 +8,7 @@ import Socket.HttpSocket.HttpServerSocket;
 import Socket.HttpSocket.HttpResourceExistsException;
 import Socket.HttpSocket.Resource.DirectoryResource;
 import Socket.HttpSocket.Resource.GifFileResource;
+import Socket.HttpSocket.Resource.HtmlFileResource;
 import Socket.HttpSocket.Resource.HttpResource;
 import Socket.HttpSocket.Resource.JpegFileResource;
 import Socket.HttpSocket.Resource.JsonBufferResource;
@@ -101,7 +102,9 @@ public class Demo {
             dir.addResource(PngFileResource.class);
             dir.addResource(GifFileResource.class);
 
-            socket.addResource(JsonBufferResource.class, "/bier");
+            socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
+            
+            socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
