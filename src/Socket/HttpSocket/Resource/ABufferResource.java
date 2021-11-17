@@ -33,6 +33,10 @@ public abstract class ABufferResource extends HttpResource {
         return data.getBytes();
     }
 
+    public void writeBuffer(String data) {
+        this._buffer = data;
+    }
+
     public void writeBuffer(IResource resource) {
         this._bufferList.add(resource);
     }

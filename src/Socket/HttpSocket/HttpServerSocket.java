@@ -2,6 +2,7 @@ package Socket.HttpSocket;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -146,12 +147,30 @@ public class HttpServerSocket implements IServerSocket
 
         bufferResource.writeBuffer(data);
     }
-    
+
     public void receiveData(HttpExchange exchange) {
         String uri = exchange.getRequestURI().getPath();
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         HttpResource resource = this._resources.get(uri);
-        
+
+        ABufferResource isBuffer = (ABufferResource)resource;
+        if(isBuffer != null) {
+            StringBuilder sb = new StringBuilder();
+            InputStream ios = exchange.getRequestBody();
+            int i;
+            try {
+                while (ios.available() > 0 && (i = ios.read()) != -1) {
+                    sb.append((char) i);
+                }
+            }
+            catch(IOException e) {
+                System.out.println("Error Reading POST Data: "+e.getMessage());
+                e.printStackTrace();
+            }
+
+            isBuffer.writeBuffer(sb.toString());
+        }
+
         if(list != null && resource != null) {
             for(ISocketListener listener : list) {
                 listener.onSocketTransmission(resource);

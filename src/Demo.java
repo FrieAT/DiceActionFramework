@@ -85,12 +85,16 @@ public class Demo {
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
-        //Pre-initialization.
+        //Pre-initialization
+
+        /*
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
+
+         */
 
         ASerializer jsonSerializer = new JsonSerializer();
         
@@ -105,6 +109,8 @@ public class Demo {
             socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
             
             socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
+
+            socket.addResource(JsonBufferResource.class, "/api/event.json");
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
@@ -115,8 +121,13 @@ public class Demo {
         serverRenderer.setSocket(socket);
         RenderManager.getInstance().addRenderer(serverRenderer);
 
+        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
+
+         */
+
+
 
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
