@@ -8,7 +8,7 @@ public class ClassicDice extends ADice {
 
     @Override
     public void start() {
-
+        super.start();
     }
 
 }

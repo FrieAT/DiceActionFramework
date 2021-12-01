@@ -26,7 +26,25 @@ public class ADiceBag extends ADice implements IDice {
     }
 
     @Override
-    public void setGameObject(GameObject owner) {
-
+    public void start() {
+        for (ADice dice : dices) {
+            dice.setGameObject(this.getGameObject());
+            dice.start();
+        }
     }
+
+    @Override
+    public void setGameObject(GameObject owner) {
+        this.owner = owner;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (ADice dice : dices) {
+            s.append(dice.toString()).append("\n");
+        }
+        return s.toString();
+    }
+
 }
+

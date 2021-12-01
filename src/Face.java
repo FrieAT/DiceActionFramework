@@ -10,6 +10,8 @@ public class Face {
         picture.setPicturePath(faceResPath);
         picture.setWidth(20);
         picture.setHeight(20);
+        System.out.println(picture.owner);
+        //picture.setTop(50);
 
         this.value = value;
         this.picture = picture;
