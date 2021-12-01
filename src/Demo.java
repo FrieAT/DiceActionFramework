@@ -60,10 +60,18 @@ public class Demo {
         gameNameLabel.setLabelText("Okay?");
         gameName2.getTransform().setPosition(new Vector2(400, 50));
 
+        /*
         GameObject g1 = new GameObject("Wuerfel");
         g1.addComponent(ClassicDice.class);
         g1.getTransform().setPosition(new Vector2(600, 600));
         g1.getTransform().setScale(new Vector2(4, 4));
+
+         */
+
+        GameObject g2 = new GameObject("Wuerfel");
+        g2.addComponent(POTCDiceBag.class);
+        g2.getTransform().setPosition(new Vector2(400, 400));
+        g2.getTransform().setScale(new Vector2(15, 15));
 
         GameObject rollButton = new GameObject("Roll_Button");
         ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
