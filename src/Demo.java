@@ -69,7 +69,7 @@ public class Demo {
          */
 
         GameObject g2 = new GameObject("Wuerfel");
-        g2.addComponent(POTCDiceBag.class);
+        g2.addComponent(ClassicDice.class);
         g2.getTransform().setPosition(new Vector2(400, 400));
         g2.getTransform().setScale(new Vector2(15, 15));
 
