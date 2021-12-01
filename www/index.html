@@ -36,10 +36,20 @@
                     dataType: 'json',
                     success: function (AGraphicArray) {     
                         // document.getElementById("scene").innerHTML = ""; // Delete all elements in the scene.                 
+                            var updatedIds = {};
+
                             for(var i = 0; i < AGraphicArray.length; i++){ // < or <=
                                  console.log(AGraphicArray[i]); // Object
-                                 render(AGraphicArray[i]);                      
+                                 render(AGraphicArray[i]);
+                                 updatedIds[""+AGraphicArray[i].owner.id] = true;
                             }
+
+                            $("#scene").find(".graphic").each(function(index, element){
+                                var gameObjectId = $(element).attr("id");
+                                if(updatedIds[gameObjectId] === undefined) {
+                                     $(element).remove();
+                                }
+                            });
 
                             confirmRenderdFrame(++frameid) //   //[To do?] Send server message that it was renderd using real frameID                          
                     },
@@ -81,6 +91,7 @@
                 if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
                         var htmlImageElement = new Image(0, 0);
                         document.getElementById("scene").appendChild(htmlImageElement); 
+                        $(htmlImageElement).addClass("graphic");
                 } else {
                         var htmlImageElement = document.getElementById(pictureGraphic.owner.id);
                 }
@@ -95,6 +106,7 @@
                 if (!ObjectAlreadyExists(labelGraphic.owner.id)) {
                         var p = document.createElement('p');
                         document.getElementById('scene').appendChild(p);
+                        $(p).addClass("graphic");
                 } else {
                         var p = document.getElementById(labelGraphic.owner.id);
                 }
@@ -117,6 +129,7 @@
                 if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
                         var button = document.createElement('button');
                         document.getElementById('scene').appendChild(button);
+                        $(button).addClass("graphic");
                 } else {
                         var button = document.getElementById(buttonGraphic.owner.id);
                 }
