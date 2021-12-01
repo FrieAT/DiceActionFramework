@@ -1,4 +1,7 @@
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,24 @@ public class JsonSerializer extends ASerializer {
                 }
             }
 
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(JsonElement.class)) {
+                    try {
+                        Object o = method.invoke(object);
+
+                        if (o != null && (AbstractComponent.class.isAssignableFrom(o.getClass())
+                        || o.getClass() == GameObject.class
+                        || o.getClass() == Vector2.class))
+                            jsonElementsMap.put(getKey(method), getString(o));
+                        else
+                            jsonElementsMap.put(getKey(method), Objects.toString(o));
+                    }
+                    catch(InvocationTargetException e) {
+                        //Ignore invocation error, because we only support methods with no argument.
+                    }
+                }
+            }
+
             if (object.getClass() != TransformComponent.class)
                 clazz = clazz.getSuperclass();
             else
@@ -47,5 +68,11 @@ public class JsonSerializer extends ASerializer {
         String value = field.getAnnotation(JsonElement.class)
                 .key();
         return value.isEmpty() ? field.getName() : value;
+    }
+
+    private String getKey(Method method) {
+        String value = method.getAnnotation(JsonElement.class)
+                .key();
+        return value.isEmpty() ? method.getName() : value;
     }
 }

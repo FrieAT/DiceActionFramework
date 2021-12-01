@@ -69,8 +69,8 @@
         
         function setPosition(HTMLelement,AGraphic) {
                 HTMLelement.style.position = 'absolute';
-                HTMLelement.style.left = AGraphic.owner.transform.position.x+'px';
-                HTMLelement.style.top = AGraphic.owner.transform.position.y+'px';
+                HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x+'px';
+                HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y+'px';
                 HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
                 HTMLelement.style.zIndex = AGraphic.renderingLayer
                 HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x;

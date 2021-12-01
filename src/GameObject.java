@@ -26,15 +26,20 @@ public class GameObject {
 
     public static void startAll() {
         if(_gameObjects != null) {
-            for(GameObject g : _gameObjects) {
-                g.start();
+            //FIXME: Switched from iterator to array due to ConcurrentModificationException
+            //FIXME: Please think about future "create/deletion"-Lists to work on after start.
+            for(int i = 0; i < _gameObjects.size(); i++) {
+                _gameObjects.get(i).start();
             }
         }
     }
 
     public static void updateAll() {
         if(_gameObjects != null) {
-            for(GameObject g : _gameObjects) {
+            //FIXME: Switched from iterator to array due to ConcurrentModificationException
+            //FIXME: Please think about future "create/deletion"-Lists to work on after update cycle.
+            for(int i = 0; i < _gameObjects.size(); i++) {
+                GameObject g = _gameObjects.get(i);
                 if (!g.enabled)
                     continue;
                 g.update();
