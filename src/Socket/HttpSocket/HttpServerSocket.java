@@ -153,24 +153,6 @@ public class HttpServerSocket implements IServerSocket
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         HttpResource resource = this._resources.get(uri);
 
-        ABufferResource isBuffer = (ABufferResource)resource;
-        if(isBuffer != null) {
-            StringBuilder sb = new StringBuilder();
-            InputStream ios = exchange.getRequestBody();
-            int i;
-            try {
-                while (ios.available() > 0 && (i = ios.read()) != -1) {
-                    sb.append((char) i);
-                }
-            }
-            catch(IOException e) {
-                System.out.println("Error Reading POST Data: "+e.getMessage());
-                e.printStackTrace();
-            }
-
-            isBuffer.writeBuffer(sb.toString());
-        }
-
         if(list != null && resource != null) {
             for(ISocketListener listener : list) {
                 listener.onSocketTransmission(resource);

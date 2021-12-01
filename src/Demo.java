@@ -126,6 +126,7 @@ public class Demo {
         InputManager.getInstance().addInputHandler(input);
 
          */
+        InputManager.getInstance().addInputHandler(new MouseServerHandler());
 
 
 

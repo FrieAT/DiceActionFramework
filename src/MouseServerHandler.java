@@ -19,7 +19,7 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         ServerRenderer serverRenderer = RenderManager.getInstance().getRenderer(ServerRenderer.class);
         IServerSocket socket = serverRenderer.getSocket();
 
-        socket.addListener("api/event.json", this);
+        socket.addListener("/api/event.json", this);
 
     }
 
@@ -27,7 +27,8 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         assert (resource.getClass() == JsonBufferResource.class);
         JsonBufferResource json = (JsonBufferResource) resource;
 
-        JSONObject jsonData = new JSONObject(new String(json.getBufferedData()));
+        String jsonString = new String(json.getBufferedData());
+        JSONObject jsonData = new JSONObject(jsonString);
 
         // {"keycode":"1","x":"835","y":"662"}
         int keycode = jsonData.getInt("keycode");

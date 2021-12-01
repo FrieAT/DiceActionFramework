@@ -162,32 +162,22 @@
 
           obj = {
               keycode: "1",
-              x: "835",
-              y: "662"
+              x: ""+x,
+              y: ""+y
           }
-          obj.x = x;
-          obj.y = y;
-          obj.keycode = 1;
-
-          var objJason = JSON.stringify(obj);
-          console.log(objJason);
 
           $.ajax({
               type: "POST",
               url: "api/event.json",
+              contentType: "application/json; charset=UTF-8",
               dataType: "json",
-              data: {
-                  o: obj
-              },
+              data: { data: JSON.stringify(obj) },
               success: function (data) {
-                  alert('Success');
-
+                  console.log("Success")
+                  console.log("Data: "+data);
               },
               error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                console.log('Error Event');
+                
               }
           });
 
