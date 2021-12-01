@@ -46,6 +46,14 @@ public abstract class ADice extends AbstractComponent implements IDice {
         }
     }
 
+    public void setPosition(double x, double y) {
+        this.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(x, y));
+    }
+
+    public Vector2 getPosition() {
+        return this.getTopFace().getPictureGraphic().getTransform().getPosition();
+    }
+
     public boolean removeFace(Face face) {
         //TODO: Delete GameObject.
         return diceFaces.remove(face);

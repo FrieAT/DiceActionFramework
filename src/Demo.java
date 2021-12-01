@@ -68,12 +68,13 @@ public class Demo {
 
          */
 
+        /**
+         * TODO: Change the way the Controller takes a dice. Not only with keyword "Wuerfel".
+         */
         GameObject g2 = new GameObject("Wuerfel");
-        g2.addComponent(ClassicDice.class);
+        g2.addComponent(POTCDiceBag.class);
         g2.getTransform().setPosition(new Vector2(400, 400));
         g2.getTransform().setScale(new Vector2(15, 15));
-
-
 
         GameObject rollButton = new GameObject("Roll_Button");
         ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
@@ -82,6 +83,7 @@ public class Demo {
         buttonG.setHeight(50);
         rollButton.getTransform().setPosition(new Vector2(800, 600));
         rollButton.addComponent(RollDiceButtonController.class);
+
 
         GameObject player1 = new GameObject("PlayerOne");
         PictureGraphic playerGraphic = player1.addComponent(PictureGraphic.class);

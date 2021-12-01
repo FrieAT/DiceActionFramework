@@ -9,11 +9,12 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void roll() {
-        int i = 50;
-        for (ADice dice : dices) {
-            dice.roll();
-            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(i, 50));
-            i += 30;
+        dices.get(0).roll();
+        setNewPosition(dices.get(0), this.getGameObject().getTransform().getPosition());
+
+        for (int i = 1; i < dices.size(); i++) {
+            dices.get(i).roll();
+            setNewPosition(dices.get(i), dices.get(i-1).getPosition());
         }
     }
 
@@ -31,12 +32,17 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void start() {
-        int x = 50;
-        for (ADice dice : dices) {
-            dice.start();
-            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(x, 50));
-            x += 30;
+        dices.get(0).start();
+        setNewPosition(dices.get(0), this.getGameObject().getTransform().getPosition());
+
+        for (int i = 1; i < dices.size(); i++) {
+            dices.get(i).start();
+            setNewPosition(dices.get(i), dices.get(i-1).getPosition());
         }
+    }
+
+    public void setNewPosition(ADice dice, Vector2 previousPos) {
+        dice.setPosition(previousPos.x + 30, previousPos.y);
     }
 }
 

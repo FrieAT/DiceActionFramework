@@ -37,6 +37,8 @@ public class DiceManager extends AbstractManager {
     @Override
     public void update() {
         for (GameObject gameObject : gameObjects) {
+            if (gameObject == null)
+                continue;
             if (!gameObject.isEnabled())
                 continue;
             gameObject.update();
