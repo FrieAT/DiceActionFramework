@@ -155,7 +155,7 @@ public class Demo {
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {
-                Thread.sleep(1000);
+                Thread.sleep(33);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

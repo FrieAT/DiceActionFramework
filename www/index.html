@@ -27,7 +27,7 @@
         }
 
 
-        var interval = 1000;  // Get new Frame from server every [invterval]  milliseconds
+        var interval = 100;  // Get new Frame from server every [invterval]  milliseconds
         function doAjax() {
             $.ajax({
                     type: 'POST',
@@ -177,7 +177,10 @@
                   console.log("Data: "+data);
               },
               error: function (jqXHR, textStatus, errorThrown) {
-                
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Error Event');
               }
           });
 
