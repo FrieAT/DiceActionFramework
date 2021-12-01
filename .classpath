@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/javafx.media.jar"/>
 	<classpathentry kind="lib" path="lib/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="lib/json-20210307.jar"/>
 	<classpathentry kind="output" path="out/production/GameFramework"/>
 </classpath>

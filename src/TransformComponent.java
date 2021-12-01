@@ -42,6 +42,7 @@ public class TransformComponent extends AbstractComponent {
         return parentTransform;
     }
 
+    @JsonElement(key = "globalPosition")
     public Vector2 getGlobalPosition() {
         TransformComponent parentTransform = this.getParentTransform();
         
@@ -53,6 +54,7 @@ public class TransformComponent extends AbstractComponent {
         return globalPosition; 
     }
 
+    @JsonElement(key = "globalRotation")
     public double getGlobalRotation() {
         TransformComponent parentTransform = this.getParentTransform();
         

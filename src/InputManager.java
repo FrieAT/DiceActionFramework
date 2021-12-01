@@ -34,13 +34,14 @@ public class InputManager extends AbstractManager
     }
     
     public <T extends AInputEvent> boolean add(Class<T> clazz, IInputListener listener) {
+        boolean registered = false;
         for(AInputHandler handler : this._inputs) {
             if(handler.getInputEventType() == clazz) {
                 handler.registerListener(listener);
-                return true;
+                registered = true;
             }
         }
-        return false;
+        return registered;
     }
 
     @Override
