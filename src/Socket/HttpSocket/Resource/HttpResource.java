@@ -51,6 +51,8 @@ public abstract class HttpResource implements HttpHandler, IResource
     }
 
     public void handle(HttpExchange exchange) throws IOException {
+        this.getSocket().receiveData(exchange);
+        
         byte[] response = getBufferedData();
 
         exchange.getResponseHeaders().add("Content-type", this.getContentType()); 
@@ -60,7 +62,5 @@ public abstract class HttpResource implements HttpHandler, IResource
         {
             buffer.write(response);
         }
-
-        this.getSocket().receiveData(exchange);
     }
 }

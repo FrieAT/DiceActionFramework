@@ -27,7 +27,7 @@
         }
 
 
-        var interval = 1000;  // Get new Frame from server every [invterval]  milliseconds
+        var interval = 100;  // Get new Frame from server every [invterval]  milliseconds
         function doAjax() {
             $.ajax({
                     type: 'POST',
@@ -152,32 +152,44 @@
         }
 </script>
 
-<script>
-         //Überlegung: Anstatt die Mausposition / Click übertragen, übertragen auf welche AGraphic gegklickt wurde (und mit welcher Maustaste)? Anhand Gameobject ID identifizieren.
-scene.addEventListener('click', function(event) {
-     var rect = scene.getBoundingClientRect();
-     var x = event.pageX - rect.left,
-     y = event.pageY - rect.top;
-     console.log("x =" +x +" y ="+y);
+  <script>
+      //Überlegung: Anstatt die Mausposition / Click übertragen, übertragen auf welche AGraphic gegklickt wurde (und mit welcher Maustaste)? Anhand Gameobject ID identifizieren.
+      scene.addEventListener('click', function(event) {
+          var rect = scene.getBoundingClientRect();
+          var x = event.pageX - rect.left,
+              y = event.pageY - rect.top;
+          console.log("x =" +x +" y ="+y);
 
-     $.ajax({
-       url: "api/JSONEventGenerator.php?x="+x+"&y="+y+"&keycode="+"1",
-       type: "GET",//type of posting the data
-       success: function (data) {
-         //what to do in success
-       },
-       error: function(xhr, ajaxOptions, thrownError){
-          //what to do in error
-       },
-       timeout : 15000//timeout of the ajax call
-  });
+          obj = {
+              keycode: "1",
+              x: ""+x,
+              y: ""+y
+          }
+
+          $.ajax({
+              type: "POST",
+              url: "api/event.json",
+              contentType: "application/json; charset=UTF-8",
+              dataType: "json",
+              data: { data: JSON.stringify(obj) },
+              success: function (data) {
+                  console.log("Success")
+                  console.log("Data: "+data);
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Error Event');
+              }
+          });
 
 
 
 
-}, false);
+      }, false);
 
 
-</script>
+  </script>
 
 </html>

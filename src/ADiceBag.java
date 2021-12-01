@@ -9,8 +9,12 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void roll() {
-        for (ADice dice : dices)
+        int i = 50;
+        for (ADice dice : dices) {
             dice.roll();
+            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(i, 50));
+            i += 30;
+        }
     }
 
     public boolean add(ADice dice) {
@@ -27,24 +31,12 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void start() {
+        int x = 50;
         for (ADice dice : dices) {
-            dice.setGameObject(this.getGameObject());
             dice.start();
+            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(x, 50));
+            x += 30;
         }
     }
-
-    @Override
-    public void setGameObject(GameObject owner) {
-        this.owner = owner;
-    }
-
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (ADice dice : dices) {
-            s.append(dice.toString()).append("\n");
-        }
-        return s.toString();
-    }
-
 }
 

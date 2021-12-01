@@ -45,7 +45,7 @@ public class ServerRenderer extends AGraphicRenderer implements ISocketListener 
         fetchFrame.append("]");
 
         JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._socket, "/api/fetchFrame.json", fetchFrame.toString());
-        this._socket.transmit(jsonBuffer, false);
+        this._socket.transmit(jsonBuffer, true);
 
         fetchFrame = new StringBuilder("");
         return true;

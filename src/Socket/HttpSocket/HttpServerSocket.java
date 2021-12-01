@@ -2,6 +2,7 @@ package Socket.HttpSocket;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -146,12 +147,12 @@ public class HttpServerSocket implements IServerSocket
 
         bufferResource.writeBuffer(data);
     }
-    
+
     public void receiveData(HttpExchange exchange) {
         String uri = exchange.getRequestURI().getPath();
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         HttpResource resource = this._resources.get(uri);
-        
+
         if(list != null && resource != null) {
             for(ISocketListener listener : list) {
                 listener.onSocketTransmission(resource);

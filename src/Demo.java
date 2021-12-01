@@ -60,10 +60,20 @@ public class Demo {
         gameNameLabel.setLabelText("Okay?");
         gameName2.getTransform().setPosition(new Vector2(400, 50));
 
+        /*
         GameObject g1 = new GameObject("Wuerfel");
         g1.addComponent(ClassicDice.class);
         g1.getTransform().setPosition(new Vector2(600, 600));
         g1.getTransform().setScale(new Vector2(4, 4));
+
+         */
+
+        GameObject g2 = new GameObject("Wuerfel");
+        g2.addComponent(POTCDiceBag.class);
+        g2.getTransform().setPosition(new Vector2(400, 400));
+        g2.getTransform().setScale(new Vector2(15, 15));
+
+
 
         GameObject rollButton = new GameObject("Roll_Button");
         ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
@@ -85,12 +95,16 @@ public class Demo {
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
-        //Pre-initialization.
+        //Pre-initialization
+
+        /*
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
+
+         */
 
         ASerializer jsonSerializer = new JsonSerializer();
         
@@ -105,6 +119,8 @@ public class Demo {
             socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
             
             socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
+
+            socket.addResource(JsonBufferResource.class, "/api/event.json");
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
@@ -115,8 +131,14 @@ public class Demo {
         serverRenderer.setSocket(socket);
         RenderManager.getInstance().addRenderer(serverRenderer);
 
+        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
+
+         */
+        InputManager.getInstance().addInputHandler(new MouseServerHandler());
+
+
 
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
@@ -143,7 +165,7 @@ public class Demo {
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {
-                Thread.sleep(1000);
+                Thread.sleep(33);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
