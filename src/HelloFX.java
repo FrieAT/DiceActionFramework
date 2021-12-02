@@ -2,6 +2,7 @@
 import java.io.File;
 import java.util.ArrayList;
 
+import DAF.Renderer.RenderManager;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

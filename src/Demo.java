@@ -3,16 +3,37 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import Socket.HttpSocket.SocketServerException;
-import Socket.HttpSocket.HttpServerSocket;
-import Socket.HttpSocket.HttpResourceExistsException;
-import Socket.HttpSocket.Resource.DirectoryResource;
-import Socket.HttpSocket.Resource.GifFileResource;
-import Socket.HttpSocket.Resource.HtmlFileResource;
-import Socket.HttpSocket.Resource.HttpResource;
-import Socket.HttpSocket.Resource.JpegFileResource;
-import Socket.HttpSocket.Resource.JsonBufferResource;
-import Socket.HttpSocket.Resource.PngFileResource;
+import DAF.AbstractManager;
+import DAF.GameObject;
+import DAF.Controller.Components.PlayerController;
+import DAF.Dice.DiceManager;
+import DAF.Dice.Components.ClassicDice;
+import DAF.Input.AInputHandler;
+import DAF.Input.InputManager;
+import DAF.Input.MouseJavaFXHandler;
+import DAF.Input.MouseServerHandler;
+import DAF.Math.Vector2;
+import DAF.Renderer.RenderManager;
+import DAF.Renderer.Components.ButtonGraphic;
+import DAF.Renderer.Components.LabelGraphic;
+import DAF.Renderer.Components.PictureGraphic;
+import DAF.Renderer.JavaFX.ButtonGraphicJavaFXRenderer;
+import DAF.Renderer.JavaFX.JavaFXRenderer;
+import DAF.Renderer.JavaFX.LabelGraphicJavaFXRenderer;
+import DAF.Renderer.JavaFX.PictureGraphicJavaFXRenderer;
+import DAF.Renderer.Server.ServerRenderer;
+import DAF.Serializer.ASerializer;
+import DAF.Serializer.JsonSerializer;
+import DAF.Socket.HttpSocket.HttpResourceExistsException;
+import DAF.Socket.HttpSocket.HttpServerSocket;
+import DAF.Socket.HttpSocket.SocketServerException;
+import DAF.Socket.HttpSocket.Resource.DirectoryResource;
+import DAF.Socket.HttpSocket.Resource.GifFileResource;
+import DAF.Socket.HttpSocket.Resource.HtmlFileResource;
+import DAF.Socket.HttpSocket.Resource.HttpResource;
+import DAF.Socket.HttpSocket.Resource.JpegFileResource;
+import DAF.Socket.HttpSocket.Resource.JsonBufferResource;
+import DAF.Socket.HttpSocket.Resource.PngFileResource;
 import javafx.scene.transform.Transform;
 
 public class Demo {
@@ -34,7 +55,7 @@ public class Demo {
 
         
         PictureGraphic bgImage = background.addComponent(PictureGraphic.class);
-        bgImage.setPicturePath("images/gameboard.png");
+        //bgImage.setPicturePath("images/gameboard.png");
         bgImage.setWidth(1024);
         bgImage.setHeight(768);
         bgImage.setLeft(0);
@@ -70,8 +91,9 @@ public class Demo {
 
         GameObject g2 = new GameObject("Wuerfel");
         g2.addComponent(ClassicDice.class);
-        g2.getTransform().setPosition(new Vector2(400, 400));
+        g2.getTransform().setPosition(new Vector2(800, 400));
         g2.getTransform().setScale(new Vector2(15, 15));
+        g2.addComponent(StupidComponent.class);
 
         GameObject rollButton = new GameObject("Roll_Button");
         ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
@@ -94,15 +116,11 @@ public class Demo {
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
         //Pre-initialization
-
-        /*
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
-
-         */
 
         ASerializer jsonSerializer = new JsonSerializer();
         
@@ -129,11 +147,8 @@ public class Demo {
         serverRenderer.setSocket(socket);
         RenderManager.getInstance().addRenderer(serverRenderer);
 
-        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
-
-         */
         InputManager.getInstance().addInputHandler(new MouseServerHandler());
 
 

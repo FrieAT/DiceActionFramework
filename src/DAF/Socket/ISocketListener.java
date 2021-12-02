@@ -1,4 +1,4 @@
-package Socket;
+package DAF.Socket;
 
 public interface ISocketListener {
     void onSocketTransmission(IResource resource);

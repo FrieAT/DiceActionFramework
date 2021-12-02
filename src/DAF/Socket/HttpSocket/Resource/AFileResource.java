@@ -1,10 +1,10 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import Socket.HttpSocket.HttpServerSocket;
+import DAF.Socket.HttpSocket.HttpServerSocket;
 
 public abstract class AFileResource extends HttpResource
 {

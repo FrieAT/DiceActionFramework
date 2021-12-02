@@ -1,14 +1,15 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpServer;
+
+import DAF.Socket.IResource;
+import DAF.Socket.HttpSocket.HttpServerSocket;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-
-import Socket.IResource;
-import Socket.HttpSocket.HttpServerSocket;
 
 public abstract class HttpResource implements HttpHandler, IResource
 {

@@ -1,4 +1,4 @@
-package Socket.HttpSocket;
+package DAF.Socket.HttpSocket;
 
 import java.io.IOException;
 

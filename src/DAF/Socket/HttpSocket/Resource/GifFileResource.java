@@ -1,8 +1,8 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.File;
 
-import Socket.HttpSocket.HttpServerSocket;
+import DAF.Socket.HttpSocket.HttpServerSocket;
 
 public class GifFileResource extends AFileResource
 {

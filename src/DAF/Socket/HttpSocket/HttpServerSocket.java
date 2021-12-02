@@ -1,4 +1,4 @@
-package Socket.HttpSocket;
+package DAF.Socket.HttpSocket;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,14 +8,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpExchange;
 
-import Socket.IResource;
-import Socket.IServerSocket;
-import Socket.ISocketListener;
-import Socket.HttpSocket.Resource.ABufferResource;
-import Socket.HttpSocket.Resource.AFileResource;
-import Socket.HttpSocket.Resource.HttpResource;
+import DAF.Socket.IResource;
+import DAF.Socket.IServerSocket;
+import DAF.Socket.ISocketListener;
+import DAF.Socket.HttpSocket.Resource.ABufferResource;
+import DAF.Socket.HttpSocket.Resource.AFileResource;
+import DAF.Socket.HttpSocket.Resource.HttpResource;
+
+import com.sun.net.httpserver.HttpExchange;
 
 public class HttpServerSocket implements IServerSocket
 {

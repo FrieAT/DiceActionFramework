@@ -1,10 +1,10 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import Socket.HttpSocket.HttpServerSocket;
+import DAF.Socket.HttpSocket.HttpServerSocket;
 
 public class JsonBufferResource extends ABufferResource {
     public JsonBufferResource(HttpServerSocket server, String path) {

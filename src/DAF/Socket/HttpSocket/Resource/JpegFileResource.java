@@ -1,11 +1,11 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.File;
 import java.io.IOException;
 
-import Socket.HttpSocket.HttpServerSocket;
-
 import com.sun.net.httpserver.HttpExchange;
+
+import DAF.Socket.HttpSocket.HttpServerSocket;
 
 public class JpegFileResource extends AFileResource
 {

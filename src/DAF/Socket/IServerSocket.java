@@ -1,6 +1,6 @@
-package Socket;
+package DAF.Socket;
 
-import Socket.HttpSocket.SocketServerException;
+import DAF.Socket.HttpSocket.SocketServerException;
 
 public interface IServerSocket {
     void transmit(IResource data, boolean clear);

@@ -1,4 +1,4 @@
-package Socket.HttpSocket.Resource;
+package DAF.Socket.HttpSocket.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -6,10 +6,10 @@ import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import Socket.IResource;
-import Socket.HttpSocket.HttpServerSocket;
-
 import com.sun.net.httpserver.HttpExchange;
+
+import DAF.Socket.IResource;
+import DAF.Socket.HttpSocket.HttpServerSocket;
 
 public abstract class ABufferResource extends HttpResource {
     protected String _buffer;
