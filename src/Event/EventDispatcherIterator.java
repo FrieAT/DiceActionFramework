@@ -71,8 +71,7 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
 
     @Override
     public boolean hasNext() {
-        // TODO Auto-generated method stub
-        return false;
+        return this._it.hasNext();
     }
 
     @Override
