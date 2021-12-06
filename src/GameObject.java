@@ -33,6 +33,11 @@ public class GameObject {
         _eventDelegates.add(delegate);
     }
 
+    @SuppressWarnings("unchecked")
+    public static Iterable<GameObject> getGameObjects() {
+        return (Iterable<GameObject>)GameObject.iterator();
+    }
+
     public static Iterator<GameObject> iterator() {
         return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
     }

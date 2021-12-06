@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Custom iterator witch dispatches events when accessing new elements from an iterator.
  */
-public class EventDispatcherIterator<E> implements Iterator<E> {
+public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
     public interface AnyEvent<E> { }
     
     public interface NextEvent<E> extends AnyEvent<E>
@@ -104,5 +104,10 @@ public class EventDispatcherIterator<E> implements Iterator<E> {
             }
         }
         this._it.remove();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return this;
     }
 }
