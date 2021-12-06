@@ -9,6 +9,11 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void roll() {
+
+        for (ADice dice : dices)
+            dice.roll();
+
+        /*
         dices.get(0).roll();
         setNewPosition(dices.get(0), this.getGameObject().getTransform().getPosition());
 
@@ -16,10 +21,18 @@ public class ADiceBag extends ADice implements IDice {
             dices.get(i).roll();
             setNewPosition(dices.get(i), dices.get(i-1).getPosition());
         }
+
+         */
+
+
     }
 
-    public boolean add(ADice dice) {
-        return dices.add(dice);
+    public <T extends ADice>
+    boolean add(Class<T> dice) {
+        GameObject go_dice = new GameObject("dice_" + dices.size() + 1, this.getGameObject());
+        T diceComp = go_dice.addComponent(dice);
+
+        return dices.add(diceComp);
     }
 
     public boolean remove(ADice dice) {
@@ -32,12 +45,23 @@ public class ADiceBag extends ADice implements IDice {
 
     @Override
     public void start() {
-        dices.get(0).start();
-        setNewPosition(dices.get(0), this.getGameObject().getTransform().getPosition());
+        DiceManager.getInstance().add(this);
 
-        for (int i = 1; i < dices.size(); i++) {
-            dices.get(i).start();
-            setNewPosition(dices.get(i), dices.get(i-1).getPosition());
+        if (this.getTransform().getPosition().x < 200
+                || this.getTransform().getPosition().x > 600) {
+            int y = 0;
+            for (ADice dice : dices) {
+                //dice.start();
+                dice.getTransform().setPosition(new Vector2(50, y));
+                y += 30;
+            }
+        } else {
+            int x = 0;
+            for (ADice dice : dices) {
+                //dice.start();
+                dice.getTransform().setPosition(new Vector2(x, 50));
+                x += 30;
+            }
         }
     }
 

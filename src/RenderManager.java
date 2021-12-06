@@ -14,7 +14,7 @@ public class RenderManager extends AbstractManager {
         return _instance;
     }
     
-    // Villeicht sollte das Framework weniger "generell" sein
+    // Vielleicht sollte das Framework weniger "generell" sein
     public RenderManager() { // JavaFXRenderer
         super();
         

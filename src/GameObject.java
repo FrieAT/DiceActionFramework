@@ -24,6 +24,16 @@ public class GameObject {
         return null;
     }
 
+    public static ArrayList<GameObject> findAll(String prefix) {
+        ArrayList<GameObject> found = new ArrayList<>();
+        for (GameObject g : _gameObjects) {
+            if (g.getName().startsWith(prefix))
+                found.add(g);
+        }
+
+        return found;
+    }
+
     public static void startAll() {
         if(_gameObjects != null) {
             //FIXME: Switched from iterator to array due to ConcurrentModificationException
@@ -96,7 +106,12 @@ public class GameObject {
         this.parent = parent;
     }
 
-    public int getId(){
+    public static void disableAll() {
+        for (GameObject g : _gameObjects)
+            g.setEnabled(false);
+    }
+
+    public int getId() {
         return this.id;
     }
 

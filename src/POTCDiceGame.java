@@ -4,11 +4,12 @@ import Socket.HttpSocket.Resource.*;
 import Socket.HttpSocket.SocketServerException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class POTCDiceGame {
 
-    static GameObject background = new GameObject("MainBackground");
+    static ArrayList<GameObject> views = new ArrayList<>();
 
     public static void main(String[] args) {
         start();
@@ -16,60 +17,154 @@ public class POTCDiceGame {
 
 
     public static void start() {
-        setUpStartScreen();
+        setUpInGameScreenV2();
+        init();
     }
 
     public static void setUpStartScreen() {
-        PictureGraphic bgImage = background.addComponent(PictureGraphic.class);
-        bgImage.setPicturePath("images/flying_dutchman.jpeg");
-        bgImage.setWidth(800);
-        bgImage.setHeight(600);
-        bgImage.setLeft(0);
-        bgImage.setTop(0);
 
-        GameObject gameName = new GameObject("GameName");
-        LabelGraphic gameNameLabel = gameName.addComponent(LabelGraphic.class);
-        gameNameLabel.setLeft(250);
-        gameNameLabel.setTop(0);
-        gameNameLabel.setFontSize(80);
-        gameNameLabel.setBold(true);
-        gameNameLabel.setLabelText("Pirates of the Caribbean");
-        gameName.getTransform().setPosition(new Vector2(300, 100));
+        GameObject mainMenuScreen = new GameObject("mainScreen");
+        View view = mainMenuScreen.addComponent(View.class);
 
-        GameObject button_startGame = new GameObject("Start_New_Game");
-        ButtonGraphic bg_startGame = button_startGame.addComponent(ButtonGraphic.class);
-        bg_startGame.setLabelText("Starrrt Game");
-        bg_startGame.setWidth(500);
-        bg_startGame.setHeight(80);
-        bg_startGame.setFontSize(20);
-        button_startGame.getTransform().setPosition(new Vector2(340, 400));
-        button_startGame.addComponent(StartGameButtonController.class);
+        view.addBackground("MenuBackground",
+                "images/flying_dutchman.jpeg",
+                800, 600,
+                0, 0
+        );
+        view.addLabel("GameTitle",
+                "Pirates of the Caribbean",
+                300, 100,
+                250, 0,
+                80, true
+        );
+        view.addButton("StartGame",
+                "Starrrt Game",
+                340, 400,
+                150, 80,
+                0, 0,
+                20,
+                StartGameButtonController.class
+        );
 
+        views.add(mainMenuScreen);
+    }
 
-        /**
-         * Roll Button Test
-         */
-        GameObject diceBag = new GameObject("Wuerfel");
-        diceBag.addComponent(POTCDiceBag.class);
-        diceBag.getTransform().setPosition(new Vector2(350, 540));
-        diceBag.getTransform().setScale(new Vector2(20, 20));
+    public static void setUpInGameScreen() {
+        GameObject inGameScreen = new GameObject("InGame");
+        View view = inGameScreen.addComponent(View.class);
 
-        GameObject rollButton = new GameObject("Roll_Button");
-        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
-        buttonG.setLabelText("Roll");
-        buttonG.setWidth(300);
-        buttonG.setHeight(50);
-        rollButton.getTransform().setPosition(new Vector2(350, 500));
-        rollButton.addComponent(RollDiceButtonController.class);
+        view.addBackground("InGameBackground",
+                "images/wooden_floor.jpg",
+                800, 600,
+                0, 0
+        );
 
-        /*
-        GameObject g1 = new GameObject("Wuerfel");
-        g1.addComponent(ClassicDice.class);
-        g1.getTransform().setPosition(new Vector2(50, 50));
-        g1.getTransform().setScale(new Vector2(50, 50));
+        view.addDice("Dice_1",
+                350, 475,
+                POTCDiceBag.class
+        );
 
-         */
+        view.addDice("Dice_2",
+                25, 250,
+                POTCDiceBag.class
+        );
 
+        view.addDice("Dice_3",
+                350, 25,
+                POTCDiceBag.class
+        );
+
+        view.addDice("Dice_4",
+                675, 250,
+                POTCDiceBag.class
+        );
+
+        view.addButton("Roll_Button",
+                "Roll",
+                400, 300,
+                100, 50,
+                0, 0,
+                30,
+                RollDiceButtonController.class
+        );
+
+        views.add(inGameScreen);
+    }
+
+    public static void setUpInGameScreenV2() {
+        GameObject inGameScreen = new GameObject("InGame");
+        View view = inGameScreen.addComponent(View.class);
+
+        view.addBackground("InGameBackground",
+                "images/wooden_floor.jpg",
+                800, 600,
+                0, 0
+        );
+
+        view.addDice("Dice_1",
+                350, 450,
+                POTCDiceBag.class
+        );
+
+        view.addDice("Dice_2",
+                25, 250,
+                POTCDiceBag.class
+        );
+
+        view.addDice("Dice_3",
+                350, 25,
+                POTCDiceBag.class
+        );
+
+        view.addDice("Dice_4",
+                650, 250,
+                POTCDiceBag.class
+        );
+
+        RollDiceButtonControllerV2 bc1 = new RollDiceButtonControllerV2("Dice_1");
+        RollDiceButtonControllerV2 bc2 = new RollDiceButtonControllerV2("Dice_2");
+        RollDiceButtonControllerV2 bc3 = new RollDiceButtonControllerV2("Dice_3");
+        RollDiceButtonControllerV2 bc4 = new RollDiceButtonControllerV2("Dice_4");
+
+        view.addButton("Roll_Button",
+                "Roll",
+                400, 550,
+                100, 50,
+                0, 0,
+                30,
+                bc1
+        );
+
+        view.addButton("Roll_Button",
+                "Roll",
+                25, 310,
+                100, 50,
+                0, 0,
+                30,
+                bc2
+        );
+
+        view.addButton("Roll_Button",
+                "Roll",
+                400, 25,
+                100, 50,
+                0, 0,
+                30,
+                bc3
+        );
+
+        view.addButton("Roll_Button",
+                "Roll",
+                730, 310,
+                100, 50,
+                0, 0,
+                30,
+                bc4
+        );
+
+    }
+
+    public static void init() {
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
         ASerializer jsonSerializer = new JsonSerializer();

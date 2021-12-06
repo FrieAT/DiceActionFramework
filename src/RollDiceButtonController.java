@@ -1,23 +1,35 @@
-import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RollDiceButtonController extends AbstractComponent implements IInputListener {
-    private ADice _dice;
+
+    private ArrayList<ADice> _dices = new ArrayList<>();
     
     @Override
     public void start() {
-        GameObject dice = GameObject.find("Wuerfel");
-        if(dice == null) {
-            throw new NullPointerException("Can't find the dice to roll.");
-        }
-        
-        ADice diceComponent = dice.getComponent(ADice.class);
-        if(diceComponent == null) {
-            throw new NullPointerException("Given gameObject doesn't own a dice-component.");
+
+        ArrayList<GameObject> dices = GameObject.findAll("Dice");
+
+        //System.out.println(_dices);
+
+        for (GameObject dice : dices) {
+            if (dice == null) {
+                throw new NullPointerException("Can't find the dice to roll.");
+            }
+
+            ADice diceComponent = dice.getComponent(ADice.class);
+
+            if (diceComponent == null) {
+                throw new NullPointerException("Given gameObject doesn't own a dice-component.");
+            }
+
+            this._dices.add(diceComponent);
         }
 
-        this._dice = diceComponent;
+        //this._dice = diceComponent;
 
         InputManager.getInstance().add(MouseInputEvent.class, this);
+
     }
     
     public void onInput(AInputEvent event) {
@@ -35,7 +47,8 @@ public class RollDiceButtonController extends AbstractComponent implements IInpu
             double yDist = buttonGraphic.getHeight()/2.0;
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
-                this._dice.roll();
+                for (ADice dice : _dices)
+                    dice.roll();
             }
         }
     }
