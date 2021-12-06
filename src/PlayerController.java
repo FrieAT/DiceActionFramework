@@ -1,12 +1,4 @@
-public class PlayerController extends AbstractComponent implements IController, IInputListener {
-    private static int playerCounter = 1; //FIXME: Better player id handling.
-    
-    private int _playerNo;
-
-    public PlayerController() {
-        this._playerNo = playerCounter++;
-    }
-
+public class PlayerController extends AbstractController implements IController, IInputListener {
     @Override
     public void start() {
         InputManager.getInstance().add(MouseInputEvent.class, this);
@@ -15,14 +7,6 @@ public class PlayerController extends AbstractComponent implements IController, 
     public int throwDice(ADice dice) {
         // TODO Auto-generated method stub
         return 0;
-    }
-
-    public void setPlayerNo(int playerNo) {
-        this._playerNo = playerNo;
-    }
-
-    public int getPlayerNo() {
-        return this._playerNo;
     }
 
     public void onInput(AInputEvent event) {

@@ -12,7 +12,9 @@ public class EventDispatcherIterator<E> implements Iterator<E> {
     
     public interface NextEvent<E> extends AnyEvent<E>
     {
-        void onNext(E obj);
+        void onBeforeNext(E obj);
+        
+        void onAfterNext(E obj);
     }
 
     public interface RemoveEvent<E> extends AnyEvent<E>
@@ -79,7 +81,11 @@ public class EventDispatcherIterator<E> implements Iterator<E> {
         LinkedList<AnyEvent<E>> eventTypes = this._delegates.get(NextEvent.class.getName());
         if(eventTypes != null) {
             for(AnyEvent<E> eventType : eventTypes) {
-                ((NextEvent<E>)eventType).onNext(obj);
+                ((NextEvent<E>)eventType).onBeforeNext(obj);
+
+                if(this._current != null) {
+                    ((NextEvent<E>)eventType).onAfterNext(this._current);
+                }
             }
         }
         return obj;
