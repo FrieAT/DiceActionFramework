@@ -30,6 +30,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
         if(this.getGameObject() != obj) {
             return;
         }
+
+        if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
+            return;
+        }
         
         _previousEnabledState = this.getGameObject().isEnabled();
         this.getGameObject().setEnabled(false);
@@ -38,6 +42,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
     @Override
     public void onAfterNext(GameObject obj) {
         if(this.getGameObject() != obj) {
+            return;
+        }
+
+        if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
             return;
         }
 

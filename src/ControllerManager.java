@@ -12,7 +12,9 @@ public class ControllerManager extends AbstractManager {
         super();
     }
 
-    public int GetPlayerCount() { return this._currentPlayer; }
+    public int GetPlayerCount() { return this.gameObjects.size(); }
+
+    public boolean IsControllerAtCycle(int playerIndex) { return playerIndex == this._currentPlayer; }
 
     public IController GetController(int controllerIndex) {
         for(GameObject gameObject : this.gameObjects) {
