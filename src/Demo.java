@@ -78,7 +78,7 @@ public class Demo {
         playerGraphic.setLeft(480);
         playerGraphic.setTop(550);
         player1.getTransform().setScale(new Vector2(0.5, 0.5));
-        player1.getTransform().setPosition(new Vector2(600, 200));
+        player1.getTransform().setPosition(new Vector2(100, 650));
         playerOneController = player1.addComponent(PlayerController.class);
 
         GameObject player2 = new GameObject("PlayerTwo");
@@ -97,9 +97,9 @@ public class Demo {
         PlayerMovement playerMovement;
         ADice currentDice;
 
-        GameObject g2 = new GameObject("Wuerfel1");
+        GameObject g2 = new GameObject("Wuerfel2");
         currentDice = g2.addComponent(ClassicDice.class);
-        g2.getTransform().setPosition(new Vector2(100, 650));
+        g2.getTransform().setPosition(new Vector2(800, 650));
         g2.getTransform().setScale(new Vector2(15, 15));
 
         GameObject rollButton2 = new GameObject("Roll_Button1");
@@ -107,15 +107,15 @@ public class Demo {
         buttonG2.setLabelText("Würfeln!");
         buttonG2.setWidth(300);
         buttonG2.setHeight(50);
-        rollButton2.getTransform().setPosition(new Vector2(70, 600));
+        rollButton2.getTransform().setPosition(new Vector2(800, 600));
         buttonController = rollButton2.addComponent(RollDiceButtonController.class);
         buttonController.setControllableDice(currentDice);
         controllerView = rollButton2.addComponent(ControllerView.class);
-        controllerView.setController(playerOneController);
+        controllerView.setController(playerTwoController);
 
-        GameObject g3 = new GameObject("Wuerfel2");
+        GameObject g3 = new GameObject("Wuerfel1");
         currentDice = g3.addComponent(ClassicDice.class);
-        g3.getTransform().setPosition(new Vector2(800, 150));
+        g3.getTransform().setPosition(new Vector2(100, 650));
         g3.getTransform().setScale(new Vector2(15, 15));
 
         GameObject rollButton = new GameObject("Roll_Button2");
@@ -123,11 +123,11 @@ public class Demo {
         buttonG.setLabelText("Würfeln!");
         buttonG.setWidth(300);
         buttonG.setHeight(50);
-        rollButton.getTransform().setPosition(new Vector2(800, 100));
+        rollButton.getTransform().setPosition(new Vector2(70, 600));
         buttonController = rollButton.addComponent(RollDiceButtonController.class);
         buttonController.setControllableDice(currentDice);
         controllerView = rollButton.addComponent(ControllerView.class);
-        controllerView.setController(playerTwoController);
+        controllerView.setController(playerOneController);
 
         GameObject movementPlayerOne = new GameObject("Player1_Movement");
         movementPlayerOne.addComponent(PlayerMovement.class);
