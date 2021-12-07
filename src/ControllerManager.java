@@ -16,9 +16,15 @@ public class ControllerManager extends AbstractManager {
 
     public int GetPlayerCount() { return _localPlayerCounter; }
 
-    public int GetNextPlayer() { return this._localPlayerCounter++; }
+    public int GetNextPlayer() { return ++this._localPlayerCounter; }
 
-    public boolean IsControllerAtCycle(int playerIndex) { return playerIndex == this._currentPlayer; }
+    public boolean IsControllerAtCycle(int playerIndex) {
+        if(this._currentPlayer == 0) {
+            return false;
+        }
+
+        return playerIndex == this._currentPlayer;
+    }
 
     public int GetControllerAtCycle() { return this._currentPlayer; }
 
@@ -44,7 +50,7 @@ public class ControllerManager extends AbstractManager {
      */
     @Override
     public void update() {
-        if(++this._currentPlayer >= this._localPlayerCounter) {
+        if(++this._currentPlayer > this._localPlayerCounter) {
             this._currentPlayer = 0;
         }
     }

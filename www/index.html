@@ -10,22 +10,30 @@
 
 
     <script>
+        var lastPlayer = -1;
         let frameid = 0; // deleteMe
         var awaitConfirmation = false;
-        function confirmRenderdFrame(frameID) {
-                awaitConfirmation = true;
+        function confirmRenderdFrame(frameID, playerId) {
+                        awaitConfirmation = true;
+                        if(playerId > 0) {
+                                requestData = { 
+                                    "player": ""+(playerId),
+                                    "last_frame_renderd_ID": ""+frameID
+                                };  
+                        } else {
+                                requestData = {
+                                    "last_frame_renderd_ID": ""+frameID
+                                };
+                        }
                         $.ajax({
                                 url: "api/confirm.json",
                                 type: "POST",//type of posting the data
-                                data: { 
-                                    "player": "1",
-                                    "last_frame_renderd_ID": ""+frameID
-                                },
+                                data: requestData,
                                 success: function (data) {
                                         awaitConfirmation = false;
                         },
                                 error: function(xhr, ajaxOptions, thrownError){
-                                        //what to do in error
+                                        awaitConfirmation = false;
                         },
                                 timeout : 0//timeout of the ajax call
                         });
@@ -34,18 +42,34 @@
 
         var interval = 100;  // Get new Frame from server every [invterval]  milliseconds
         function doAjax() {
-            $.ajax({
-                    type: 'POST',
-                    url: 'api/player.json',
+             if(awaitConfirmation) { return; }
+             awaitConfirmation = true;
+
+             var currentPlayer = parseInt($("body").find("#changePlayer :selected").val());
+             if(lastPlayer != currentPlayer) {
+                console.log("Switching from Player "+lastPlayer+" to Player "+currentPlayer);
+                lastPlayer = currentPlayer;
+                $("#scene").empty();
+             }
+
+             
+             var requestedUrl = "api/fetchFrame.json";
+             var requestData = {};
+             if(currentPlayer > 0) {
+                  requestedUrl = "api/player.json";
+                  requestData = { "player": ""+(currentPlayer)};
+             }
+             $.ajax({
+                    type: 'GET',
+                    url: requestedUrl,
                     AGraphics: $(this).serialize(),
                     contentT: 'json',
-                    data: { "player": "1"},
-                    success: function (AGraphicArray) {     
-                        // document.getElementById("scene").innerHTML = ""; // Delete all elements in the scene.                 
+                    data: requestData,
+                    success: function (AGraphicArray) {                   
                             var updatedIds = {};
 
                             for(var i = 0; i < AGraphicArray.length; i++){ // < or <=
-                                 console.log(AGraphicArray[i]); // Object
+                                 //console.log(AGraphicArray[i]); // Object
                                  render(AGraphicArray[i]);
                                  updatedIds[""+AGraphicArray[i].owner.id] = true;
                             }
@@ -57,7 +81,10 @@
                                 }
                             });
 
-                            confirmRenderdFrame(++frameid) //   //[To do?] Send server message that it was renderd using real frameID                          
+                            confirmRenderdFrame(++frameid, currentPlayer); //   //[To do?] Send server message that it was renderd using real frameID                          
+                    },
+                    error: function(){
+                        awaitConfirmation = false;
                     },
                     complete: function (AGraphics) {
                             // Schedule the next
@@ -73,8 +100,16 @@
 
 
   </head>
-  <body>
-        <div id="scene" style="outline: solid; width: 1024px; height: 768px; position: relative;"></div> <!-- get width and height through json?-->
+  <body class="overflow:auto;">
+        <div id="scene" style="outline: solid; width: 1024px; height: 768px; position: relative; float:left;"></div> <!-- get width and height through json?-->
+        <div style="width:200px;height:200px">
+                <p>Select Player:</p>
+                <select id="changePlayer">
+                        <option value="0">Watcher</option> 
+                        <option value="1">PlayerOne</option> 
+                        <option value="2">PlayerTwo</option> 
+                </select>
+        </div>      
   </body>
 
   <script>
@@ -182,7 +217,8 @@
           obj = {
               keycode: "1",
               x: ""+x,
-              y: ""+y
+              y: ""+y,
+              controller: ""+lastPlayer
           }
 
           $.ajax({

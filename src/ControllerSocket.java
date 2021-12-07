@@ -29,7 +29,7 @@ public class ControllerSocket extends AbstractComponent implements ISocketListen
     @Override
     public void start() {
         this._controllerRenderings = new ArrayList<>();
-        for(int i = 0; i < ControllerManager.getInstance().GetPlayerCount(); i++) {
+        for(int i = 0; i <= ControllerManager.getInstance().GetPlayerCount(); i++) {
             this._controllerRenderings.add("[]");
         }
 
@@ -59,7 +59,10 @@ public class ControllerSocket extends AbstractComponent implements ISocketListen
                         buffer.writeBuffer("{\"ok\": true}");
                     } else if(requestPath.compareTo(apiFetchFrameForPlayer) == 0) {
                         String fetchFrame = this._controllerRenderings.get(controllerIndex);
-                        buffer.writeBuffer(fetchFrame);
+                        //buffer.writeBuffer(fetchFrame);
+                        JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._renderer.getSocket(), apiFetchFrameForPlayer, fetchFrame);
+                        this._renderer.getSocket().transmit(jsonBuffer, true);
+
                     }
                 }
                 catch(NumberFormatException e) {

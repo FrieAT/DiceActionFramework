@@ -10,7 +10,7 @@ public class GameObject {
 
     private static LinkedList<GameObject> _gameObjects;
 
-    private static LinkedList<AnyEvent<GameObject>> _eventDelegates = null;
+    public static LinkedList<AnyEvent<GameObject>> _eventDelegates = null;
 
     private static int _gameObjectCounter = 0;
 
@@ -38,14 +38,14 @@ public class GameObject {
         return (Iterable<GameObject>)GameObject.iterator();
     }
 
-    public static Iterator<GameObject> iterator() {
-        return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
+    public static Iterable<GameObject> getGameObject(GameObject obj) {
+        LinkedList<GameObject> list = new LinkedList<>();
+        list.add(obj);
+        return (Iterable<GameObject>)new EventDispatcherIterator<GameObject>(list.iterator(), _eventDelegates);
     }
 
-    public static GameObject getRequestedGameObject(GameObject obj) {
-        LinkedList<GameObject> list = new LinkedList<GameObject>();
-        list.add(obj);
-        return new EventDispatcherIterator<GameObject>(list.iterator(), _eventDelegates).next();
+    public static Iterator<GameObject> iterator() {
+        return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
     }
 
     public static void startAll() {
@@ -141,10 +141,6 @@ public class GameObject {
     }
 
     public boolean isEnabled() {
-        return GameObject.getRequestedGameObject(this).enabled;
-    }
-
-    public boolean unsafeIsEnabled() {
         return this.enabled;
     }
 
