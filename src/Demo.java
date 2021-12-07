@@ -90,19 +90,18 @@ public class Demo {
         playerGraphic.setTop(550);
         player1.getTransform().setScale(new Vector2(0.5, 0.5));
         player1.addComponent(PlayerController.class);
+
+        GameObject controllerSocket = new GameObject("ControllerSocket");
+        controllerSocket.addComponent(ControllerSocket.class);
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
         //Pre-initialization
-
-        /*
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
-
-         */
 
         ASerializer jsonSerializer = new JsonSerializer();
         
@@ -114,11 +113,13 @@ public class Demo {
             dir.addResource(PngFileResource.class);
             dir.addResource(GifFileResource.class);
 
-            socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
-            
-            socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiFetchFrame);
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiEvent);
 
-            socket.addResource(JsonBufferResource.class, "/api/event.json");
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiFetchFrameForPlayer);
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiConfirmFrameForPlayer);
+
+            socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
@@ -129,11 +130,8 @@ public class Demo {
         serverRenderer.setSocket(socket);
         RenderManager.getInstance().addRenderer(serverRenderer);
 
-        /*
         AInputHandler input = new MouseJavaFXHandler();
         InputManager.getInstance().addInputHandler(input);
-
-         */
         InputManager.getInstance().addInputHandler(new MouseServerHandler());
 
 
@@ -155,11 +153,11 @@ public class Demo {
         while(true) {
             //TODO: If game quits or exception happens?
 
+            GameObject.updateAll();
+
             for(AbstractManager m : _managers) {
                 m.update();
             }
-
-            GameObject.updateAll();
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {
