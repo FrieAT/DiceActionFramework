@@ -16,6 +16,8 @@ public class ControllerManager extends AbstractManager {
 
     public boolean IsControllerAtCycle(int playerIndex) { return playerIndex == this._currentPlayer; }
 
+    public int GetControllerAtCycle() { return this._currentPlayer; }
+
     public IController GetController(int controllerIndex) {
         for(GameObject gameObject : this.gameObjects) {
             AbstractController controller = gameObject.getComponent(AbstractController.class);
@@ -45,19 +47,19 @@ public class ControllerManager extends AbstractManager {
 
     @Override
     public boolean add(GameObject gameObject) {
-        throw new NullPointerException("Please add an IController object and not a gameObject itself.");
+        throw new NullPointerException("Please add an AbstractController object and not a gameObject itself.");
     }
 
-    public boolean add(IController controller) {
+    public boolean add(AbstractController controller) {
         return super.add(controller.getGameObject());
     }
 
     @Override
     public boolean remove(GameObject gameObject) {
-        throw new NullPointerException("Please add an IController object and not a gameObject itself.");
+        throw new NullPointerException("Please add an AbstractController object and not a gameObject itself.");
     }
 
-    public boolean remove(IController controller) {
+    public boolean remove(AbstractController controller) {
         return super.add(controller.getGameObject());
     }
 }

@@ -1,10 +1,19 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ResourceBundle.Control;
+
 import Socket.IResource;
 import Socket.IServerSocket;
 import Socket.ISocketListener;
+import Socket.HttpSocket.HttpResourceExistsException;
 import Socket.HttpSocket.HttpServerSocket;
+import Socket.HttpSocket.Resource.ABufferResource;
 import Socket.HttpSocket.Resource.JsonBufferResource;
 
-public class ServerRenderer extends AGraphicRenderer implements ISocketListener {
+public class ServerRenderer extends AGraphicRenderer {
+    public static final String apiFetchFrame = "/api/fetchFrame.json";
+
+    public static final String apiEvent = "/api/event.json";
 
     private ASerializer serializer;
 
@@ -12,10 +21,13 @@ public class ServerRenderer extends AGraphicRenderer implements ISocketListener 
 
     private IServerSocket _socket;
 
+    private LinkedList<Integer> _renderAcks;
+
     public ServerRenderer() {
         this.fetchFrame = new StringBuilder();
         this.serializer = null;
         this._socket = null;
+        this._renderAcks = new LinkedList<>();
     }
 
     public ASerializer getSerializer() { return this.serializer; }
@@ -48,7 +60,7 @@ public class ServerRenderer extends AGraphicRenderer implements ISocketListener 
         }
         fetchFrame.append("]");
 
-        JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._socket, "/api/fetchFrame.json", fetchFrame.toString());
+        JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._socket, apiFetchFrame, fetchFrame.toString());
         this._socket.transmit(jsonBuffer, true);
 
         fetchFrame = new StringBuilder("");
@@ -65,14 +77,12 @@ public class ServerRenderer extends AGraphicRenderer implements ISocketListener 
             throw new NullPointerException("Please set a "+ASerializer.class.getName()+" for "+this.getClass().getName());
         }
 
-        //FIXME: Shouldn't be the socket bind-ed here?
-
-        this._socket.addListener("/api/fetchFrame.json", this);
-
         fetchFrame.append("[");
     }
 
-    public void onSocketTransmission(IResource resource) {
-
+    public void addControllerAcknowledgement(int controllerIndex) {
+        if(!this._renderAcks.contains(controllerIndex)) {
+            this._renderAcks.push(controllerIndex);
+        }
     }
 }

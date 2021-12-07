@@ -1,9 +1,12 @@
-public class PlayerController extends AbstractController implements IController, IInputListener {
+public class PlayerController extends AbstractController implements IInputListener {
     @Override
     public void start() {
+        super.start();
+
         InputManager.getInstance().add(MouseInputEvent.class, this);
     }
 
+    @Override
     public int throwDice(ADice dice) {
         // TODO Auto-generated method stub
         return 0;

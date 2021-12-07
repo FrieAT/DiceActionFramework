@@ -3,6 +3,7 @@ package Socket.HttpSocket.Resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -30,9 +31,10 @@ public abstract class ABufferResource extends HttpResource {
     public byte[] getBufferedData() {
         String data = this._buffer;
         
-        while(!this._bufferList.isEmpty()) {
-            String appendData = new String(this._bufferList.poll().getBufferedData());
-            data += appendData;
+        Iterator<IResource> it = this._bufferList.iterator();
+        while(it.hasNext()) {
+            String peekBuffer = new String(it.next().getBufferedData());
+            data += peekBuffer;
         }
 
         return data.getBytes();
