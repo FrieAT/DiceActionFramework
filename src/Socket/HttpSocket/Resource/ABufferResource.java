@@ -42,6 +42,9 @@ public abstract class ABufferResource extends HttpResource {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        this._buffer = "";
+        
+        //[optional] POST-data
         try(BufferedInputStream buffer = new BufferedInputStream(exchange.getRequestBody()))
         {
             this._buffer = new String(buffer.readAllBytes());
@@ -54,6 +57,17 @@ public abstract class ABufferResource extends HttpResource {
 
                 this._buffer = URLDecoder.decode(this._buffer, "UTF-8");
             }
+        }
+
+        //[optional] GET-data
+        String requestedUri = exchange.getRequestURI().toString();
+        int getParamIndex = requestedUri.indexOf("?");
+        if(getParamIndex != -1) {
+            String getData = requestedUri.substring(getParamIndex+1);
+            if(this._buffer.length() > 0) {
+                this._buffer += "&";
+            }
+            this._buffer += getData;
         }
 
         super.handle(exchange);

@@ -2,7 +2,7 @@ public class AbstractController extends AbstractComponent implements IController
     private int _playerNo;
     
     public AbstractController() {
-        this._playerNo = ControllerManager.getInstance().GetPlayerCount();
+        this._playerNo = ControllerManager.getInstance().GetNextPlayer();
     }
 
     public int getPlayerNo() {

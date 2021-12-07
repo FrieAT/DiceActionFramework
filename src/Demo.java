@@ -68,28 +68,65 @@ public class Demo {
 
          */
 
-        GameObject g2 = new GameObject("Wuerfel");
-        g2.addComponent(ClassicDice.class);
-        g2.getTransform().setPosition(new Vector2(400, 400));
-        g2.getTransform().setScale(new Vector2(15, 15));
-
-        GameObject rollButton = new GameObject("Roll_Button");
-        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
-        buttonG.setLabelText("Würfeln!");
-        buttonG.setWidth(300);
-        buttonG.setHeight(50);
-        rollButton.getTransform().setPosition(new Vector2(800, 600));
-        rollButton.addComponent(RollDiceButtonController.class);
-
         GameObject player1 = new GameObject("PlayerOne");
         PictureGraphic playerGraphic = player1.addComponent(PictureGraphic.class);
-        playerGraphic.setPicturePath("images/player2.png");
+        playerGraphic.setPicturePath("images/player1.png");
         playerGraphic.setWidth(50);
         playerGraphic.setHeight(75);
         playerGraphic.setLeft(480);
         playerGraphic.setTop(550);
         player1.getTransform().setScale(new Vector2(0.5, 0.5));
+        player1.getTransform().setPosition(new Vector2(600, 200));
         player1.addComponent(PlayerController.class);
+
+        GameObject player2 = new GameObject("PlayerTwo");
+        PictureGraphic playerGraphic2 = player1.addComponent(PictureGraphic.class);
+        playerGraphic2.setPicturePath("images/player2.png");
+        playerGraphic2.setWidth(50);
+        playerGraphic2.setHeight(75);
+        playerGraphic2.setLeft(480);
+        playerGraphic2.setTop(550);
+        player2.getTransform().setScale(new Vector2(0.5, 0.5));
+        player2.getTransform().setPosition(new Vector2(600, 700));
+        player2.addComponent(PlayerController.class);
+
+        ControllerView controllerView;
+        RollDiceButtonController buttonController;
+        ADice currentDice;
+
+        GameObject g2 = new GameObject("Wuerfel1");
+        currentDice = g2.addComponent(ClassicDice.class);
+        g2.getTransform().setPosition(new Vector2(800, 650));
+        g2.getTransform().setScale(new Vector2(15, 15));
+        controllerView = g2.addComponent(ControllerView.class);
+        controllerView.setController(0);
+
+        GameObject rollButton2 = new GameObject("Roll_Button2");
+        ButtonGraphic buttonG2 = rollButton2.addComponent(ButtonGraphic.class);
+        buttonG2.setLabelText("Würfeln!");
+        buttonG2.setWidth(300);
+        buttonG2.setHeight(50);
+        rollButton2.getTransform().setPosition(new Vector2(800, 600));
+        buttonController = rollButton2.addComponent(RollDiceButtonController.class);
+        buttonController.setControllableDice(currentDice);
+        controllerView = rollButton2.addComponent(ControllerView.class);
+        controllerView.setController(0);
+
+        GameObject g3 = new GameObject("Wuerfel2");
+        currentDice = g3.addComponent(ClassicDice.class);
+        g3.getTransform().setPosition(new Vector2(800, 150));
+        g3.getTransform().setScale(new Vector2(15, 15));
+
+        GameObject rollButton = new GameObject("Roll_Button1");
+        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
+        buttonG.setLabelText("Würfeln!");
+        buttonG.setWidth(300);
+        buttonG.setHeight(50);
+        rollButton.getTransform().setPosition(new Vector2(800, 100));
+        buttonController = rollButton.addComponent(RollDiceButtonController.class);
+        buttonController.setControllableDice(currentDice);
+        controllerView = rollButton.addComponent(ControllerView.class);
+        controllerView.setController(1);
 
         GameObject controllerSocket = new GameObject("ControllerSocket");
         controllerSocket.addComponent(ControllerSocket.class);
@@ -113,10 +150,11 @@ public class Demo {
             dir.addResource(PngFileResource.class);
             dir.addResource(GifFileResource.class);
 
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiFetchFrameForPlayer);
             socket.addResource(JsonBufferResource.class, ServerRenderer.apiFetchFrame);
             socket.addResource(JsonBufferResource.class, ServerRenderer.apiEvent);
 
-            socket.addResource(JsonBufferResource.class, ControllerSocket.apiFetchFrameForPlayer);
+            
             socket.addResource(JsonBufferResource.class, ControllerSocket.apiConfirmFrameForPlayer);
 
             socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
@@ -140,6 +178,7 @@ public class Demo {
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());
         _managers.add(InputManager.getInstance());
+        _managers.add(ControllerManager.getInstance());
 
         //Initialization of the managers.
         for(AbstractManager m : _managers) {

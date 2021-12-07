@@ -26,7 +26,7 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
 
     private HashMap<String, LinkedList<AnyEvent<E>>> _delegates;
 
-    private E _current;
+    private E _previousElement;
 
     /**
      * Mask iterator for event-broadcasting.
@@ -34,7 +34,7 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
      * @initDelegates delegates to add on construction @Nullable()
      */
     public EventDispatcherIterator(Iterator<E> it, List<AnyEvent<E>> initDelegates) {
-        this._current = null;
+        this._previousElement = null;
         this._it = it;
         this._delegates = new HashMap<>();
 
@@ -49,7 +49,7 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
     {
         for(Class genericEvent : delegate.getClass().getInterfaces()) {
             //Check if interface is type on an AnyEvent<E>
-            if(genericEvent.getSuperclass() == AnyEvent.class) {
+            if(AnyEvent.class.isAssignableFrom(genericEvent)) {
                 String eventInterface = genericEvent.getName();
                 LinkedList<AnyEvent<E>> delegateList = this._delegates.get(eventInterface);
                 
@@ -71,7 +71,18 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
 
     @Override
     public boolean hasNext() {
-        return this._it.hasNext();
+        boolean hasNext = this._it.hasNext();
+
+        LinkedList<AnyEvent<E>> eventTypes = this._delegates.get(NextEvent.class.getName());
+        if(eventTypes != null) {
+            for(AnyEvent<E> eventType : eventTypes) {
+                if(this._previousElement != null) {
+                    ((NextEvent<E>)eventType).onAfterNext(this._previousElement);
+                }
+            }
+        } 
+
+        return hasNext;
     }
 
     @Override
@@ -82,24 +93,27 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
             for(AnyEvent<E> eventType : eventTypes) {
                 ((NextEvent<E>)eventType).onBeforeNext(obj);
 
-                if(this._current != null) {
-                    ((NextEvent<E>)eventType).onAfterNext(this._current);
+                if(this._previousElement != null) {
+                    ((NextEvent<E>)eventType).onAfterNext(this._previousElement);
                 }
             }
         }
+
+        this._previousElement = obj;
+
         return obj;
     }
 
     @Override
     public void remove() {
-        if(this._current == null) {
+        if(this._previousElement == null) {
             return;
         }
         
         LinkedList<AnyEvent<E>> eventTypes = this._delegates.get(RemoveEvent.class.getName());
         if(eventTypes != null) {
             for(AnyEvent<E> eventType : eventTypes) {
-                ((RemoveEvent<E>)eventType).onRemove(this._current);
+                ((RemoveEvent<E>)eventType).onRemove(this._previousElement);
             }
         }
         this._it.remove();

@@ -128,7 +128,7 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmit(IResource data, boolean clear) {
+    public synchronized void transmit(IResource data, boolean clear) {
         HttpResource resource = this._resources.get(data.getResourcePath());
 
         if(resource == null) {

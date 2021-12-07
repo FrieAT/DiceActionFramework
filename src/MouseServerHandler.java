@@ -42,6 +42,10 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         );
 
         for(IInputListener listener : _subscribers) {
+            if(!listener.getGameObject().isEnabled()) {
+                continue;
+            }
+
             listener.onInput(event);
         }
     }

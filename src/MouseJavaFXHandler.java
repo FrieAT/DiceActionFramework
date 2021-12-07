@@ -43,6 +43,10 @@ public class MouseJavaFXHandler extends AInputHandler {
                 );
                 
                 for(IInputListener listener : _subscribers) {
+                    if(!listener.getGameObject().isEnabled()) {
+                        continue;
+                    }
+
                     listener.onInput(event);
                 }
             }
@@ -58,6 +62,10 @@ public class MouseJavaFXHandler extends AInputHandler {
                 );
                 
                 for(IInputListener listener : _subscribers) {
+                    if(!listener.getGameObject().isEnabled()) {
+                        continue;
+                    }
+
                     listener.onInput(event);
                 }
             }

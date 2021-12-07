@@ -42,6 +42,12 @@ public class GameObject {
         return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
     }
 
+    public static GameObject getRequestedGameObject(GameObject obj) {
+        LinkedList<GameObject> list = new LinkedList<GameObject>();
+        list.add(obj);
+        return new EventDispatcherIterator<GameObject>(list.iterator(), _eventDelegates).next();
+    }
+
     public static void startAll() {
         if(_gameObjects != null) {
             //FIXME: Switched from iterator to array due to ConcurrentModificationException
@@ -135,6 +141,10 @@ public class GameObject {
     }
 
     public boolean isEnabled() {
+        return GameObject.getRequestedGameObject(this).enabled;
+    }
+
+    public boolean unsafeIsEnabled() {
         return this.enabled;
     }
 

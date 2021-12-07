@@ -35,7 +35,7 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
             return;
         }
         
-        _previousEnabledState = this.getGameObject().isEnabled();
+        _previousEnabledState = this.getGameObject().unsafeIsEnabled();
         this.getGameObject().setEnabled(false);
     }
 

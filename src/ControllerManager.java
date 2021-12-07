@@ -6,13 +6,17 @@ public class ControllerManager extends AbstractManager {
         return _instance;
     }
 
+    private int _localPlayerCounter = 0;
+
     private int _currentPlayer;
 
     private ControllerManager() {
         super();
     }
 
-    public int GetPlayerCount() { return this.gameObjects.size(); }
+    public int GetPlayerCount() { return _localPlayerCounter; }
+
+    public int GetNextPlayer() { return this._localPlayerCounter++; }
 
     public boolean IsControllerAtCycle(int playerIndex) { return playerIndex == this._currentPlayer; }
 
@@ -40,7 +44,7 @@ public class ControllerManager extends AbstractManager {
      */
     @Override
     public void update() {
-        if(++this._currentPlayer >= this.gameObjects.size()) {
+        if(++this._currentPlayer >= this._localPlayerCounter) {
             this._currentPlayer = 0;
         }
     }

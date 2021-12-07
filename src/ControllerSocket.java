@@ -46,7 +46,7 @@ public class ControllerSocket extends AbstractComponent implements ISocketListen
     public void onSocketReceive(IResource resource) {
         ABufferResource buffer = (ABufferResource)resource;
         if(buffer != null) {
-            String params = new String(buffer.getBufferedData()); //
+            String params = new String(buffer.getBufferedData());
             int index = params.indexOf(paramControllerPrefix);
             if(index != -1) {
                 try {
@@ -58,11 +58,8 @@ public class ControllerSocket extends AbstractComponent implements ISocketListen
                         this._renderer.addControllerAcknowledgement(controllerIndex);
                         buffer.writeBuffer("{\"ok\": true}");
                     } else if(requestPath.compareTo(apiFetchFrameForPlayer) == 0) {
-                        if(!ControllerManager.getInstance().IsControllerAtCycle(controllerIndex)) {
-                            String fetchFrame = this._controllerRenderings.get(controllerIndex);
-                            JsonBufferResource jsonBuffer = new JsonBufferResource((HttpServerSocket)this._renderer.getSocket(), apiFetchFrame, fetchFrame.toString());
-                            this._renderer.getSocket().transmit(jsonBuffer, true);
-                        }
+                        String fetchFrame = this._controllerRenderings.get(controllerIndex);
+                        buffer.writeBuffer(fetchFrame);
                     }
                 }
                 catch(NumberFormatException e) {
@@ -78,7 +75,7 @@ public class ControllerSocket extends AbstractComponent implements ISocketListen
     }
 
     @Override
-    public void onSocketPrepareTransmission(IResource resource) {
+    public synchronized void onSocketPrepareTransmission(IResource resource) {
         ABufferResource buffer = (ABufferResource)resource;
         if(buffer != null) {
             String requestPath = resource.getResourcePath();
