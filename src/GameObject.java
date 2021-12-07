@@ -1,15 +1,16 @@
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javafx.scene.transform.Transform;
+import Event.EventDispatcherIterator;
+import Event.EventDispatcherIterator.AnyEvent;
 
 @Serializable
 public class GameObject {
 
     private static LinkedList<GameObject> _gameObjects;
+
+    private static LinkedList<AnyEvent<GameObject>> _eventDelegates = null;
 
     private static int _gameObjectCounter = 0;
 
@@ -32,6 +33,23 @@ public class GameObject {
         }
 
         return found;
+
+    }
+    public static void addIteratorDelegate(AnyEvent<GameObject> delegate)
+    {
+        if(_eventDelegates == null) {
+            _eventDelegates = new LinkedList<>();
+        }
+        _eventDelegates.add(delegate);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Iterable<GameObject> getGameObjects() {
+        return (Iterable<GameObject>)GameObject.iterator();
+    }
+
+    public static Iterator<GameObject> iterator() {
+        return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
     }
 
     public static void startAll() {
