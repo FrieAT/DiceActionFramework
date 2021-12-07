@@ -82,6 +82,8 @@ public abstract class ABufferResource extends HttpResource {
     }
 
     public void clearBuffer() {
+        this._data = new byte[0];
+        this._buffer = "";
         this._bufferList.clear();
     }
 }

@@ -92,10 +92,6 @@ public class EventDispatcherIterator<E> implements Iterator<E>, Iterable<E> {
         if(eventTypes != null) {
             for(AnyEvent<E> eventType : eventTypes) {
                 ((NextEvent<E>)eventType).onBeforeNext(obj);
-
-                if(this._previousElement != null) {
-                    ((NextEvent<E>)eventType).onAfterNext(this._previousElement);
-                }
             }
         }
 

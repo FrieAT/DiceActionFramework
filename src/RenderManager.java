@@ -78,9 +78,10 @@ public class RenderManager extends AbstractManager {
                 return;
             }
             
-            for (GameObject gameObject: GameObject.getGameObjects()) {
+            for (GameObject gameObject: this.getGameObjects()) {
                 if (!gameObject.isEnabled())
-                    continue;
+			        continue;
+
                 AGraphic graphic = gameObject.getComponent(AGraphic.class);
     
                 if(graphic == null) {
