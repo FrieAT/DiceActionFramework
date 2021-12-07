@@ -23,7 +23,7 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
 
     }
 
-    public void onSocketTransmission(IResource resource) {
+    public void onSocketReceive(IResource resource) {
         assert (resource.getClass() == JsonBufferResource.class);
         JsonBufferResource json = (JsonBufferResource) resource;
 
@@ -44,5 +44,15 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         for(IInputListener listener : _subscribers) {
             listener.onInput(event);
         }
+    }
+
+    @Override
+    public void onSocketTransmission(IResource resource) {
+        
+    }
+
+    @Override
+    public void onSocketPrepareTransmission(IResource resource) {
+        
     }
 }

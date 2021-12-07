@@ -11,13 +11,18 @@
 
     <script>
         let frameid = 0; // deleteMe
+        var awaitConfirmation = false;
         function confirmRenderdFrame(frameID) {
-
+                awaitConfirmation = true;
                         $.ajax({
-                                url: "api/JSONRenderConfirmationGenerator.php?last_frame_renderd_ID="+frameID,
-                                type: "GET",//type of posting the data
+                                url: "api/confirm.json",
+                                type: "POST",//type of posting the data
+                                data: { 
+                                    "player": "1",
+                                    "last_frame_renderd_ID": ""+frameID
+                                },
                                 success: function (data) {
-                                        //what to do in success
+                                        awaitConfirmation = false;
                         },
                                 error: function(xhr, ajaxOptions, thrownError){
                                         //what to do in error
@@ -31,9 +36,10 @@
         function doAjax() {
             $.ajax({
                     type: 'POST',
-                    url: 'api/fetchFrame.json',
+                    url: 'api/player.json',
                     AGraphics: $(this).serialize(),
-                    dataType: 'json',
+                    contentT: 'json',
+                    data: { "player": "1"},
                     success: function (AGraphicArray) {     
                         // document.getElementById("scene").innerHTML = ""; // Delete all elements in the scene.                 
                             var updatedIds = {};

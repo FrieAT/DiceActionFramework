@@ -146,9 +146,29 @@ public class HttpServerSocket implements IServerSocket
         }
 
         bufferResource.writeBuffer(data);
+
+        String uri = data.getResourcePath();
+        LinkedList<ISocketListener> list = this._listeners.get(uri);
+        if(list != null && resource != null) {
+            for(ISocketListener listener : list) {
+                listener.onSocketPrepareTransmission(resource);
+            }
+        }
     }
 
     public void receiveData(HttpExchange exchange) {
+        String uri = exchange.getRequestURI().getPath();
+        LinkedList<ISocketListener> list = this._listeners.get(uri);
+        HttpResource resource = this._resources.get(uri);
+
+        if(list != null && resource != null) {
+            for(ISocketListener listener : list) {
+                listener.onSocketReceive(resource);
+            }
+        }
+    }
+
+    public void sendData(HttpExchange exchange) {
         String uri = exchange.getRequestURI().getPath();
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         HttpResource resource = this._resources.get(uri);
