@@ -135,4 +135,23 @@ public class View extends AbstractComponent {
         return dice;
     }
 
+    public <T extends AbstractComponent>
+    GameObject addGraphic(String name, String path, double posX, double posY, int width, int height, int left, int top, Class<T>... components) {
+        GameObject graphic = new GameObject(name);
+        PictureGraphic bgImage = graphic.addComponent(PictureGraphic.class);
+        bgImage.setPicturePath(path);
+        bgImage.setWidth(width);
+        bgImage.setHeight(height);
+        bgImage.setLeft(left);
+        bgImage.setTop(top);
+
+        for (Class<T> c: components)
+            graphic.addComponent(c);
+
+        gameObjects.add(graphic);
+
+        return graphic;
+    }
+
+
 }
