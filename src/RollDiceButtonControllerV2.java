@@ -7,7 +7,11 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
     private ArrayList<ADice> _dices = new ArrayList<>();
     private ArrayList<String> _diceNames = new ArrayList<>();
 
-    public RollDiceButtonControllerV2(String... diceName) {
+    public RollDiceButtonControllerV2() {
+        
+    }
+
+    public void addDiceNames(String... diceName) {
         Collections.addAll(_diceNames, diceName);
     }
 

@@ -9,7 +9,7 @@ public class View extends AbstractComponent {
     }
 
     public <T extends AbstractComponent>
-    void addBackground(String name, String path, int width, int height, int left, int top, Class<T>... components) {
+    GameObject addBackground(String name, String path, int width, int height, int left, int top, Class<T>... components) {
         GameObject background = new GameObject(name);
         PictureGraphic bgImage = background.addComponent(PictureGraphic.class);
         bgImage.setPicturePath(path);
@@ -22,10 +22,12 @@ public class View extends AbstractComponent {
             background.addComponent(c);
 
         gameObjects.add(background);
+
+        return background;
     }
 
     public <T extends AbstractComponent>
-    void addLabel(String name, String text, double posX, double posY, int left, int top, int fontSize, boolean bold, Class<T>... components) {
+    GameObject addLabel(String name, String text, double posX, double posY, int left, int top, int fontSize, boolean bold, Class<T>... components) {
         GameObject label = new GameObject(name);
         LabelGraphic lGraphic = label.addComponent(LabelGraphic.class);
         lGraphic.setLabelText(text);
@@ -39,10 +41,12 @@ public class View extends AbstractComponent {
             label.addComponent(c);
 
         gameObjects.add(label);
+
+        return label;
     }
 
     public <T extends AbstractComponent>
-    void addButton(String name, String text, double posX, double posY, int width, int height, int left, int top, int fontSize, Class<T>... components) {
+    GameObject addButton(String name, String text, double posX, double posY, int width, int height, int left, int top, int fontSize, Class<T>... components) {
         GameObject button = new GameObject(name);
         ButtonGraphic bGraphic = button.addComponent(ButtonGraphic.class);
         bGraphic.setLabelText(text);
@@ -55,9 +59,11 @@ public class View extends AbstractComponent {
             button.addComponent(c);
 
         gameObjects.add(button);
+
+        return button;
     }
 
-    public void addButton(String name, String text, double posX, double posY, int width, int height, int left, int top, int fontSize, AbstractComponent... components) {
+    public GameObject addButton(String name, String text, double posX, double posY, int width, int height, int left, int top, int fontSize, AbstractComponent... components) {
         GameObject button = new GameObject(name);
         ButtonGraphic bGraphic = button.addComponent(ButtonGraphic.class);
         bGraphic.setLabelText(text);
@@ -70,10 +76,12 @@ public class View extends AbstractComponent {
             button.addComponent(c);
 
         gameObjects.add(button);
+
+        return button;
     }
 
     public <T extends AbstractComponent>
-    void addDice(String name, double posX, double posY, Class<T>... components) {
+    GameObject addDice(String name, double posX, double posY, Class<T>... components) {
         GameObject dice = new GameObject(name);
         dice.getTransform().setPosition(new Vector2(posX, posY));
 
@@ -81,6 +89,8 @@ public class View extends AbstractComponent {
             dice.addComponent(c);
 
         gameObjects.add(dice);
+
+        return dice;
     }
 
 }

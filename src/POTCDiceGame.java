@@ -52,41 +52,38 @@ public class POTCDiceGame {
     public static void setUpInGameScreen() {
         GameObject inGameScreen = new GameObject("InGame");
         View view = inGameScreen.addComponent(View.class);
+        GameObject obj;
 
-        view.addBackground("InGameBackground",
+        obj = view.addBackground("InGameBackground",
                 "images/wooden_floor.jpg",
                 800, 600,
                 0, 0
         );
+        obj.addComponent(ControllerSocket.class);
 
-        view.addDice("Dice_1",
+        obj = view.addDice("Dice_1",
                 350, 475,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_2",
+        obj = view.addDice("Dice_2",
                 25, 250,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_3",
+        obj = view.addDice("Dice_3",
                 350, 25,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_4",
+        obj = view.addDice("Dice_4",
                 675, 250,
                 POTCDiceBag.class
         );
-
-        view.addButton("Roll_Button",
-                "Roll",
-                400, 300,
-                100, 50,
-                0, 0,
-                30,
-                RollDiceButtonController.class
-        );
+        obj.addComponent(PlayerController.class);
 
         views.add(inGameScreen);
     }
@@ -94,74 +91,82 @@ public class POTCDiceGame {
     public static void setUpInGameScreenV2() {
         GameObject inGameScreen = new GameObject("InGame");
         View view = inGameScreen.addComponent(View.class);
+        GameObject obj;
 
-        view.addBackground("InGameBackground",
+        obj = view.addBackground("InGameBackground",
                 "images/wooden_floor.jpg",
                 800, 600,
                 0, 0
         );
+        obj.addComponent(ControllerSocket.class);
 
-        view.addDice("Dice_1",
+        obj = view.addDice("Dice_1",
                 350, 450,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_2",
+        obj = view.addDice("Dice_2",
                 25, 250,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_3",
+        obj = view.addDice("Dice_3",
                 350, 25,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        view.addDice("Dice_4",
+        obj = view.addDice("Dice_4",
                 650, 250,
                 POTCDiceBag.class
         );
+        obj.addComponent(PlayerController.class);
 
-        RollDiceButtonControllerV2 bc1 = new RollDiceButtonControllerV2("Dice_1");
-        RollDiceButtonControllerV2 bc2 = new RollDiceButtonControllerV2("Dice_2");
-        RollDiceButtonControllerV2 bc3 = new RollDiceButtonControllerV2("Dice_3");
-        RollDiceButtonControllerV2 bc4 = new RollDiceButtonControllerV2("Dice_4");
-
-        view.addButton("Roll_Button",
+        obj = view.addButton("Roll_Button_1",
                 "Roll",
                 400, 550,
                 100, 50,
                 0, 0,
                 30,
-                bc1
+                RollDiceButtonControllerV2.class
         );
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_1");
+        obj.addComponent(ControllerView.class).setController(1);
 
-        view.addButton("Roll_Button",
+        obj = view.addButton("Roll_Button_2",
                 "Roll",
                 25, 310,
                 100, 50,
                 0, 0,
                 30,
-                bc2
+                RollDiceButtonControllerV2.class
         );
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_2");
+        obj.addComponent(ControllerView.class).setController(2);
 
-        view.addButton("Roll_Button",
+        obj = view.addButton("Roll_Button_3",
                 "Roll",
                 400, 25,
                 100, 50,
                 0, 0,
                 30,
-                bc3
+                RollDiceButtonControllerV2.class
         );
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_3");
+        obj.addComponent(ControllerView.class).setController(3);
 
-        view.addButton("Roll_Button",
+        obj = view.addButton("Roll_Button_4",
                 "Roll",
                 730, 310,
                 100, 50,
                 0, 0,
                 30,
-                bc4
+                RollDiceButtonControllerV2.class
         );
-
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_4");
+        obj.addComponent(ControllerView.class).setController(4);
     }
 
     public static void init() {
@@ -179,9 +184,10 @@ public class POTCDiceGame {
 
             socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
 
-            socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
-
-            socket.addResource(JsonBufferResource.class, "/api/event.json");
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiFetchFrameForPlayer);
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiFetchFrame);
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiEvent);
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiConfirmFrameForPlayer);
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
@@ -203,6 +209,7 @@ public class POTCDiceGame {
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());
         _managers.add(InputManager.getInstance());
+        _managers.add(ControllerManager.getInstance());
 
         //Initialization of the managers.
         for(AbstractManager m : _managers) {
@@ -216,11 +223,11 @@ public class POTCDiceGame {
         while(true) {
             //TODO: If game quits or exception happens?
 
+            GameObject.updateAll();
+
             for(AbstractManager m : _managers) {
                 m.update();
             }
-
-            GameObject.updateAll();
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {
