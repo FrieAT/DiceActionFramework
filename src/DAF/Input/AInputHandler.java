@@ -1,7 +1,6 @@
 package DAF.Input;
-import java.util.HashMap;
+
 import java.util.LinkedList;
-import java.util.List;
 
 import DAF.Event.AInputEvent;
 import DAF.Event.IInputListener;
@@ -18,7 +17,11 @@ public abstract class AInputHandler {
     }
 
     public void init() {
-        throw new NullPointerException("Not implemented input handler.");
+
+    }
+
+    public void update() {
+
     }
 
     public void registerListener(IInputListener listener) {

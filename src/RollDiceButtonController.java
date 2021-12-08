@@ -1,6 +1,3 @@
-import java.util.ArrayDeque;
-
-import DAF.GameObject;
 import DAF.Components.AbstractComponent;
 import DAF.Dice.Components.ADice;
 import DAF.Event.AInputEvent;
@@ -14,19 +11,15 @@ import DAF.Renderer.Components.ButtonGraphic;
 public class RollDiceButtonController extends AbstractComponent implements IInputListener {
     private ADice _dice;
     
+    public void setControllableDice(ADice dice) {
+        this._dice = dice;
+    }
+
     @Override
     public void start() {
-        GameObject dice = GameObject.find("Wuerfel");
-        if(dice == null) {
-            throw new NullPointerException("Can't find the dice to roll.");
+        if(this._dice == null) {
+            throw new NullPointerException("Please define a correct ADice component as a reference.");
         }
-        
-        ADice diceComponent = dice.getComponent(ADice.class);
-        if(diceComponent == null) {
-            throw new NullPointerException("Given gameObject doesn't own a dice-component.");
-        }
-
-        this._dice = diceComponent;
 
         InputManager.getInstance().add(MouseInputEvent.class, this);
     }

@@ -36,6 +36,13 @@ public class InputManager extends AbstractManager
     }
 
     @Override
+    public void update() {
+        for(AInputHandler handler : this._inputs) {
+            handler.update();
+        }
+    }
+
+    @Override
     public boolean add(GameObject gameObject) {
         throw new NullPointerException("Please add an IController object and not a gameObject itself.");
     }

@@ -3,6 +3,7 @@ package DAF.Socket.HttpSocket.Resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -30,9 +31,10 @@ public abstract class ABufferResource extends HttpResource {
     public byte[] getBufferedData() {
         String data = this._buffer;
         
-        while(!this._bufferList.isEmpty()) {
-            String appendData = new String(this._bufferList.poll().getBufferedData());
-            data += appendData;
+        Iterator<IResource> it = this._bufferList.iterator();
+        while(it.hasNext()) {
+            String peekBuffer = new String(it.next().getBufferedData());
+            data += peekBuffer;
         }
 
         return data.getBytes();
@@ -40,6 +42,9 @@ public abstract class ABufferResource extends HttpResource {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        this._buffer = "";
+        
+        //[optional] POST-data
         try(BufferedInputStream buffer = new BufferedInputStream(exchange.getRequestBody()))
         {
             this._buffer = new String(buffer.readAllBytes());
@@ -54,6 +59,17 @@ public abstract class ABufferResource extends HttpResource {
             }
         }
 
+        //[optional] GET-data
+        String requestedUri = exchange.getRequestURI().toString();
+        int getParamIndex = requestedUri.indexOf("?");
+        if(getParamIndex != -1) {
+            String getData = requestedUri.substring(getParamIndex+1);
+            if(this._buffer.length() > 0) {
+                this._buffer += "&";
+            }
+            this._buffer += getData;
+        }
+
         super.handle(exchange);
     }
 
@@ -66,6 +82,8 @@ public abstract class ABufferResource extends HttpResource {
     }
 
     public void clearBuffer() {
+        this._data = new byte[0];
+        this._buffer = "";
         this._bufferList.clear();
     }
 }

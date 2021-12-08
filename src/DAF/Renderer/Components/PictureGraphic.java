@@ -1,7 +1,5 @@
 package DAF.Renderer.Components;
 
-import java.io.File;
-
 import DAF.Math.Vector2;
 import DAF.Serializer.Init;
 import DAF.Serializer.JsonElement;

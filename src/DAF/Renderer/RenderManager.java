@@ -80,12 +80,13 @@ public class RenderManager extends AbstractManager {
     public void update() {
         for(AGraphicRenderer renderer : this.renderer) {
             if(!renderer.beforeRender()) {
-                return;
+                continue;
             }
             
-            for (GameObject gameObject: gameObjects) {
+            for (GameObject gameObject: this.getGameObjects()) {
                 if (!gameObject.isEnabled())
-                    continue;
+			        continue;
+
                 AGraphic graphic = gameObject.getComponent(AGraphic.class);
     
                 if(graphic == null) {

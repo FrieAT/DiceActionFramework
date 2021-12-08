@@ -9,8 +9,6 @@ import DAF.Renderer.Components.PictureGraphic;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.event.EventHandler;
 
 public class PictureGraphicJavaFXRenderer extends JavaFXRenderer {
 	private HashMap<String, Image> _cachedImages; //TODO: Replace with own FlyweightAssetManager-class.

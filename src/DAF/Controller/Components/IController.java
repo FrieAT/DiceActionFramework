@@ -1,4 +1,5 @@
 package DAF.Controller.Components;
+
 import DAF.Components.IComponent;
 import DAF.Dice.Components.ADice;
 

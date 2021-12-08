@@ -1,8 +1,5 @@
 package DAF.Dice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import DAF.AbstractManager;
 import DAF.GameObject;
 import DAF.Dice.Components.ADice;

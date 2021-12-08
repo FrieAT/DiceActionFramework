@@ -1,20 +1,22 @@
 package DAF;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import DAF.Components.AbstractComponent;
 import DAF.Components.TransformComponent;
+import DAF.Event.EventDispatcherIterator;
+import DAF.Event.EventDispatcherIterator.AnyEvent;
 import DAF.Serializer.JsonElement;
 import DAF.Serializer.Serializable;
-import javafx.scene.transform.Transform;
 
 @Serializable
 public class GameObject {
 
     private static LinkedList<GameObject> _gameObjects;
+
+    public static LinkedList<AnyEvent<GameObject>> _eventDelegates = null;
 
     private static int _gameObjectCounter = 0;
 
@@ -27,6 +29,29 @@ public class GameObject {
             }
         }
         return null;
+    }
+
+    public static void addIteratorDelegate(AnyEvent<GameObject> delegate)
+    {
+        if(_eventDelegates == null) {
+            _eventDelegates = new LinkedList<>();
+        }
+        _eventDelegates.add(delegate);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Iterable<GameObject> getGameObjects() {
+        return (Iterable<GameObject>)GameObject.iterator();
+    }
+
+    public static Iterable<GameObject> getGameObject(GameObject obj) {
+        LinkedList<GameObject> list = new LinkedList<>();
+        list.add(obj);
+        return (Iterable<GameObject>)new EventDispatcherIterator<GameObject>(list.iterator(), _eventDelegates);
+    }
+
+    public static Iterator<GameObject> iterator() {
+        return new EventDispatcherIterator<GameObject>(_gameObjects.iterator(), _eventDelegates);
     }
 
     public static void startAll() {

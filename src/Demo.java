@@ -5,8 +5,13 @@ import java.util.LinkedList;
 
 import DAF.AbstractManager;
 import DAF.GameObject;
+import DAF.Controller.ControllerManager;
+import DAF.Controller.Components.ControllerSocket;
+import DAF.Controller.Components.ControllerView;
+import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
 import DAF.Dice.DiceManager;
+import DAF.Dice.Components.ADice;
 import DAF.Dice.Components.ClassicDice;
 import DAF.Input.AInputHandler;
 import DAF.Input.InputManager;
@@ -89,19 +94,7 @@ public class Demo {
 
          */
 
-        GameObject g2 = new GameObject("Wuerfel");
-        g2.addComponent(ClassicDice.class);
-        g2.getTransform().setPosition(new Vector2(800, 400));
-        g2.getTransform().setScale(new Vector2(15, 15));
-        g2.addComponent(StupidComponent.class);
-
-        GameObject rollButton = new GameObject("Roll_Button");
-        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
-        buttonG.setLabelText("Würfeln!");
-        buttonG.setWidth(300);
-        buttonG.setHeight(50);
-        rollButton.getTransform().setPosition(new Vector2(800, 600));
-        rollButton.addComponent(RollDiceButtonController.class);
+        IController playerOneController, playerTwoController;
 
         GameObject player1 = new GameObject("PlayerOne");
         PictureGraphic playerGraphic = player1.addComponent(PictureGraphic.class);
@@ -111,7 +104,69 @@ public class Demo {
         playerGraphic.setLeft(480);
         playerGraphic.setTop(550);
         player1.getTransform().setScale(new Vector2(0.5, 0.5));
-        player1.addComponent(PlayerController.class);
+        player1.getTransform().setPosition(new Vector2(100, 650));
+        playerOneController = player1.addComponent(PlayerController.class);
+
+        GameObject player2 = new GameObject("PlayerTwo");
+        PictureGraphic playerGraphic2 = player2.addComponent(PictureGraphic.class);
+        playerGraphic2.setPicturePath("images/player1.png");
+        playerGraphic2.setWidth(50);
+        playerGraphic2.setHeight(75);
+        playerGraphic2.setLeft(480);
+        playerGraphic2.setTop(550);
+        player2.getTransform().setScale(new Vector2(0.5, 0.5));
+        player2.getTransform().setPosition(new Vector2(600, 700));
+        playerTwoController = player2.addComponent(PlayerController.class);
+
+        ControllerView controllerView;
+        RollDiceButtonController buttonController;
+        PlayerMovement playerMovement;
+        ADice currentDice;
+
+        GameObject g2 = new GameObject("Wuerfel2");
+        currentDice = g2.addComponent(ClassicDice.class);
+        g2.getTransform().setPosition(new Vector2(800, 650));
+        g2.getTransform().setScale(new Vector2(15, 15));
+
+        GameObject rollButton2 = new GameObject("Roll_Button1");
+        ButtonGraphic buttonG2 = rollButton2.addComponent(ButtonGraphic.class);
+        buttonG2.setLabelText("Würfeln!");
+        buttonG2.setWidth(300);
+        buttonG2.setHeight(50);
+        rollButton2.getTransform().setPosition(new Vector2(800, 600));
+        buttonController = rollButton2.addComponent(RollDiceButtonController.class);
+        buttonController.setControllableDice(currentDice);
+        controllerView = rollButton2.addComponent(ControllerView.class);
+        controllerView.setController(playerTwoController);
+
+        GameObject g3 = new GameObject("Wuerfel1");
+        currentDice = g3.addComponent(ClassicDice.class);
+        g3.getTransform().setPosition(new Vector2(100, 650));
+        g3.getTransform().setScale(new Vector2(15, 15));
+
+        GameObject rollButton = new GameObject("Roll_Button2");
+        ButtonGraphic buttonG = rollButton.addComponent(ButtonGraphic.class);
+        buttonG.setLabelText("Würfeln!");
+        buttonG.setWidth(300);
+        buttonG.setHeight(50);
+        rollButton.getTransform().setPosition(new Vector2(70, 600));
+        buttonController = rollButton.addComponent(RollDiceButtonController.class);
+        buttonController.setControllableDice(currentDice);
+        controllerView = rollButton.addComponent(ControllerView.class);
+        controllerView.setController(playerOneController);
+
+        GameObject movementPlayerOne = new GameObject("Player1_Movement");
+        movementPlayerOne.addComponent(PlayerMovement.class);
+        controllerView = movementPlayerOne.addComponent(ControllerView.class);
+        controllerView.setController(playerOneController);
+
+        GameObject movementPlayerTwo = new GameObject("Player2_Movement");
+        movementPlayerTwo.addComponent(PlayerMovement.class);
+        controllerView = movementPlayerTwo.addComponent(ControllerView.class);
+        controllerView.setController(playerTwoController);
+
+        GameObject controllerSocket = new GameObject("ControllerSocket");
+        controllerSocket.addComponent(ControllerSocket.class);
         
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
@@ -132,11 +187,14 @@ public class Demo {
             dir.addResource(PngFileResource.class);
             dir.addResource(GifFileResource.class);
 
-            socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
-            
-            socket.addResource(JsonBufferResource.class, "/api/fetchFrame.json");
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiFetchFrameForPlayer);
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiFetchFrame);
+            socket.addResource(JsonBufferResource.class, ServerRenderer.apiEvent);
 
-            socket.addResource(JsonBufferResource.class, "/api/event.json");
+            
+            socket.addResource(JsonBufferResource.class, ControllerSocket.apiConfirmFrameForPlayer);
+
+            socket.addResource(HtmlFileResource.class, "/", new File("www/index.html"));
         }
         catch(SocketServerException|HttpResourceExistsException e) {
             throw new NullPointerException(e.getMessage());
@@ -157,6 +215,7 @@ public class Demo {
         _managers.add(RenderManager.getInstance());
         _managers.add(DiceManager.getInstance());
         _managers.add(InputManager.getInstance());
+        _managers.add(ControllerManager.getInstance());
 
         //Initialization of the managers.
         for(AbstractManager m : _managers) {
@@ -170,11 +229,11 @@ public class Demo {
         while(true) {
             //TODO: If game quits or exception happens?
 
+            GameObject.updateAll();
+
             for(AbstractManager m : _managers) {
                 m.update();
             }
-
-            GameObject.updateAll();
 
             //FIXME: Just used as a delay for main thread to reduce CPU usage.
             try {

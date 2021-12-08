@@ -2,7 +2,6 @@ package DAF.Socket.HttpSocket;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -129,7 +128,7 @@ public class HttpServerSocket implements IServerSocket
         this._resources.remove(uri);
     }
 
-    public void transmit(IResource data, boolean clear) {
+    public synchronized void transmit(IResource data, boolean clear) {
         HttpResource resource = this._resources.get(data.getResourcePath());
 
         if(resource == null) {
@@ -138,18 +137,34 @@ public class HttpServerSocket implements IServerSocket
 
         ABufferResource bufferResource = (ABufferResource)resource;
 
-        if(bufferResource == null) {
-            throw new IllegalArgumentException("Only on buffered resources is a tramission allowed. Other Resources may only have disk-changes, not memory-changes.");
-        }
-
         if(clear) {
             bufferResource.clearBuffer();
         }
 
         bufferResource.writeBuffer(data);
+
+        String uri = data.getResourcePath();
+        LinkedList<ISocketListener> list = this._listeners.get(uri);
+        if(list != null && resource != null) {
+            for(ISocketListener listener : list) {
+                listener.onSocketPrepareTransmission(resource);
+            }
+        }
     }
 
     public void receiveData(HttpExchange exchange) {
+        String uri = exchange.getRequestURI().getPath();
+        LinkedList<ISocketListener> list = this._listeners.get(uri);
+        HttpResource resource = this._resources.get(uri);
+
+        if(list != null && resource != null) {
+            for(ISocketListener listener : list) {
+                listener.onSocketReceive(resource);
+            }
+        }
+    }
+
+    public void sendData(HttpExchange exchange) {
         String uri = exchange.getRequestURI().getPath();
         LinkedList<ISocketListener> list = this._listeners.get(uri);
         HttpResource resource = this._resources.get(uri);

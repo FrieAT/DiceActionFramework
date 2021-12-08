@@ -7,7 +7,6 @@ import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.JavaFX.JavaFXRenderer;
 import DAF.Renderer.JavaFX.JavaFXWindow;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -48,10 +47,15 @@ public class MouseJavaFXHandler extends AInputHandler {
                 MouseInputEvent event = new MouseInputEvent(
                     KeyState.Down,
                     new Vector2(mouseEvent.getX(), mouseEvent.getY()),
-                    mouseEvent.getButton().ordinal()
+                    mouseEvent.getButton().ordinal(),
+                    0
                 );
                 
                 for(IInputListener listener : _subscribers) {
+                    if(!listener.getGameObject().isEnabled()) {
+                        continue;
+                    }
+
                     listener.onInput(event);
                 }
             }
@@ -63,10 +67,15 @@ public class MouseJavaFXHandler extends AInputHandler {
                 MouseInputEvent event = new MouseInputEvent(
                     KeyState.Up,
                     new Vector2(mouseEvent.getX(), mouseEvent.getY()),
-                    mouseEvent.getButton().ordinal()
+                    mouseEvent.getButton().ordinal(),
+                    0
                 );
                 
                 for(IInputListener listener : _subscribers) {
+                    if(!listener.getGameObject().isEnabled()) {
+                        continue;
+                    }
+
                     listener.onInput(event);
                 }
             }

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import DAF.Math.Vector2;
 
-public class ADiceBag extends ADice implements IDice {
+public class ADiceBag extends ADice {
     private ArrayList<ADice> dices;
 
     public ADiceBag () {

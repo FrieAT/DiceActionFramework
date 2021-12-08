@@ -1,6 +1,6 @@
 package DAF.Renderer.JavaFX;
-import javax.swing.text.html.HTMLDocument.BlockElement;
 
+import DAF.Controller.ControllerManager;
 import DAF.Renderer.AGraphicRenderer;
 import DAF.Renderer.Components.AGraphic;
 import javafx.scene.Node;
@@ -33,6 +33,11 @@ public class JavaFXRenderer extends AGraphicRenderer {
 		JavaFXWindow window = this.getWindow();
 		
 		if(window == null || !window.isRendered()) {
+			return false;
+		}
+
+		//FIXME: Prevent strong binding to other manager!!!
+		if(ControllerManager.getInstance().GetControllerAtCycle() != 0) {
 			return false;
 		}
 

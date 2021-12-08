@@ -1,13 +1,10 @@
 package DAF.Renderer.JavaFX;
 
-import java.io.File;
-
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.AGraphic;
 import DAF.Renderer.Components.LabelGraphic;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {

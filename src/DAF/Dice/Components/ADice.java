@@ -11,8 +11,6 @@ public abstract class ADice extends AbstractComponent implements IDice {
     private Face topFace;
     private final int MAX_FACES = 20;
 
-    private double accumulatedTime = 0.0;
-
     public ADice() {
         this.diceFaces = new ArrayList<>();
         this.topFace = null;
