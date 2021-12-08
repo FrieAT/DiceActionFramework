@@ -5,25 +5,31 @@ public class RollDiceButtonController extends AbstractComponent implements IInpu
 
     private ArrayList<ADice> _dices = new ArrayList<>();
     
+    public void addControllableDice(ADice newDice) {
+        this._dices.add(newDice);
+    }
+
     @Override
     public void start() {
 
-        ArrayList<GameObject> dices = GameObject.findAll("Dice");
+        if(this._dices.size() == 0) {
+            ArrayList<GameObject> dices = GameObject.findAll("Dice");
 
-        //System.out.println(_dices);
+            //System.out.println(_dices);
 
-        for (GameObject dice : dices) {
-            if (dice == null) {
-                throw new NullPointerException("Can't find the dice to roll.");
+            for (GameObject dice : dices) {
+                if (dice == null) {
+                    throw new NullPointerException("Can't find the dice to roll.");
+                }
+
+                ADice diceComponent = dice.getComponent(ADice.class);
+
+                if (diceComponent == null) {
+                    throw new NullPointerException("Given gameObject doesn't own a dice-component.");
+                }
+
+                this._dices.add(diceComponent);
             }
-
-            ADice diceComponent = dice.getComponent(ADice.class);
-
-            if (diceComponent == null) {
-                throw new NullPointerException("Given gameObject doesn't own a dice-component.");
-            }
-
-            this._dices.add(diceComponent);
         }
 
         //this._dice = diceComponent;

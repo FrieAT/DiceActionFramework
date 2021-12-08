@@ -2,13 +2,9 @@ import Socket.HttpSocket.Resource.JsonBufferResource;
 import Socket.IResource;
 import Socket.IServerSocket;
 import Socket.ISocketListener;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import org.json.JSONObject;
 
-public class MouseServerHandler extends AInputHandler implements ISocketListener {
+public class MouseServerHandler extends AServerHandler implements ISocketListener {
     @Override
     public Class<? extends AInputEvent> getInputEventType() {
         return MouseInputEvent.class;
@@ -20,10 +16,9 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         IServerSocket socket = serverRenderer.getSocket();
 
         socket.addListener("/api/event.json", this);
-
     }
 
-    public void onSocketTransmission(IResource resource) {
+    public void onSocketReceive(IResource resource) {
         assert (resource.getClass() == JsonBufferResource.class);
         JsonBufferResource json = (JsonBufferResource) resource;
 
@@ -34,15 +29,25 @@ public class MouseServerHandler extends AInputHandler implements ISocketListener
         int keycode = jsonData.getInt("keycode");
         double x = jsonData.getDouble("x");
         double y = jsonData.getDouble("y");
+        int controller = jsonData.getInt("controller");
 
         MouseInputEvent event = new MouseInputEvent(
                 KeyState.Up,
                 new Vector2(x, y),
-                keycode
+                keycode,
+                controller
         );
 
-        for(IInputListener listener : _subscribers) {
-            listener.onInput(event);
-        }
+        this.addDelayedEvent(event);
+    }
+
+    @Override
+    public void onSocketTransmission(IResource resource) {
+        
+    }
+
+    @Override
+    public void onSocketPrepareTransmission(IResource resource) {
+        
     }
 }

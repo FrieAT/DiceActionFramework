@@ -10,10 +10,11 @@ public class KeyboardInputEvent extends AInputEvent
 
     private int _keycode;
 
-    public KeyboardInputEvent(KeyState state, int keycode)
+    public KeyboardInputEvent(KeyState state, int keycode, int controller)
     {
         this._state = state;
         this._keycode = keycode;
+        this._controller = controller;
     }
 
     public String getType() { return "keyboard"; }

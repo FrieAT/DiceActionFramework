@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class AInputHandler {
     protected LinkedList<IInputListener> _subscribers;
@@ -14,7 +15,11 @@ public abstract class AInputHandler {
     }
 
     public void init() {
-        throw new NullPointerException("Not implemented input handler.");
+
+    }
+
+    public void update() {
+
     }
 
     public void registerListener(IInputListener listener) {

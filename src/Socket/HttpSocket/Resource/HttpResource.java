@@ -62,5 +62,7 @@ public abstract class HttpResource implements HttpHandler, IResource
         {
             buffer.write(response);
         }
+
+        this.getSocket().sendData(exchange);
     }
 }
