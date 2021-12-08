@@ -150,6 +150,7 @@ public class GameObject {
         return this.instantiateTransform();
     }
 
+    // TODO: Standard checks parent if enabled
     public boolean isEnabled() {
         return this.enabled;
     }

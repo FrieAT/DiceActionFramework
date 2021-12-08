@@ -100,6 +100,10 @@ public class POTCDiceGame {
         );
         obj.addComponent(ControllerSocket.class);
 
+        obj = view.addBackground("Cup_1",
+                "images/wooden_floor.png",
+                64, 64,
+                0,0);
         obj = view.addDice("Dice_1",
                 350, 450,
                 POTCDiceBag.class
@@ -110,6 +114,7 @@ public class POTCDiceGame {
                 25, 250,
                 POTCDiceBag.class
         );
+
         obj.addComponent(PlayerController.class);
 
         obj = view.addDice("Dice_3",
