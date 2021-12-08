@@ -75,7 +75,7 @@ public class RenderManager extends AbstractManager {
     public void update() {
         for(AGraphicRenderer renderer : this.renderer) {
             if(!renderer.beforeRender()) {
-                return;
+                continue;
             }
             
             for (GameObject gameObject: this.getGameObjects()) {
