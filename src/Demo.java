@@ -60,7 +60,7 @@ public class Demo {
 
         
         PictureGraphic bgImage = background.addComponent(PictureGraphic.class);
-        //bgImage.setPicturePath("images/gameboard.png");
+        bgImage.setPicturePath("images/gameboard.png");
         bgImage.setWidth(1024);
         bgImage.setHeight(768);
         bgImage.setLeft(0);

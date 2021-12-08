@@ -194,13 +194,13 @@
 
 <script>
         function render(AGraphic) {
-                if (AGraphic["@type"] == "PictureGraphic") { //
+                if (AGraphic["@type"].endsWith("PictureGraphic")) { //
                         renderPictureGraphic(AGraphic);
                 }
-                if (AGraphic["@type"] == "LabelGraphic") { //
+                if (AGraphic["@type"].endsWith("LabelGraphic")) { //
                         renderLabelGraphic(AGraphic);
                 }
-                if (AGraphic["@type"] == "ButtonGraphic") { //
+                if (AGraphic["@type"].endsWith("ButtonGraphic")) { //
                         renderButtonGraphic(AGraphic);
                 }
         }
