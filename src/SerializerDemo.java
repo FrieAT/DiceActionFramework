@@ -1,3 +1,13 @@
+
+
+import DAF.GameObject;
+import DAF.Controller.Components.PlayerController;
+import DAF.Math.Vector2;
+import DAF.Renderer.Components.ButtonGraphic;
+import DAF.Renderer.Components.PictureGraphic;
+import DAF.Serializer.ASerializer;
+import DAF.Serializer.JsonSerializer;
+
 public class SerializerDemo {
     public static void main (String[] args) {
 

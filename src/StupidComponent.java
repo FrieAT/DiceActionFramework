@@ -1,3 +1,6 @@
+import DAF.Components.AbstractComponent;
+import DAF.Renderer.Components.PictureGraphic;
+
 public class StupidComponent extends AbstractComponent
 {
     @Override
