@@ -1,3 +1,14 @@
+import DAF.Components.AbstractComponent;
+import DAF.Controller.Components.ControllerView;
+import DAF.Controller.Components.IController;
+import DAF.Event.AInputEvent;
+import DAF.Event.IInputListener;
+import DAF.Event.KeyState;
+import DAF.Event.MouseInputEvent;
+import DAF.Input.InputManager;
+import DAF.Math.Vector2;
+import DAF.Renderer.Components.PictureGraphic;
+
 public class PlayerMovement extends AbstractComponent implements IInputListener {
     private IController _forController = null;
 

@@ -1,3 +1,6 @@
+import DAF.Components.AbstractComponent;
+import DAF.Math.Vector2;
+
 public class DiceSeparatorComponent extends AbstractComponent {
 
     private Vector2 _initPosition;

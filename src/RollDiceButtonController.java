@@ -1,41 +1,27 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import DAF.Components.AbstractComponent;
+import DAF.Dice.Components.ADice;
+import DAF.Event.AInputEvent;
+import DAF.Event.IInputListener;
+import DAF.Event.KeyState;
+import DAF.Event.MouseInputEvent;
+import DAF.Input.InputManager;
+import DAF.Math.Vector2;
+import DAF.Renderer.Components.ButtonGraphic;
 
 public class RollDiceButtonController extends AbstractComponent implements IInputListener {
-
-    private ArrayList<ADice> _dices = new ArrayList<>();
+    private ADice _dice;
     
-    public void addControllableDice(ADice newDice) {
-        this._dices.add(newDice);
+    public void setControllableDice(ADice dice) {
+        this._dice = dice;
     }
 
     @Override
     public void start() {
-
-        if(this._dices.size() == 0) {
-            ArrayList<GameObject> dices = GameObject.findAll("Dice");
-
-            //System.out.println(_dices);
-
-            for (GameObject dice : dices) {
-                if (dice == null) {
-                    throw new NullPointerException("Can't find the dice to roll.");
-                }
-
-                ADice diceComponent = dice.getComponent(ADice.class);
-
-                if (diceComponent == null) {
-                    throw new NullPointerException("Given gameObject doesn't own a dice-component.");
-                }
-
-                this._dices.add(diceComponent);
-            }
+        if(this._dice == null) {
+            throw new NullPointerException("Please define a correct ADice component as a reference.");
         }
 
-        //this._dice = diceComponent;
-
         InputManager.getInstance().add(MouseInputEvent.class, this);
-
     }
     
     public void onInput(AInputEvent event) {
@@ -53,8 +39,7 @@ public class RollDiceButtonController extends AbstractComponent implements IInpu
             double yDist = buttonGraphic.getHeight()/2.0;
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
-                for (ADice dice : _dices)
-                    dice.roll();
+                this._dice.roll();
             }
         }
     }

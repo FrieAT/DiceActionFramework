@@ -1,3 +1,6 @@
+import DAF.Dice.Components.ADiceBag;
+import DAF.Dice.Components.ClassicDice;
+
 public class POTCDiceBag extends ADiceBag {
 
     public POTCDiceBag () {
