@@ -10,14 +10,18 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     private boolean _cycled = false;
 
+    private boolean _isStarted = false;
+
     public void setController(IController controller) {
         this._forControllerIndex = -1;
         this._forController = controller;
+        this.registerController();
     }
 
     public void setController(int controllerIndex) {
         this._forControllerIndex = controllerIndex;
         this._forController = null;
+        this.registerController();
     }
 
     public IController getController() {
@@ -26,6 +30,8 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     @Override
     public void start() {
+        this._isStarted = true;
+
         this.registerController();
         
         GameObject.addIteratorDelegate(this);
@@ -59,6 +65,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
     }
 
     private void registerController() {
+        if(!this._isStarted) {
+            return;
+        }
+
         if(this._forController == null) {
             this._forController = ControllerManager.getInstance().GetController(this._forControllerIndex);
         }
