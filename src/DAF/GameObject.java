@@ -147,6 +147,10 @@ public class GameObject {
     }
 
     public boolean isEnabled() {
+        if(this.parent != null) {
+            return this.parent.isEnabled() && this.enabled;
+        }
+
         return this.enabled;
     }
 

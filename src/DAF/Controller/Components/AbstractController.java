@@ -20,9 +20,4 @@ public class AbstractController extends AbstractComponent implements IController
     {
         ControllerManager.getInstance().add(this);
     }
-
-    @Override
-    public int throwDice(ADice dice) {
-        throw new NullPointerException("Abstract method called");
-    }
 }

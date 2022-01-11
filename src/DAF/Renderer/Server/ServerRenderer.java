@@ -44,10 +44,6 @@ public class ServerRenderer extends AGraphicRenderer {
 
     @Override
     public void render(AGraphic g) {
-        if(!g.getGameObject().isEnabled()) {
-            return;
-        }
-
         fetchFrame.append(serializer.serialize(g)).append(",");
     }
 
