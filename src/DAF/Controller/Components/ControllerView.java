@@ -44,6 +44,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     @Override
     public void onBeforeNext(GameObject obj) {
+        if(this._cycled || this._forController == null) {
+            return;
+        }
+        
         GameObject current = this.getGameObject();
         while(current != null && current != obj) {
             current = current.getParent();
@@ -59,6 +63,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     @Override
     public void onAfterNext(GameObject obj) {
+        if(!this._cycled || this._forController == null) {
+            return;
+        }
+        
         GameObject current = this.getGameObject();
         while(current != null && current != obj) {
             current = current.getParent();
