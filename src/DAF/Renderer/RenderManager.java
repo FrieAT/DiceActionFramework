@@ -82,7 +82,16 @@ public class RenderManager extends AbstractManager {
             if(!renderer.beforeRender()) {
                 continue;
             }
-            
+
+            GameObject x = GameObject.find("Dice_1");
+            for (GameObject y : GameObject.getGameObject(x)) {
+                if (x.isEnabled()) {
+
+                }
+
+            }
+            x.isEnabled();
+
             for (GameObject gameObject: this.getGameObjects()) {
                 if (!gameObject.isEnabled())
 			        continue;

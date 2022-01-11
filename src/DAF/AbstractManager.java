@@ -22,7 +22,7 @@ public class AbstractManager {
 
     @SuppressWarnings("unchecked")
     public Iterable<GameObject> getGameObjects() {
-        return (Iterable<GameObject>)GameObject.iterator();
+        return (Iterable<GameObject>) iterator();
     }
 
     public Iterator<GameObject> iterator() {

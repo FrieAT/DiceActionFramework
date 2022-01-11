@@ -125,6 +125,7 @@ public class POTCDiceGame {
     public static void setUpInGameScreenV2() {
         GameObject inGameScreen = new GameObject("InGame");
         View view = inGameScreen.addComponent(View.class);
+        ControllerView cw;
         GameObject obj;
 
         obj = view.addBackground("InGameBackground",
@@ -134,21 +135,32 @@ public class POTCDiceGame {
         );
         obj.addComponent(ControllerSocket.class);
 
-        obj = view.addBackground("Cup_1",
-                "images/wooden_floor.png",
-                64, 64,
-                0,0);
         obj = view.addDice("Dice_1",
                 350, 450,
                 POTCDiceBag.class
         );
+
         obj.addComponent(PlayerController.class);
+        cw = obj.addComponent(ControllerView.class);
+        cw.setController(1);
+
+        obj = view.addCup("DiceCup_1",
+                "Cup_1_open",
+                "images/dice_cup_open.png",
+                280, 470,
+                64, 64,
+                0,0,
+                "Cup_1_closed",
+                "images/dice_cup_closed.png",
+                325, 470,
+                64, 64,
+                0, 0
+        );
 
         obj = view.addDice("Dice_2",
                 25, 250,
                 POTCDiceBag.class
         );
-
         obj.addComponent(PlayerController.class);
 
         obj = view.addDice("Dice_3",
@@ -171,7 +183,24 @@ public class POTCDiceGame {
                 30,
                 RollDiceButtonControllerV2.class
         );
+
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_1");
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_1");
+        //TODO: set DiceCup here
+        // e.g.: obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("Dice_cup_1");
+        obj.addComponent(ControllerView.class).setController(1);
+
+        obj = view.addButton("Collect_Button_1",
+                "Collect",
+                280, 550,
+                100, 50,
+                0, 0,
+                30,
+                CollectDiceButtonController.class
+        );
+
+        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_1");
+        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_1");
         obj.addComponent(ControllerView.class).setController(1);
 
         obj = view.addButton("Roll_Button_2",

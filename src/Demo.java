@@ -171,11 +171,14 @@ public class Demo {
         LinkedList<AbstractManager> _managers = new LinkedList<>();
 
         //Pre-initialization
+
         JavaFXRenderer renderer = new JavaFXRenderer();
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
+
+
 
         ASerializer jsonSerializer = new JsonSerializer();
         

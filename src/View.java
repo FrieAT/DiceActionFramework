@@ -6,41 +6,11 @@ import java.util.LinkedList;
 import DAF.AbstractManager;
 import DAF.GameObject;
 import DAF.Components.AbstractComponent;
-import DAF.Controller.ControllerManager;
-import DAF.Controller.Components.ControllerSocket;
-import DAF.Controller.Components.ControllerView;
-import DAF.Controller.Components.IController;
-import DAF.Controller.Components.PlayerController;
-import DAF.Dice.DiceManager;
-import DAF.Dice.Components.ADice;
-import DAF.Dice.Components.ClassicDice;
-import DAF.Input.AInputHandler;
-import DAF.Input.InputManager;
-import DAF.Input.MouseJavaFXHandler;
-import DAF.Input.MouseServerHandler;
 import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.LabelGraphic;
 import DAF.Renderer.Components.PictureGraphic;
-import DAF.Renderer.JavaFX.ButtonGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.JavaFXRenderer;
-import DAF.Renderer.JavaFX.LabelGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.PictureGraphicJavaFXRenderer;
-import DAF.Renderer.Server.ServerRenderer;
-import DAF.Serializer.ASerializer;
-import DAF.Serializer.JsonSerializer;
-import DAF.Socket.HttpSocket.HttpResourceExistsException;
-import DAF.Socket.HttpSocket.HttpServerSocket;
-import DAF.Socket.HttpSocket.SocketServerException;
-import DAF.Socket.HttpSocket.Resource.DirectoryResource;
-import DAF.Socket.HttpSocket.Resource.GifFileResource;
-import DAF.Socket.HttpSocket.Resource.HtmlFileResource;
-import DAF.Socket.HttpSocket.Resource.HttpResource;
-import DAF.Socket.HttpSocket.Resource.JpegFileResource;
-import DAF.Socket.HttpSocket.Resource.JsonBufferResource;
-import DAF.Socket.HttpSocket.Resource.PngFileResource;
-import javafx.scene.transform.Transform;
 
 public class View extends AbstractComponent {
 
@@ -105,6 +75,26 @@ public class View extends AbstractComponent {
         return button;
     }
 
+    // with PictureGraphic
+    public <T extends AbstractComponent>
+    GameObject addButton(String name, String text, String path, double posX, double posY, int width, int height, int left, int top, int fontSize, Class<T>... components) {
+        GameObject button = new GameObject(name);
+        ButtonGraphic bGraphic = button.addComponent(ButtonGraphic.class);
+        bGraphic.setLabelText(text);
+        bGraphic.setPicturePath(path);
+        bGraphic.setWidth(width);
+        bGraphic.setHeight(height);
+        bGraphic.setFontSize(fontSize);
+        button.getTransform().setPosition(new Vector2(posX, posY));
+
+        for (Class<T> c : components)
+            button.addComponent(c);
+
+        gameObjects.add(button);
+
+        return button;
+    }
+
     public GameObject addButton(String name, String text, double posX, double posY, int width, int height, int left, int top, int fontSize, AbstractComponent... components) {
         GameObject button = new GameObject(name);
         ButtonGraphic bGraphic = button.addComponent(ButtonGraphic.class);
@@ -136,21 +126,21 @@ public class View extends AbstractComponent {
     }
 
     public <T extends AbstractComponent>
-    GameObject addGraphic(String name, String path, double posX, double posY, int width, int height, int left, int top, Class<T>... components) {
-        GameObject graphic = new GameObject(name);
-        PictureGraphic bgImage = graphic.addComponent(PictureGraphic.class);
-        bgImage.setPicturePath(path);
-        bgImage.setWidth(width);
-        bgImage.setHeight(height);
-        bgImage.setLeft(left);
-        bgImage.setTop(top);
+    GameObject addCup(String goName,
+                      String name, String path, double posX, double posY, int width, int height, int left, int top,
+                      String name2, String path2, double posX2, double posY2, int width2, int height2, int left2, int top2, Class<T>... components) {
+        GameObject diceCup = new GameObject(goName);
+        DiceCup dcImage = diceCup.addComponent(DiceCup.class);
+        dcImage.setOpenCup(name, path, posX, posY, width, height, left, top);
+        dcImage.setClosedCup(name2, path2, posX2, posY2, width2, height2, left2, top2);
+        diceCup.getTransform().setPosition(new Vector2(posX, posY));
 
         for (Class<T> c: components)
-            graphic.addComponent(c);
+            diceCup.addComponent(c);
 
-        gameObjects.add(graphic);
+        gameObjects.add(diceCup);
 
-        return graphic;
+        return diceCup;
     }
 
 

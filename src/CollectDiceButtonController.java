@@ -14,14 +14,14 @@ import DAF.Input.InputManager;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
 
-public class RollDiceButtonControllerV2 extends AbstractComponent implements IInputListener {
+public class CollectDiceButtonController extends AbstractComponent implements IInputListener {
 
     private ArrayList<ADice> _dices = new ArrayList<>();
     private ArrayList<String> _diceNames = new ArrayList<>();
     private DiceCup _diceCup;
 
-    public RollDiceButtonControllerV2() {
-        
+    public CollectDiceButtonController() {
+
     }
 
     public void addDiceNames(String... diceName) {
@@ -44,7 +44,7 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
 
         for (GameObject dice : dices) {
             if (dice == null) {
-                throw new NullPointerException("Can't find the dice to roll.");
+                throw new NullPointerException("Can't find the dice to collect.");
             }
 
             ADice diceComponent = dice.getComponent(ADice.class);
@@ -76,16 +76,17 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
                 for (ADice dice : _dices) {
-                    if (!_diceCup.isOpen()) {
-                        dice.getGameObject().setEnabled(true);
-                        dice.roll();
-                        _diceCup.setCupStatus(true);
-
+                    if (_diceCup.isOpen()) {
+                        dice.getGameObject().setEnabled(false);
+                        _diceCup.setCupStatus(false);
                     }
                 }
+
+                //_diceCup.setCupStatus(!_diceCup.isOpen());
 
             }
         }
     }
 
 }
+
