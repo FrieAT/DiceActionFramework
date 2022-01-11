@@ -27,7 +27,7 @@ public class ControllerManager extends AbstractManager {
 
     public boolean IsControllerAtCycle(int playerIndex) {
         if(this._currentPlayer == 0) {
-            return false;
+            return true;
         }
 
         return playerIndex == this._currentPlayer;
