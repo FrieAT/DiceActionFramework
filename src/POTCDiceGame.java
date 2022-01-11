@@ -186,8 +186,7 @@ public class POTCDiceGame {
 
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_1");
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_1");
-        //TODO: set DiceCup here
-        // e.g.: obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("Dice_cup_1");
+
         obj.addComponent(ControllerView.class).setController(1);
 
         obj = view.addButton("Collect_Button_1",

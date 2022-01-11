@@ -1,10 +1,6 @@
 package DAF.Dice.Components;
 public class ClassicDice extends ADice {
 
-    public ClassicDice() {
-
-    }
-
     @Override
     public void start() {
         super.start();
