@@ -1,5 +1,7 @@
 package DAF.Controller.Components;
 
+import javax.naming.ldap.Control;
+
 import DAF.GameObject;
 import DAF.Components.AbstractComponent;
 import DAF.Controller.ControllerManager;
@@ -55,9 +57,14 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
         this._cycled = true;
 
+        int currentPlayer = ControllerManager.getInstance().GetControllerAtCycle();
         if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
-            this._previousEnabledState = this.getGameObject().isEnabled();
-            this.getGameObject().setEnabled(false);
+            if((this._forController.getPlayerNo() == 0 && currentPlayer != 0)) {
+                this._cycled = false;
+            } else {
+                this._previousEnabledState = this.getGameObject().isEnabled();
+                this.getGameObject().setEnabled(false);
+            }
         }
     }
 
