@@ -135,104 +135,212 @@ public class POTCDiceGame {
         );
         obj.addComponent(ControllerSocket.class);
 
+        /***************************************************
+         *                     Dice 1                      *
+         ***************************************************/
+
         obj = view.addDice("Dice_1",
                 350, 450,
                 POTCDiceBag.class
         );
-
         obj.addComponent(PlayerController.class);
         cw = obj.addComponent(ControllerView.class);
         cw.setController(1);
-
         obj = view.addCup("DiceCup_1",
                 "Cup_1_open",
                 "images/dice_cup_open.png",
-                280, 470,
+                380, 425,
                 64, 64,
                 0,0,
                 "Cup_1_closed",
                 "images/dice_cup_closed.png",
-                325, 470,
+                380, 425,
                 64, 64,
                 0, 0
         );
+
+        /***************************************************
+         *                     Dice 2                      *
+         ***************************************************/
 
         obj = view.addDice("Dice_2",
                 25, 250,
                 POTCDiceBag.class
         );
         obj.addComponent(PlayerController.class);
+        cw = obj.addComponent(ControllerView.class);
+        cw.setController(2);
+        obj = view.addCup("DiceCup_2",
+                "Cup_2_open",
+                "images/dice_cup_open.png",
+                110, 280,
+                64, 64,
+                0,0,
+                "Cup_2_closed",
+                "images/dice_cup_closed.png",
+                110, 280,
+                64, 64,
+                0, 0
+        );
+
+        /***************************************************
+         *                     Dice 3                      *
+         ***************************************************/
 
         obj = view.addDice("Dice_3",
                 350, 25,
                 POTCDiceBag.class
         );
         obj.addComponent(PlayerController.class);
+        cw = obj.addComponent(ControllerView.class);
+        cw.setController(3);
+        obj = view.addCup("DiceCup_3",
+                "Cup_3_open",
+                "images/dice_cup_open.png",
+                380, 100,
+                64, 64,
+                0,0,
+                "Cup_3_closed",
+                "images/dice_cup_closed.png",
+                380, 100,
+                64, 64,
+                0, 0
+        );
+
+        /***************************************************
+         *                     Dice 4                      *
+         ***************************************************/
 
         obj = view.addDice("Dice_4",
                 650, 250,
                 POTCDiceBag.class
         );
         obj.addComponent(PlayerController.class);
+        cw = obj.addComponent(ControllerView.class);
+        cw.setController(4);
+        obj = view.addCup("DiceCup_4",
+                "Cup_4_open",
+                "images/dice_cup_open.png",
+                630, 280,
+                64, 64,
+                0,0,
+                "Cup_4_closed",
+                "images/dice_cup_closed.png",
+                630, 280,
+                64, 64,
+                0, 0
+        );
+
+        /***************************************************
+         *                  Buttons 1                      *
+         ***************************************************/
 
         obj = view.addButton("Roll_Button_1",
                 "Roll",
-                400, 550,
+                450, 550,
                 100, 50,
                 0, 0,
                 30,
                 RollDiceButtonControllerV2.class
         );
-
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_1");
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_1");
-
         obj.addComponent(ControllerView.class).setController(1);
 
         obj = view.addButton("Collect_Button_1",
                 "Collect",
-                280, 550,
+                350, 550,
                 100, 50,
                 0, 0,
                 30,
                 CollectDiceButtonController.class
         );
-
         obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_1");
         obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_1");
         obj.addComponent(ControllerView.class).setController(1);
 
+        /***************************************************
+         *                  Buttons 2                      *
+         ***************************************************/
+
         obj = view.addButton("Roll_Button_2",
                 "Roll",
-                25, 310,
+                25, 250,
                 100, 50,
                 0, 0,
                 30,
                 RollDiceButtonControllerV2.class
         );
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_2");
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_2");
         obj.addComponent(ControllerView.class).setController(2);
+
+        obj = view.addButton("Collect_Button_2",
+                "Collect",
+                5, 370,
+                100, 50,
+                0, 0,
+                30,
+                CollectDiceButtonController.class
+        );
+        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_2");
+        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_2");
+        obj.addComponent(ControllerView.class).setController(2);
+
+        /***************************************************
+         *                  Buttons 3                      *
+         ***************************************************/
 
         obj = view.addButton("Roll_Button_3",
                 "Roll",
-                400, 25,
+                350, 25,
                 100, 50,
                 0, 0,
                 30,
                 RollDiceButtonControllerV2.class
         );
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_3");
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_3");
         obj.addComponent(ControllerView.class).setController(3);
+
+        obj = view.addButton("Collect_Button_3",
+                "Collect",
+                430, 25,
+                100, 50,
+                0, 0,
+                30,
+                CollectDiceButtonController.class
+        );
+        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_3");
+        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_3");
+        obj.addComponent(ControllerView.class).setController(3);
+
+        /***************************************************
+         *                  Buttons 4                      *
+         ***************************************************/
 
         obj = view.addButton("Roll_Button_4",
                 "Roll",
-                730, 310,
+                730, 370,
                 100, 50,
                 0, 0,
                 30,
                 RollDiceButtonControllerV2.class
         );
         obj.getComponent(RollDiceButtonControllerV2.class).addDiceNames("Dice_4");
+        obj.getComponent(RollDiceButtonControllerV2.class).addDiceCup("DiceCup_4");
+        obj.addComponent(ControllerView.class).setController(4);
+
+        obj = view.addButton("Collect_Button_4",
+                "Collect",
+                730, 250,
+                100, 50,
+                0, 0,
+                30,
+                CollectDiceButtonController.class
+        );
+        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_4");
+        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_4");
         obj.addComponent(ControllerView.class).setController(4);
     }
 

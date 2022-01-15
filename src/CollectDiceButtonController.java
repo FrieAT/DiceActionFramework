@@ -76,10 +76,11 @@ public class CollectDiceButtonController extends AbstractComponent implements II
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
                 for (ADice dice : _dices) {
-                    if (_diceCup.isOpen()) {
-                        dice.getGameObject().setEnabled(false);
-                        _diceCup.setCupStatus(false);
-                    }
+                    boolean isEnabled = dice.getGameObject().isEnabled();
+                    boolean isOpen = _diceCup.isOpen();
+                    dice.getGameObject().setEnabled(!isEnabled);
+                    _diceCup.setCupStatus(!isOpen);
+
                 }
 
                 //_diceCup.setCupStatus(!_diceCup.isOpen());

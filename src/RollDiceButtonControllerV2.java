@@ -77,10 +77,7 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
                 //If mouse position is near on button position
                 for (ADice dice : _dices) {
                     if (!_diceCup.isOpen()) {
-                        dice.getGameObject().setEnabled(true);
                         dice.roll();
-                        _diceCup.setCupStatus(true);
-
                     }
                 }
 
