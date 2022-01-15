@@ -25,7 +25,20 @@ public class InputManager extends AbstractManager
     }
 
     public void addInputHandler(AInputHandler handler) {
+        if(this.getInputHandler(handler.getClass()) != null) {
+            throw new NullPointerException("Duplicate entry for AInputHandler : "+handler.getClass().getName());
+        }
+
         this._inputs.add(handler);
+    }
+
+    public <T extends AInputHandler> T getInputHandler(Class<? extends T> clazz) {
+        for(AInputHandler handler : this._inputs) {
+            if(handler.getClass().isAssignableFrom(clazz)) {
+                return (T)handler;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -47,7 +60,7 @@ public class InputManager extends AbstractManager
         throw new NullPointerException("Please add an IController object and not a gameObject itself.");
     }
     
-    public <T extends AInputEvent> boolean add(Class<T> clazz, IInputListener listener) {
+    public boolean add(Class<? extends AInputEvent> clazz, IInputListener listener) {
         boolean registered = false;
         for(AInputHandler handler : this._inputs) {
             if(handler.getInputEventType() == clazz) {

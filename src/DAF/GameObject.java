@@ -31,6 +31,25 @@ public class GameObject {
         return null;
     }
 
+    public static GameObject find(int id) {
+        for(GameObject g : _gameObjects) {
+            if(g.getId() == id) {
+                return g;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<GameObject> findAll(String prefix) {
+        ArrayList<GameObject> found = new ArrayList<>();
+        for (GameObject g : _gameObjects) {
+            if (g.getName().startsWith(prefix))
+                found.add(g);
+        }
+
+        return found;
+    }
+
     public static void addIteratorDelegate(AnyEvent<GameObject> delegate)
     {
         if(_eventDelegates == null) {
@@ -146,6 +165,7 @@ public class GameObject {
         return this.instantiateTransform();
     }
 
+    // TODO: Standard checks parent if enabled
     public boolean isEnabled() {
         if(this.parent != null) {
             return this.parent.isEnabled() && this.enabled;
