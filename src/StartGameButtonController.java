@@ -46,8 +46,11 @@ public class StartGameButtonController extends AbstractComponent implements IInp
 
             if (buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //GameObject.disableAll();
-                POTCDiceGame.setUpInGameScreen();
-                GameObject.startAll();
+                GameObject inGameView = GameObject.find("inGame");
+                GameObject mainView = GameObject.find("mainScreen");
+
+                mainView.setEnabled(false);
+                inGameView.setEnabled(true);
             }
         }
     }

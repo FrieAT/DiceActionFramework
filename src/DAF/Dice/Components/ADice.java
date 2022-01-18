@@ -71,6 +71,7 @@ public abstract class ADice extends AbstractComponent implements IDice {
     public void roll() {
         Face rolledFace = diceFaces.get((int) (Math.random() * diceFaces.size()));
         this.setTopFace(rolledFace);
+
     }
 
     @Override

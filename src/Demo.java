@@ -13,10 +13,7 @@ import DAF.Controller.Components.PlayerController;
 import DAF.Dice.DiceManager;
 import DAF.Dice.Components.ADice;
 import DAF.Dice.Components.ClassicDice;
-import DAF.Input.AInputHandler;
-import DAF.Input.InputManager;
-import DAF.Input.MouseJavaFXHandler;
-import DAF.Input.MouseServerHandler;
+import DAF.Input.*;
 import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.ButtonGraphic;
@@ -208,10 +205,10 @@ public class Demo {
         serverRenderer.setSocket(socket);
         RenderManager.getInstance().addRenderer(serverRenderer);
 
-        AInputHandler input = new MouseJavaFXHandler();
-        InputManager.getInstance().addInputHandler(input);
+        InputManager.getInstance().addInputHandler(new MouseJavaFXHandler());
+        InputManager.getInstance().addInputHandler(new ButtonJavaFXHandler());
         InputManager.getInstance().addInputHandler(new MouseServerHandler());
-
+        InputManager.getInstance().addInputHandler(new ButtonServerHandler());
 
 
         //Adding the managers.

@@ -1,31 +1,19 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import DAF.AbstractManager;
+import DAF.Components.AbstractComponent;
+import DAF.Dice.Components.ADice;
 import DAF.GameObject;
 import DAF.Controller.ControllerManager;
 import DAF.Controller.Components.ControllerSocket;
 import DAF.Controller.Components.ControllerView;
-import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
 import DAF.Dice.DiceManager;
-import DAF.Dice.Components.ADice;
-import DAF.Dice.Components.ClassicDice;
-import DAF.Input.AInputHandler;
 import DAF.Input.InputManager;
-import DAF.Input.MouseJavaFXHandler;
 import DAF.Input.MouseServerHandler;
-import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
-import DAF.Renderer.Components.ButtonGraphic;
-import DAF.Renderer.Components.LabelGraphic;
-import DAF.Renderer.Components.PictureGraphic;
-import DAF.Renderer.JavaFX.ButtonGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.JavaFXRenderer;
-import DAF.Renderer.JavaFX.LabelGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.PictureGraphicJavaFXRenderer;
 import DAF.Renderer.Server.ServerRenderer;
 import DAF.Serializer.ASerializer;
 import DAF.Serializer.JsonSerializer;
@@ -35,11 +23,9 @@ import DAF.Socket.HttpSocket.SocketServerException;
 import DAF.Socket.HttpSocket.Resource.DirectoryResource;
 import DAF.Socket.HttpSocket.Resource.GifFileResource;
 import DAF.Socket.HttpSocket.Resource.HtmlFileResource;
-import DAF.Socket.HttpSocket.Resource.HttpResource;
 import DAF.Socket.HttpSocket.Resource.JpegFileResource;
 import DAF.Socket.HttpSocket.Resource.JsonBufferResource;
 import DAF.Socket.HttpSocket.Resource.PngFileResource;
-import javafx.scene.transform.Transform;
 
 public class POTCDiceGame {
 
@@ -51,6 +37,7 @@ public class POTCDiceGame {
 
 
     public static void start() {
+        setUpStartScreen();
         setUpInGameScreenV2();
         init();
     }
@@ -172,7 +159,7 @@ public class POTCDiceGame {
         cw.setController(2);
         obj = view.addCup("DiceCup_2",
                 "Cup_2_open",
-                "images/dice_cup_open.png",
+                "images/dice_cup_peek.png",
                 110, 280,
                 64, 64,
                 0,0,
@@ -232,6 +219,14 @@ public class POTCDiceGame {
         );
 
         /***************************************************
+         *                  Round 1                      *
+         ***************************************************/
+
+
+        obj = new GameObject("Round_1");
+        ARound aRound = obj.addComponent(WaitForAllRound.class);
+
+        /***************************************************
          *                  Buttons 1                      *
          ***************************************************/
 
@@ -249,15 +244,18 @@ public class POTCDiceGame {
 
         obj = view.addButton("Collect_Button_1",
                 "Collect",
+                "images/dice_cup_peek.png",
                 350, 550,
                 100, 50,
                 0, 0,
                 30,
-                CollectDiceButtonController.class
+                PeekDiceButtonController.class
         );
-        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_1");
-        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_1");
+        obj.getComponent(PeekDiceButtonController.class).addDiceNames("Dice_1");
+        obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_1");
         obj.addComponent(ControllerView.class).setController(1);
+
+        aRound.addPlayer(1);
 
         /***************************************************
          *                  Buttons 2                      *
@@ -281,11 +279,13 @@ public class POTCDiceGame {
                 100, 50,
                 0, 0,
                 30,
-                CollectDiceButtonController.class
+                PeekDiceButtonController.class
         );
-        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_2");
-        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_2");
+        obj.getComponent(PeekDiceButtonController.class).addDiceNames("Dice_2");
+        obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_2");
         obj.addComponent(ControllerView.class).setController(2);
+
+        aRound.addPlayer(2);
 
         /***************************************************
          *                  Buttons 3                      *
@@ -309,11 +309,13 @@ public class POTCDiceGame {
                 100, 50,
                 0, 0,
                 30,
-                CollectDiceButtonController.class
+                PeekDiceButtonController.class
         );
-        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_3");
-        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_3");
+        obj.getComponent(PeekDiceButtonController.class).addDiceNames("Dice_3");
+        obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_3");
         obj.addComponent(ControllerView.class).setController(3);
+
+        aRound.addPlayer(3);
 
         /***************************************************
          *                  Buttons 4                      *
@@ -337,11 +339,16 @@ public class POTCDiceGame {
                 100, 50,
                 0, 0,
                 30,
-                CollectDiceButtonController.class
+                PeekDiceButtonController.class
         );
-        obj.getComponent(CollectDiceButtonController.class).addDiceNames("Dice_4");
-        obj.getComponent(CollectDiceButtonController.class).addDiceCup("DiceCup_4");
+        obj.getComponent(PeekDiceButtonController.class).addDiceNames("Dice_4");
+        obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_4");
         obj.addComponent(ControllerView.class).setController(4);
+
+        aRound.addPlayer(4);
+
+        views.add(inGameScreen);
+        inGameScreen.setEnabled(false);
     }
 
     public static void init() {
@@ -385,6 +392,7 @@ public class POTCDiceGame {
         _managers.add(DiceManager.getInstance());
         _managers.add(InputManager.getInstance());
         _managers.add(ControllerManager.getInstance());
+        _managers.add(RoundManager.getInstance());
 
         //Initialization of the managers.
         for(AbstractManager m : _managers) {

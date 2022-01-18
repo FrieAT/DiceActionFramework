@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+import DAF.Controller.Components.ControllerView;
 import DAF.GameObject;
 import DAF.Components.AbstractComponent;
 import DAF.Dice.Components.ADice;
@@ -19,10 +20,7 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
     private ArrayList<ADice> _dices = new ArrayList<>();
     private ArrayList<String> _diceNames = new ArrayList<>();
     private DiceCup _diceCup;
-
-    public RollDiceButtonControllerV2() {
-        
-    }
+    private boolean hasRolled = false;
 
     public void addDiceNames(String... diceName) {
         Collections.addAll(_diceNames, diceName);
@@ -40,7 +38,6 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
             dices.add(GameObject.find(diceName));
         }
 
-        //System.out.println(_dices);
 
         for (GameObject dice : dices) {
             if (dice == null) {
@@ -76,8 +73,13 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
                 for (ADice dice : _dices) {
-                    if (!_diceCup.isOpen()) {
+                    // use player number - 1 since player 0 is no player and LinkedList needs to start with idx 0.
+                    int playerNo = dice.getGameObject().getComponent(ControllerView.class).getController().getPlayerNo();
+                    ARound wfar = GameObject.find("Round_1").getComponent(WaitForAllRound.class);
+                    if (wfar.isPlayersTurn(playerNo)) {
+                        wfar.play(playerNo);
                         dice.roll();
+                        //GameObject.find("Round_1").getComponent(WaitForAllRound.class).play(dice.getGameObject().getComponent(ControllerView.class));
                     }
                 }
 

@@ -31,6 +31,15 @@ public class GameObject {
         return null;
     }
 
+    public static GameObject find(int id) {
+        for(GameObject g : _gameObjects) {
+            if(g.getId() == id) {
+                return g;
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<GameObject> findAll(String prefix) {
         ArrayList<GameObject> found = new ArrayList<>();
         for (GameObject g : _gameObjects) {

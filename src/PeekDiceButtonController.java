@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+import DAF.Controller.Components.ControllerView;
 import DAF.GameObject;
 import DAF.Components.AbstractComponent;
 import DAF.Dice.Components.ADice;
@@ -14,13 +15,13 @@ import DAF.Input.InputManager;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
 
-public class CollectDiceButtonController extends AbstractComponent implements IInputListener {
+public class PeekDiceButtonController extends AbstractComponent implements IInputListener {
 
     private ArrayList<ADice> _dices = new ArrayList<>();
     private ArrayList<String> _diceNames = new ArrayList<>();
     private DiceCup _diceCup;
 
-    public CollectDiceButtonController() {
+    public PeekDiceButtonController() {
 
     }
 
@@ -50,7 +51,7 @@ public class CollectDiceButtonController extends AbstractComponent implements II
             ADice diceComponent = dice.getComponent(ADice.class);
 
             if (diceComponent == null) {
-                throw new NullPointerException("Given gameObject doesn't own a dice-component.");
+                throw new NullPointerException("Given GameObject doesn't own a dice component.");
             }
 
             this._dices.add(diceComponent);
@@ -80,7 +81,6 @@ public class CollectDiceButtonController extends AbstractComponent implements II
                     boolean isOpen = _diceCup.isOpen();
                     dice.getGameObject().setEnabled(!isEnabled);
                     _diceCup.setCupStatus(!isOpen);
-
                 }
 
                 //_diceCup.setCupStatus(!_diceCup.isOpen());
