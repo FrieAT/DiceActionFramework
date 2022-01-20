@@ -9,4 +9,6 @@ public interface IController extends IComponent {
      * @return the player number
      */
     int getPlayerNo();
+
+    String getTokenId();
 }
