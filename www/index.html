@@ -131,22 +131,22 @@
       }
 
       function renderPictureGraphic(pictureGraphic) {
-      if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
-      var htmlImageElement = new Image(0, 0);
-      document.getElementById("scene").appendChild(htmlImageElement);
-      $(htmlImageElement).addClass("graphic");
-      } else {
-      var htmlImageElement = document.getElementById(pictureGraphic.owner.id);
-      }
+          if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
+            var htmlImageElement = new Image(0, 0);
+            document.getElementById("scene").appendChild(htmlImageElement);
+            $(htmlImageElement).addClass("graphic");
+          } else {
+            var htmlImageElement = document.getElementById(pictureGraphic.owner.id);
+          }
 
-      var prevSrc = htmlImageElement.getAttribute("data-src");
-      if(prevSrc == undefined || prevSrc.localeCompare(pictureGraphic.picturePath) != 0) {
-      htmlImageElement.src = pictureGraphic.picturePath;
-      htmlImageElement.setAttribute("data-src", pictureGraphic.picturePath);
-      }
+          var prevSrc = htmlImageElement.getAttribute("data-src");
+          if(prevSrc == undefined || prevSrc.localeCompare(pictureGraphic.picturePath) != 0) {
+              htmlImageElement.src = pictureGraphic.picturePath;
+              htmlImageElement.setAttribute("data-src", pictureGraphic.picturePath);
+          }
 
-      htmlImageElement.id = pictureGraphic.owner.id;
-      setPosition(htmlImageElement,pictureGraphic);
+          htmlImageElement.id = pictureGraphic.owner.id;
+          setPosition(htmlImageElement,pictureGraphic);
       }
 
       //Wie funktioniert skalierung bei Text? Was ist x-skalierung / y-skalierung bei text?
@@ -160,70 +160,125 @@
       }
 
       p.innerHTML = labelGraphic.labelText;
-      var bold;
-      if (labelGraphic.bold) {
-      bold = "bold";
+      if (labelGraphic.bold == "true") {
+        p.style.fontWeight = "bolder";
       } else {
-      bold = "";
+        p.style.fontWeight = "normal";
       }
       p.id = labelGraphic.owner.id;
-      p.style.fontWeight = bold;
-      p.style.fontSize = labelGraphic.fontsize+'px';
+      p.style.color = labelGraphic.color;
+      p.style.fontSize = labelGraphic.fontSize+'px';
       setPosition(p,labelGraphic);
+      }
+
+      function renderInputGraphic(inputGraphic) {
+          if (!ObjectAlreadyExists(inputGraphic.owner.id)) {
+              var input = document.createElement('input');
+              input.setAttribute('type', 'text');
+              document.getElementById('scene').appendChild(input);
+              $(input).addClass("graphic");
+              input.addEventListener("input",function () {
+                  var target = event.target;
+                  var elementId = target.getAttribute('id');
+                  var value = $(target).val();
+                  obj = {
+                      '@type': 'DAF.Event.TextInputEvent',
+                      'source': ""+elementId,
+                      'controller': ""+lastPlayer,
+                      'text': ""+value
+                  }
+
+                  $.ajax({
+                      type: "POST",
+                      url: "api/event.json",
+                      contentType: "application/json; charset=UTF-8",
+                      dataType: "json",
+                      data: { data: JSON.stringify(obj) },
+                      success: function (data) {
+                      console.log("Success")
+                      console.log("Data: "+data);
+                      },
+                      error: function (jqXHR, textStatus, errorThrown) {
+                      console.log(jqXHR);
+                      console.log(textStatus);
+                      console.log(errorThrown);
+                      console.log('Error Event');
+                      }
+                  });
+              }, false);
+          } else {
+              var input = document.getElementById(inputGraphic.owner.id);
+          }
+
+          input.innerHTML = inputGraphic.text;
+          var bold;
+          if (inputGraphic.bold) {
+            bold = "bold";
+          } else {
+            bold = "";
+          }
+          input.id = inputGraphic.owner.id;
+          input.value = inputGraphic.text;
+          input.style.width = inputGraphic.width+"px";
+          input.style.height = inputGraphic.height+"px";
+          input.style.fontWeight = bold;
+          input.style.fontSize = inputGraphic.fontsize+'px';
+          setPosition(input,inputGraphic);
       }
 
       // [To do] picturepath, scale.
       function renderButtonGraphic(buttonGraphic) {
       if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
-        var button = document.createElement('button');
-        document.getElementById('scene').appendChild(button);
-        $(button).addClass("graphic");
+          var button = document.createElement('button');
+          document.getElementById('scene').appendChild(button);
+          $(button).addClass("graphic");
 
-        button.addEventListener('click', function(event) {
-          var target = event.target;
-          var elementId = target.getAttribute('id');
-          obj = {
-            '@type': 'DAF.Event.ButtonInputEvent',
-            'keycode': "0",
-            'source': ""+elementId,
-            'controller': ""+lastPlayer
-          }
+          button.addEventListener('click', function(event) {
+              var target = event.target;
+              var elementId = target.getAttribute('id');
+              obj = {
+                  '@type': 'DAF.Event.ButtonInputEvent',
+                  'keycode': "0",
+                  'source': ""+elementId,
+                  'controller': ""+lastPlayer
+              }
 
-          $.ajax({
-            type: "POST",
-            url: "api/event.json",
-            contentType: "application/json; charset=UTF-8",
-            dataType: "json",
-            data: { data: JSON.stringify(obj) },
-                success: function (data) {
-                console.log("Success")
-                console.log("Data: "+data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                console.log('Error Event');
-            }
-          });
-        }, false);
+              $.ajax({
+                  type: "POST",
+                  url: "api/event.json",
+                  contentType: "application/json; charset=UTF-8",
+                  dataType: "json",
+                  data: { data: JSON.stringify(obj) },
+                  success: function (data) {
+                      console.log("Success")
+                      console.log("Data: "+data);
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                      console.log(jqXHR);
+                      console.log(textStatus);
+                      console.log(errorThrown);
+                      console.log('Error Event');
+                  }
+              });
+          }, false);
       } else {
         var button = document.getElementById(buttonGraphic.owner.id);
       }
 
       var bold;
       if (buttonGraphic.bold) {
-      bold = "bold";
+        bold = "bold";
       } else {
-      bold = "";
+        bold = "";
       }
 
-      //button.style.background = "url(../images/dice_cup_peek.png)";
-      button.style.fontWeight = bold;
-      button.innerHTML = buttonGraphic.labelText;
-      button.type = "button";
-      button.id = buttonGraphic.owner.id;
-      setPosition(button,buttonGraphic);
+          //button.style.background = "url(../images/dice_cup_peek.png)";
+
+          button.style.fontWeight = bold;
+          button.innerHTML = buttonGraphic.labelText;
+          button.type = "button";
+          button.id = buttonGraphic.owner.id;
+          setPosition(button,buttonGraphic);
       }
 
 
@@ -239,6 +294,9 @@
                 }
                 if (AGraphic["@type"].endsWith("ButtonGraphic")) { //
                         renderButtonGraphic(AGraphic);
+                }
+                if (AGraphic["@type"].endsWith("InputGraphic")) { //
+                    renderInputGraphic(AGraphic);
                 }
         }
 </script>
