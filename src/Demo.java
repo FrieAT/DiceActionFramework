@@ -1,6 +1,5 @@
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import DAF.AbstractManager;
@@ -15,14 +14,12 @@ import DAF.Dice.Components.ADice;
 import DAF.Dice.Components.ClassicDice;
 import DAF.Input.*;
 import DAF.Math.Vector2;
+import DAF.Renderer.Components.InputGraphic;
+import DAF.Renderer.JavaFX.*;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.LabelGraphic;
 import DAF.Renderer.Components.PictureGraphic;
-import DAF.Renderer.JavaFX.ButtonGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.JavaFXRenderer;
-import DAF.Renderer.JavaFX.LabelGraphicJavaFXRenderer;
-import DAF.Renderer.JavaFX.PictureGraphicJavaFXRenderer;
 import DAF.Renderer.Server.ServerRenderer;
 import DAF.Serializer.ASerializer;
 import DAF.Serializer.JsonSerializer;
@@ -32,11 +29,9 @@ import DAF.Socket.HttpSocket.SocketServerException;
 import DAF.Socket.HttpSocket.Resource.DirectoryResource;
 import DAF.Socket.HttpSocket.Resource.GifFileResource;
 import DAF.Socket.HttpSocket.Resource.HtmlFileResource;
-import DAF.Socket.HttpSocket.Resource.HttpResource;
 import DAF.Socket.HttpSocket.Resource.JpegFileResource;
 import DAF.Socket.HttpSocket.Resource.JsonBufferResource;
 import DAF.Socket.HttpSocket.Resource.PngFileResource;
-import javafx.scene.transform.Transform;
 
 public class Demo {
 
@@ -149,8 +144,16 @@ public class Demo {
         rollButton.getTransform().setPosition(new Vector2(70, 600));
         buttonController = rollButton.addComponent(RollDiceButtonController.class);
         buttonController.setControllableDice(currentDice);
-        controllerView = rollButton.addComponent(ControllerView.class);
-        controllerView.setController(playerOneController);
+        //controllerView = rollButton.addComponent(ControllerView.class);
+        //controllerView.setController(playerOneController);
+
+        GameObject rollAmountText = new GameObject("Roll2_Amount", rollButton);
+        rollAmountText.getTransform().setPosition(new Vector2(70, 0));
+        InputGraphic inputG = rollAmountText.addComponent(InputGraphic.class);
+        inputG.setWidth(50);
+        inputG.setText("1");
+        inputG.setFontSize(16);
+        inputG.setBold(true);
 
         GameObject movementPlayerOne = new GameObject("Player1_Movement");
         movementPlayerOne.addComponent(PlayerMovement.class);
@@ -172,6 +175,7 @@ public class Demo {
         renderer.add(new PictureGraphicJavaFXRenderer());
         renderer.add(new LabelGraphicJavaFXRenderer());
         renderer.add(new ButtonGraphicJavaFXRenderer());
+        renderer.add(new InputGraphicJavaFXRenderer());
         RenderManager.getInstance().addRenderer(renderer);
 
         ASerializer jsonSerializer = new JsonSerializer();
@@ -204,9 +208,9 @@ public class Demo {
 
         InputManager.getInstance().addInputHandler(new MouseJavaFXHandler());
         InputManager.getInstance().addInputHandler(new ButtonJavaFXHandler());
+        InputManager.getInstance().addInputHandler(new InputJavaFXHandler());
         InputManager.getInstance().addInputHandler(new MouseServerHandler());
         InputManager.getInstance().addInputHandler(new ButtonServerHandler());
-
 
         //Adding the managers.
         _managers.add(RenderManager.getInstance());

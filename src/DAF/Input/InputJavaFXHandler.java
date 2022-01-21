@@ -1,14 +1,15 @@
 package DAF.Input;
 
 import DAF.Event.ButtonInputEvent;
-import DAF.Event.IInputListener;
+import DAF.Event.TextInputEvent;
 import DAF.Renderer.JavaFX.JavaFXRenderer;
 import DAF.Renderer.RenderManager;
+import org.w3c.dom.Text;
 
-public class ButtonJavaFXHandler extends AInputHandler {
+public class InputJavaFXHandler extends AInputHandler {
     @Override
-    public Class<ButtonInputEvent> getInputEventType() {
-        return ButtonInputEvent.class;
+    public Class<TextInputEvent> getInputEventType() {
+        return TextInputEvent.class;
     }
 
     @Override
