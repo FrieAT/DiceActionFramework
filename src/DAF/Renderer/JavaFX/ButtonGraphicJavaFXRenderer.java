@@ -86,14 +86,16 @@ public class ButtonGraphicJavaFXRenderer extends JavaFXRenderer {
 		buttonView.setScaleY(scale.y);
 		buttonView.setRotate(rotation);
 
-		//FIXME: On macOS wrong width gets examined.
-		if(buttonView.getWidth() > buttonGraphic.getWidth()) {
-			buttonGraphic.setWidth((int)buttonView.getWidth());
-		}
+		if(buttonGraphic.getGameObject().isEnabled()) {
+			//FIXME: On macOS wrong width gets examined.
+			if (buttonView.getWidth() > buttonGraphic.getWidth()) {
+				buttonGraphic.setWidth((int) buttonView.getWidth());
+			}
 
-		//FIXME: On macOS wrong height gets examined.
-		if(buttonView.getHeight() > buttonGraphic.getHeight()) {
-			buttonGraphic.setHeight((int)buttonView.getHeight());
+			//FIXME: On macOS wrong height gets examined.
+			if (buttonView.getHeight() > buttonGraphic.getHeight()) {
+				buttonGraphic.setHeight((int) buttonView.getHeight());
+			}
 		}
 
 		return buttonView;

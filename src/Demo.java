@@ -144,13 +144,14 @@ public class Demo {
         rollButton.getTransform().setPosition(new Vector2(70, 600));
         buttonController = rollButton.addComponent(RollDiceButtonController.class);
         buttonController.setControllableDice(currentDice);
-        //controllerView = rollButton.addComponent(ControllerView.class);
-        //controllerView.setController(playerOneController);
+        controllerView = rollButton.addComponent(ControllerView.class);
+        controllerView.setController(playerOneController);
 
         GameObject rollAmountText = new GameObject("Roll2_Amount", rollButton);
         rollAmountText.getTransform().setPosition(new Vector2(70, 0));
         InputGraphic inputG = rollAmountText.addComponent(InputGraphic.class);
         inputG.setWidth(50);
+        inputG.setHeight(22);
         inputG.setText("1");
         inputG.setFontSize(16);
         inputG.setBold(true);

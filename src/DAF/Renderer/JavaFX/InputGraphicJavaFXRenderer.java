@@ -80,14 +80,16 @@ public class InputGraphicJavaFXRenderer extends JavaFXRenderer {
         textField.setScaleY(scale.y);
         textField.setRotate(rotation);
 
-        //FIXME: On macOS wrong width gets examined.
-        if(textField.getWidth() > inputGraphic.getWidth()) {
-            inputGraphic.setWidth((int)textField.getWidth());
-        }
+        if(inputGraphic.getGameObject().isEnabled()) {
+            //FIXME: On macOS wrong width gets examined.
+            if (textField.getWidth() > inputGraphic.getWidth()) {
+                inputGraphic.setWidth((int) textField.getWidth());
+            }
 
-        //FIXME: On macOS wrong height gets examined.
-        if(textField.getHeight() > inputGraphic.getHeight()) {
-            inputGraphic.setHeight((int)textField.getHeight());
+            //FIXME: On macOS wrong height gets examined.
+            if (textField.getHeight() > inputGraphic.getHeight()) {
+                inputGraphic.setHeight((int) textField.getHeight());
+            }
         }
 
         return textField;
