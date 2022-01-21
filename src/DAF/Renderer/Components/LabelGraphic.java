@@ -9,6 +9,8 @@ public class LabelGraphic extends AGraphic {
 	@JsonElement
 	private Integer fontSize = 12;
 	@JsonElement
+	private String fontFamily = "Arial";
+	@JsonElement
 	Boolean bold = false;
 	@JsonElement
 	String labelText ="Example Text";
@@ -52,4 +54,6 @@ public class LabelGraphic extends AGraphic {
 	}
 	public String getWebColor() { return this.color; }
 	public void setWebColor(String color) { this.color = color; }
+	public String getFontFamily() { return this.fontFamily; }
+	public void setFontFamily(String family) { this.fontFamily = family; }
 }
