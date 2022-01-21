@@ -53,17 +53,16 @@ public class ButtonGraphicJavaFXRenderer extends JavaFXRenderer {
 		Vector2 scale = g.getTransform().getScale();
 		double rotation = g.getTransform().getRotation();
 
-		ImageView imageView = null;
-		if(image != null) {
-			imageView = new ImageView();
-			imageView.setImage(image);
-			imageView.setFitWidth(buttonGraphic.getWidth() * scale.x);
-			imageView.setFitHeight(buttonGraphic.getHeight() * scale.y);
-		}
-
 		int gameObjectId = g.getGameObject().getId();
 		Button buttonView = this._cachedNodes.get(gameObjectId);
+		ImageView imageView = null;
 		if(buttonView == null) {
+
+			if(image != null) {
+				imageView = new ImageView();
+				imageView.setImage(image);
+			}
+
 			buttonView = new Button(buttonGraphic.getLabelText(), imageView);
 			buttonView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
@@ -78,6 +77,13 @@ public class ButtonGraphicJavaFXRenderer extends JavaFXRenderer {
 				}
 			});
 			this._cachedNodes.put(gameObjectId, buttonView);
+		}
+
+		imageView.getImage();
+		if(imageView != null) {
+			imageView.setPreserveRatio(true);
+			imageView.setFitWidth(buttonGraphic.getWidth());
+			imageView.setFitHeight(buttonGraphic.getHeight());
 		}
 		
 		buttonView.setLayoutX(buttonGraphic.getLeft());	
