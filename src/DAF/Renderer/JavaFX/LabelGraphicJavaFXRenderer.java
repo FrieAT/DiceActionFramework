@@ -5,9 +5,13 @@ import DAF.Renderer.Components.AGraphic;
 import DAF.Renderer.Components.LabelGraphic;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
+	private static final Font _defaultFont = new Font(1);
+
 	@Override
 	public Node renderNode(AGraphic g) {
 		LabelGraphic labelGraphic;
@@ -27,11 +31,13 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 		label.setScaleX(scale.x);
 		label.setScaleY(scale.y);
 		label.setRotate(rotation);
-	    label.setFont(new Font(labelGraphic.getFontSize()));
-	    
-	    if (labelGraphic.getBold()) {
-	    	label.setStyle("-fx-font-weight: bold;");
-	    }
+		label.setTextFill(Color.web(labelGraphic.getWebColor()));
+
+		FontWeight curWeight = (labelGraphic.getBold() ? FontWeight.BOLD : FontWeight.NORMAL);
+		if(Math.abs(label.getFont().getSize() - labelGraphic.getFontSize()) > 0.1
+				|| !label.getFont().getStyle().equals(curWeight)) {
+			label.setFont(Font.font(_defaultFont.getFamily(), curWeight, labelGraphic.getFontSize()));
+		}
   
 		return label;
 	}
