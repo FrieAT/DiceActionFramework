@@ -136,14 +136,21 @@ public class POTCDiceGame {
         obj = view.addCup("DiceCup_1",
                 "Cup_1_open",
                 "images/dice_cup_open.png",
-                380, 425,
-                64, 64,
-                0,0,
                 "Cup_1_closed",
                 "images/dice_cup_closed.png",
+                "Cup_1_peek",
+                "images/dice_cup_peek.png",
                 380, 425,
                 64, 64,
                 0, 0
+        );
+
+        obj = view.addLabel("label_player_1",
+                "Player 1",
+                "white",
+                300, 100,
+                250, 0,
+                40, true
         );
 
         /***************************************************
@@ -159,12 +166,11 @@ public class POTCDiceGame {
         cw.setController(2);
         obj = view.addCup("DiceCup_2",
                 "Cup_2_open",
-                "images/dice_cup_peek.png",
-                110, 280,
-                64, 64,
-                0,0,
+                "images/dice_cup_open.png",
                 "Cup_2_closed",
                 "images/dice_cup_closed.png",
+                "Cup_2_peek",
+                "images/dice_cup_peek.png",
                 110, 280,
                 64, 64,
                 0, 0
@@ -184,11 +190,10 @@ public class POTCDiceGame {
         obj = view.addCup("DiceCup_3",
                 "Cup_3_open",
                 "images/dice_cup_open.png",
-                380, 100,
-                64, 64,
-                0,0,
                 "Cup_3_closed",
                 "images/dice_cup_closed.png",
+                "Cup_3_peek",
+                "images/dice_cup_peek.png",
                 380, 100,
                 64, 64,
                 0, 0
@@ -208,14 +213,14 @@ public class POTCDiceGame {
         obj = view.addCup("DiceCup_4",
                 "Cup_4_open",
                 "images/dice_cup_open.png",
-                630, 280,
-                64, 64,
-                0,0,
                 "Cup_4_closed",
                 "images/dice_cup_closed.png",
+                "Cup_4_peek",
+                "images/dice_cup_peek.png",
                 630, 280,
                 64, 64,
-                0, 0
+                0,0
+
         );
 
         /***************************************************
@@ -243,7 +248,7 @@ public class POTCDiceGame {
         obj.addComponent(ControllerView.class).setController(1);
 
         obj = view.addButton("Collect_Button_1",
-                "Collect",
+                "Peek",
                 "images/dice_cup_peek.png",
                 350, 550,
                 100, 50,
@@ -274,7 +279,7 @@ public class POTCDiceGame {
         obj.addComponent(ControllerView.class).setController(2);
 
         obj = view.addButton("Collect_Button_2",
-                "Collect",
+                "Peek",
                 5, 370,
                 100, 50,
                 0, 0,
@@ -304,7 +309,7 @@ public class POTCDiceGame {
         obj.addComponent(ControllerView.class).setController(3);
 
         obj = view.addButton("Collect_Button_3",
-                "Collect",
+                "Peek",
                 430, 25,
                 100, 50,
                 0, 0,
@@ -334,7 +339,7 @@ public class POTCDiceGame {
         obj.addComponent(ControllerView.class).setController(4);
 
         obj = view.addButton("Collect_Button_4",
-                "Collect",
+                "Peek",
                 730, 250,
                 100, 50,
                 0, 0,

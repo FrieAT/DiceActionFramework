@@ -77,11 +77,17 @@ public class PeekDiceButtonController extends AbstractComponent implements IInpu
             if(buttonGraphic != null && way.x < xDist && way.y < yDist) {
                 //If mouse position is near on button position
                 for (ADice dice : _dices) {
-                    boolean isEnabled = dice.getGameObject().isEnabled();
-                    boolean isOpen = _diceCup.isOpen();
-                    dice.getGameObject().setEnabled(!isEnabled);
-                    _diceCup.setCupStatus(!isOpen);
+                    if (_diceCup.isPeek()) {
+                        _diceCup.setCupStatus(1);
+                        dice.getGameObject().setEnabled(false);
+                    }
+                    else if (_diceCup.isClosed()) {
+                        _diceCup.setCupStatus(2);
+                        dice.getGameObject().setEnabled(true);
+                    }
                 }
+
+
 
                 //_diceCup.setCupStatus(!_diceCup.isOpen());
 

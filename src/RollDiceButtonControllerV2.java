@@ -77,6 +77,10 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
                     int playerNo = dice.getGameObject().getComponent(ControllerView.class).getController().getPlayerNo();
                     ARound wfar = GameObject.find("Round_1").getComponent(WaitForAllRound.class);
                     if (wfar.isPlayersTurn(playerNo)) {
+                        if (_diceCup.isOpen() || _diceCup.isPeek()) {
+                            _diceCup.setCupStatus("closed");
+                            dice.getGameObject().setEnabled(false);
+                        }
                         wfar.play(playerNo);
                         dice.roll();
                         //GameObject.find("Round_1").getComponent(WaitForAllRound.class).play(dice.getGameObject().getComponent(ControllerView.class));
