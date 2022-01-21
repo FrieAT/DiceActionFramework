@@ -36,7 +36,7 @@ public class LabelGraphicJavaFXRenderer extends JavaFXRenderer {
 		FontWeight curWeight = (labelGraphic.getBold() ? FontWeight.BOLD : FontWeight.NORMAL);
 		if(Math.abs(label.getFont().getSize() - labelGraphic.getFontSize()) > 0.1
 				|| !label.getFont().getStyle().equals(curWeight)) {
-			label.setFont(Font.font(_defaultFont.getFamily(), curWeight, labelGraphic.getFontSize()));
+			label.setFont(Font.font(labelGraphic.getFontFamily(), curWeight, labelGraphic.getFontSize()));
 		}
   
 		return label;
