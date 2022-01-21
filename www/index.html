@@ -158,15 +158,14 @@
       }
 
       p.innerHTML = labelGraphic.labelText;
-      var bold;
-      if (labelGraphic.bold) {
-      bold = "bold";
+      if (labelGraphic.bold == "true") {
+        p.style.fontWeight = "bolder";
       } else {
-      bold = "";
+        p.style.fontWeight = "normal";
       }
       p.id = labelGraphic.owner.id;
-      p.style.fontWeight = bold;
-      p.style.fontSize = labelGraphic.fontsize+'px';
+      p.style.color = labelGraphic.color;
+      p.style.fontSize = labelGraphic.fontSize+'px';
       setPosition(p,labelGraphic);
       }
 
