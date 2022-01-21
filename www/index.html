@@ -1,15 +1,25 @@
-
+<!-- Standard resolution 1024x768 --> 
 
 
 <!doctype html>
 <html>
   <head>
+    <style>
+  * {
+    margin: 0px;
+    padding: 0px;
+}
+  </style>
+  
     <title>This is the title of the webpage!</title>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 
 
 
     <script>
+
+        
+        
         var lastPlayer = -1;
         let frameid = 0; // deleteMe
         var awaitConfirmation = false;
@@ -101,7 +111,7 @@
 
   </head>
   <body class="overflow:auto;">
-        <div id="scene" style="outline: solid; width: 1024px; height: 768px; position: relative; float:left;"></div> <!-- get width and height through json?-->
+        <div id="scene" style="width: 1024px; height: 768px; position: relative; float:left;"></div> <!-- get width and height through json?-->
         <div style="width:200px;height:200px">
                 <p>Select Player:</p>
                 <select id="changePlayer">
@@ -113,20 +123,25 @@
   </body>
 
   <script>
+        var scaleY = window.innerHeight / 768;
+        var scaleX = document.body.clientWidth / 1024 ;
+        $('#scene').height(768 * scaleY);
+        $('#scene').width(1024 * scaleX);
+        
       function ObjectAlreadyExists(ObjectId) {
       var elementExists = !!document.getElementById(ObjectId);
       return elementExists;
       }
 
-      function setPosition(HTMLelement,AGraphic) {
-      HTMLelement.style.position = 'absolute';
-      HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x+'px';
-      HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y+'px';
-      HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
-      HTMLelement.style.zIndex = AGraphic.renderingLayer
-      HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x;
-      HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y;
-      }
+        function setPosition(HTMLelement,AGraphic) {
+        HTMLelement.style.position = 'absolute';
+        HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x * scaleX +'px' ;
+        HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y * scaleY +'px';
+        HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
+        HTMLelement.style.zIndex = AGraphic.renderingLayer
+        HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x * scaleX;
+        HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y * scaleY;
+        }
 
       function renderPictureGraphic(pictureGraphic) {
           if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
@@ -166,7 +181,7 @@
       p.style.fontFamily = labelGraphic.fontFamily;
       p.id = labelGraphic.owner.id;
       p.style.color = labelGraphic.color;
-      p.style.fontSize = labelGraphic.fontSize+'px';
+      p.style.fontSize = labelGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
       setPosition(p,labelGraphic);
       }
 
@@ -271,11 +286,12 @@
         bold = "";
       }
 
-          button.style.fontWeight = bold;
-          button.innerHTML = buttonGraphic.labelText;
-          button.type = "button";
-          button.id = buttonGraphic.owner.id;
-          setPosition(button,buttonGraphic);
+                button.style.fontWeight = bold;
+                button.innerHTML = buttonGraphic.labelText;
+                button.style.fontSize = buttonGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
+                button.type = "button";
+                button.id = buttonGraphic.owner.id;
+                setPosition(button,buttonGraphic);
       }
 
 
@@ -302,8 +318,8 @@
       //Überlegung: Anstatt die Mausposition / Click übertragen, übertragen auf welche AGraphic gegklickt wurde (und mit welcher Maustaste)? Anhand Gameobject ID identifizieren.
       scene.addEventListener('click', function(event) {
           var rect = scene.getBoundingClientRect();
-          var x = event.pageX - rect.left,
-              y = event.pageY - rect.top;
+          var x = (event.pageX  / scaleX) - rect.left,
+              y =  (event.pageY / scaleY) - rect.top;
           console.log("x =" +x +" y ="+y);
 
           obj = {
