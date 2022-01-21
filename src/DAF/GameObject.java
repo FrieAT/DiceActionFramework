@@ -3,6 +3,7 @@ package DAF;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import DAF.Components.AbstractComponent;
 import DAF.Components.TransformComponent;
@@ -108,10 +109,13 @@ public class GameObject {
 
     private ArrayList<AbstractComponent> components;
 
+    private LinkedList<GameObject> children;
+
     public GameObject() {
         this.parent = null;
         this.transform = null;
         this.components = new ArrayList<>();
+        this.children = new LinkedList<>();
 
         if(_gameObjects == null) {
             _gameObjects = new LinkedList<>();
@@ -136,6 +140,7 @@ public class GameObject {
         this(name);
 
         this.parent = parent;
+        parent.children.add(this);
     }
 
     public GameObject(String name, GameObject parent, TransformComponent transform) {
@@ -164,6 +169,8 @@ public class GameObject {
     public TransformComponent getTransform() {
         return this.instantiateTransform();
     }
+
+    public List<GameObject> getChildren() { return this.children; }
 
     // TODO: Standard checks parent if enabled
     public boolean isEnabled() {

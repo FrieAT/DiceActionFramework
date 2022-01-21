@@ -2,12 +2,14 @@ package DAF.Renderer.JavaFX;
 
 import java.time.Clock;
 import java.util.LinkedList;
+import java.util.Observable;
 
 import DAF.Renderer.RenderManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -109,9 +111,20 @@ public class JavaFXWindow extends Application
         if(!isChanged()) {
             return;
         }
-        
-        _nodesBuffer.getChildren().clear();
-        _nodesBuffer.getChildren().addAll(this._buffer);
+
+        ObservableList<Node> list = _nodesBuffer.getChildren();
+        for(Node n : this._buffer) {
+            if(!list.contains(n)) {
+                list.add(n);
+            }
+        }
+        LinkedList<Node> toDelete = new LinkedList<>();
+        for(Node n : list) {
+            if(!this._buffer.contains(n)) {
+                toDelete.add(n);
+            }
+        }
+        list.removeAll(toDelete);
         
         RenderManager.getInstance().setRenderedTime(_clock.instant().getNano());
 

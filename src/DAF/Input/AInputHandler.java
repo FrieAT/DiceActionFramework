@@ -3,6 +3,7 @@ package DAF.Input;
 import java.util.LinkedList;
 
 import DAF.Event.AInputEvent;
+import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
 
 public abstract class AInputHandler {
@@ -32,5 +33,14 @@ public abstract class AInputHandler {
         this._subscribers.remove(listener);
     }
 
+    public void callSubscribers(AInputEvent event)
+    {
+        for(IInputListener listener : _subscribers) {
+            if(!listener.getGameObject().isEnabled()) {
+                continue;
+            }
 
+            listener.onInput(event);
+        }
+    }
 }
