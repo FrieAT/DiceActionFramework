@@ -211,6 +211,7 @@ public class Demo {
         InputManager.getInstance().addInputHandler(new InputJavaFXHandler());
         InputManager.getInstance().addInputHandler(new MouseServerHandler());
         InputManager.getInstance().addInputHandler(new ButtonServerHandler());
+        InputManager.getInstance().addInputHandler(new InputServerHandler());
 
         //Adding the managers.
         _managers.add(RenderManager.getInstance());
