@@ -1,9 +1,12 @@
 package DAF.Dice.Components;
+
 import java.util.ArrayList;
 
+import DAF.GameObject;
+import DAF.Dice.DiceManager;
 import DAF.Math.Vector2;
 
-public class ADiceBag extends ADice {
+public class ADiceBag extends ADice implements IDice {
     private ArrayList<ADice> dices;
 
     public ADiceBag () {
@@ -12,16 +15,30 @@ public class ADiceBag extends ADice {
 
     @Override
     public void roll() {
-        int i = 50;
-        for (ADice dice : dices) {
+
+        for (ADice dice : dices)
             dice.roll();
-            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(i, 50));
-            i += 30;
+
+        /*
+        dices.get(0).roll();
+        setNewPosition(dices.get(0), this.getGameObject().getTransform().getPosition());
+
+        for (int i = 1; i < dices.size(); i++) {
+            dices.get(i).roll();
+            setNewPosition(dices.get(i), dices.get(i-1).getPosition());
         }
+
+         */
+
+
     }
 
-    public boolean add(ADice dice) {
-        return dices.add(dice);
+    public <T extends ADice>
+    boolean add(Class<T> dice) {
+        GameObject go_dice = new GameObject("dice_" + dices.size() + 1, this.getGameObject());
+        T diceComp = go_dice.addComponent(dice);
+
+        return dices.add(diceComp);
     }
 
     public boolean remove(ADice dice) {
@@ -34,11 +51,28 @@ public class ADiceBag extends ADice {
 
     @Override
     public void start() {
-        int i = 50;
-        for (ADice dice : dices) {
-            dice.start();
-            dice.getTopFace().getPictureGraphic().getTransform().setPosition(new Vector2(i, 50));
-            i += 30;
+        DiceManager.getInstance().add(this);
+
+        if (this.getTransform().getPosition().x < 200
+                || this.getTransform().getPosition().x > 600) {
+            int y = 0;
+            for (ADice dice : dices) {
+                //dice.start();
+                dice.getTransform().setPosition(new Vector2(50, y));
+                y += 30;
+            }
+        } else {
+            int x = 0;
+            for (ADice dice : dices) {
+                //dice.start();
+                dice.getTransform().setPosition(new Vector2(x, 50));
+                x += 30;
+            }
         }
     }
+
+    public void setNewPosition(ADice dice, Vector2 previousPos) {
+        dice.getTransform().setPosition(new Vector2(previousPos.x + 30, previousPos.y));
+    }
 }
+
