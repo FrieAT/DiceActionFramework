@@ -17,6 +17,10 @@ public abstract class AFileResource extends HttpResource
     public AFileResource(HttpServerSocket server, String path, File file) {
         super(server, path);
 
+        if(file != null && !file.exists()) {
+            file = new File(getClass().getClassLoader().getResource(file.getPath()).toString());
+        }
+
         this._file = file;
     }
 

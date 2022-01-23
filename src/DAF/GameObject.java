@@ -163,7 +163,11 @@ public class GameObject {
     }
 
     public void setParent(GameObject parent) {
+        if(this.parent != null) {
+            this.parent.children.remove(this);
+        }
         this.parent = parent;
+        this.parent.children.add(this);
     }
 
     public TransformComponent getTransform() {
