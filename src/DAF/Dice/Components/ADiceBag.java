@@ -1,11 +1,12 @@
 package DAF.Dice.Components;
+
 import java.util.ArrayList;
 
 import DAF.GameObject;
 import DAF.Dice.DiceManager;
 import DAF.Math.Vector2;
 
-public class ADiceBag extends ADice {
+public class ADiceBag extends ADice implements IDice {
     private ArrayList<ADice> dices;
 
     public ADiceBag () {
@@ -71,7 +72,7 @@ public class ADiceBag extends ADice {
     }
 
     public void setNewPosition(ADice dice, Vector2 previousPos) {
-        dice.setPosition(previousPos.x + 30, previousPos.y);
+        dice.getTransform().setPosition(new Vector2(previousPos.x + 30, previousPos.y));
     }
 }
 
