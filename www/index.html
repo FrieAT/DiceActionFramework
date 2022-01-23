@@ -1,0 +1,250 @@
+
+
+
+<!doctype html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+
+
+    <script>
+        var lastPlayer = -1;
+        let frameid = 0; // deleteMe
+        var awaitConfirmation = false;
+        function confirmRenderdFrame(frameID, playerId) {
+                        awaitConfirmation = true;
+                        if(playerId > 0) {
+                                requestData = { 
+                                    "player": ""+(playerId),
+                                    "last_frame_renderd_ID": ""+frameID
+                                };  
+                        } else {
+                                requestData = {
+                                    "last_frame_renderd_ID": ""+frameID
+                                };
+                        }
+                        $.ajax({
+                                url: "api/confirm.json",
+                                type: "POST",//type of posting the data
+                                data: requestData,
+                                success: function (data) {
+                                        awaitConfirmation = false;
+                        },
+                                error: function(xhr, ajaxOptions, thrownError){
+                                        awaitConfirmation = false;
+                        },
+                                timeout : 0//timeout of the ajax call
+                        });
+        }
+
+
+        var interval = 100;  // Get new Frame from server every [invterval]  milliseconds
+        function doAjax() {
+             //if(awaitConfirmation) { return; }
+             awaitConfirmation = true;
+
+             var currentPlayer = parseInt($("body").find("#changePlayer :selected").val());
+             if(lastPlayer != currentPlayer) {
+                console.log("Switching from Player "+lastPlayer+" to Player "+currentPlayer);
+                lastPlayer = currentPlayer;
+                $("#scene").empty();
+             }
+
+             
+             var requestedUrl = "api/fetchFrame.json";
+             var requestData = {};
+             if(currentPlayer > 0) {
+                  requestedUrl = "api/player.json";
+                  requestData = { "player": ""+(currentPlayer)};
+             }
+             $.ajax({
+                    type: 'GET',
+                    url: requestedUrl,
+                    AGraphics: $(this).serialize(),
+                    contentT: 'json',
+                    data: requestData,
+                    success: function (AGraphicArray) {                   
+                            var updatedIds = {};
+
+                            for(var i = 0; i < AGraphicArray.length; i++){ // < or <=
+                                 //console.log(AGraphicArray[i]); // Object
+                                 render(AGraphicArray[i]);
+                                 updatedIds[""+AGraphicArray[i].owner.id] = true;
+                            }
+
+                            $("#scene").find(".graphic").each(function(index, element){
+                                var gameObjectId = $(element).attr("id");
+                                if(updatedIds[gameObjectId] === undefined) {
+                                     $(element).remove();
+                                }
+                            });
+
+                            confirmRenderdFrame(++frameid, currentPlayer); //   //[To do?] Send server message that it was renderd using real frameID                          
+                    },
+                    error: function(){
+                        awaitConfirmation = false;
+                    },
+                    complete: function (AGraphics) {
+                            // Schedule the next
+                            setTimeout(doAjax, interval);
+                    }
+
+                  
+            });
+        }
+        setTimeout(doAjax, interval);
+        </script>
+
+
+
+  </head>
+  <body class="overflow:auto;">
+        <div id="scene" style="outline: solid; width: 1024px; height: 768px; position: relative; float:left;"></div> <!-- get width and height through json?-->
+        <div style="width:200px;height:200px">
+                <p>Select Player:</p>
+                <select id="changePlayer">
+                        <option value="0">Watcher</option> 
+                        <option value="1">PlayerOne</option> 
+                        <option value="2">PlayerTwo</option> 
+                </select>
+        </div>      
+  </body>
+
+  <script>
+          function ObjectAlreadyExists(ObjectId) {  
+                var elementExists = !!document.getElementById(ObjectId);
+                return elementExists;
+        }
+        
+        function setPosition(HTMLelement,AGraphic) {
+                HTMLelement.style.position = 'absolute';
+                HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x+'px';
+                HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y+'px';
+                HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
+                HTMLelement.style.zIndex = AGraphic.renderingLayer
+                HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x;
+                HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y;
+        }
+        
+        function renderPictureGraphic(pictureGraphic) {  
+                if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
+                        var htmlImageElement = new Image(0, 0);
+                        document.getElementById("scene").appendChild(htmlImageElement); 
+                        $(htmlImageElement).addClass("graphic");
+                } else {
+                        var htmlImageElement = document.getElementById(pictureGraphic.owner.id);
+                }
+
+                htmlImageElement.src = pictureGraphic.picturePath;      
+                htmlImageElement.id = pictureGraphic.owner.id;
+                setPosition(htmlImageElement,pictureGraphic);
+        }
+
+        //Wie funktioniert skalierung bei Text? Was ist x-skalierung / y-skalierung bei text?
+        function renderLabelGraphic(labelGraphic) {
+                if (!ObjectAlreadyExists(labelGraphic.owner.id)) {
+                        var p = document.createElement('p');
+                        document.getElementById('scene').appendChild(p);
+                        $(p).addClass("graphic");
+                } else {
+                        var p = document.getElementById(labelGraphic.owner.id);
+                }
+
+                p.innerHTML = labelGraphic.labelText;
+                var bold;
+                if (labelGraphic.bold) {
+                        bold = "bold";   
+                } else {
+                        bold = "";  
+                }
+                p.id = labelGraphic.owner.id;
+                p.style.fontWeight = bold;
+                p.style.fontSize = labelGraphic.fontsize+'px';
+                setPosition(p,labelGraphic);      
+        }
+
+        // [To do] picturepath, scale.
+        function renderButtonGraphic(buttonGraphic) {
+                if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
+                        var button = document.createElement('button');
+                        document.getElementById('scene').appendChild(button);
+                        $(button).addClass("graphic");
+                } else {
+                        var button = document.getElementById(buttonGraphic.owner.id);
+                }
+
+                var bold;
+                if (buttonGraphic.bold) {
+                        bold = "bold";   
+                } else {
+                        bold = "";  
+                }
+
+                button.style.fontWeight = bold;
+                button.innerHTML = buttonGraphic.labelText;
+                button.type = "button";
+                button.id = buttonGraphic.owner.id;
+                setPosition(button,buttonGraphic);
+        }
+
+        
+</script>
+
+<script>
+        function render(AGraphic) {
+                if (AGraphic["@type"].endsWith("PictureGraphic")) { //
+                        renderPictureGraphic(AGraphic);
+                }
+                if (AGraphic["@type"].endsWith("LabelGraphic")) { //
+                        renderLabelGraphic(AGraphic);
+                }
+                if (AGraphic["@type"].endsWith("ButtonGraphic")) { //
+                        renderButtonGraphic(AGraphic);
+                }
+        }
+</script>
+
+  <script>
+      //Überlegung: Anstatt die Mausposition / Click übertragen, übertragen auf welche AGraphic gegklickt wurde (und mit welcher Maustaste)? Anhand Gameobject ID identifizieren.
+      scene.addEventListener('click', function(event) {
+          var rect = scene.getBoundingClientRect();
+          var x = event.pageX - rect.left,
+              y = event.pageY - rect.top;
+          console.log("x =" +x +" y ="+y);
+
+          obj = {
+              keycode: "1",
+              x: ""+x,
+              y: ""+y,
+              controller: ""+lastPlayer
+          }
+
+          $.ajax({
+              type: "POST",
+              url: "api/event.json",
+              contentType: "application/json; charset=UTF-8",
+              dataType: "json",
+              data: { data: JSON.stringify(obj) },
+              success: function (data) {
+                  console.log("Success")
+                  console.log("Data: "+data);
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Error Event');
+              }
+          });
+
+
+
+
+      }, false);
+
+
+  </script>
+
+</html>
