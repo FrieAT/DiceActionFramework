@@ -26,7 +26,7 @@ public class RuneGameManager extends AbstractManager {
     
     LabelGraphic txtCurAction;
 
-    int _maxPlayers = 2;
+    int _maxPlayers = 6;
 
     GameState _state = GameState.AWAITING_READY;
 

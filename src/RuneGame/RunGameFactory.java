@@ -1,6 +1,7 @@
 package RuneGame;
 
 import DAF.GameObject;
+import DAF.Controller.Components.ControllerView;
 import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
 import DAF.Math.Vector2;
@@ -33,7 +34,9 @@ public class RunGameFactory {
         IController controller = playerObject.addComponent(PlayerController.class);
         playerObject.addComponent(RuneDiceBag.class);
         
-        addReadyButton(playerObject);
+        addReadyButton(playerObject)
+            .addComponent(ControllerView.class)
+            .setController(controller);
         
         //Setze Spieler in einem Spielerkreis von {maxPlayers}-Spieler
         double playerAlpha = Math.toRadians(controller.getPlayerNo() * dAlpha);
@@ -43,9 +46,10 @@ public class RunGameFactory {
         return controller;
     }
 
-    public static void addReadyButton(GameObject forObject) {
+    public static GameObject addReadyButton(GameObject forObject) {
         ButtonGraphic button = createButton("Bereit?", new Vector2(-20, 20), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        return button.getGameObject();
     }
 
     public static PictureGraphic createBackground(String path, Vector2 position) {
