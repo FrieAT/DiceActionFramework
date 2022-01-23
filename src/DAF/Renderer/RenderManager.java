@@ -6,7 +6,7 @@ import DAF.GameObject;
 import DAF.Renderer.Components.AGraphic;
 
 public class RenderManager extends AbstractManager {
-	private LinkedList<AGraphicRenderer> renderer;
+    private LinkedList<AGraphicRenderer> renderer;
 
     private long _lastRenderedTime;
 
@@ -18,11 +18,11 @@ public class RenderManager extends AbstractManager {
             _instance = new RenderManager();
         return _instance;
     }
-    
+
     // Villeicht sollte das Framework weniger "generell" sein
     public RenderManager() { // JavaFXRenderer
         super();
-        
+
         this.renderer = new LinkedList<>();
         this._lastRenderedTime = 0;
         this._currentRenderedTime = 0;
@@ -75,7 +75,7 @@ public class RenderManager extends AbstractManager {
             renderer.Init();
         }
     }
-    
+
     @Override
     public void update() {
         for(AGraphicRenderer renderer : this.renderer) {
@@ -83,29 +83,20 @@ public class RenderManager extends AbstractManager {
                 continue;
             }
 
-            GameObject x = GameObject.find("Dice_1");
-            for (GameObject y : GameObject.getGameObject(x)) {
-                if (x.isEnabled()) {
-
-                }
-
-            }
-            x.isEnabled();
-
             for (GameObject gameObject: this.getGameObjects()) {
                 if (!gameObject.isEnabled())
-			        continue;
+                    continue;
 
                 AGraphic graphic = gameObject.getComponent(AGraphic.class);
-    
+
                 if(graphic == null) {
                     //TODO: Exception if not an AGraphic component.
                     continue;
                 }
-                
+
                 renderer.render(graphic);
             }
-    
+
             renderer.afterRender();
         }
     }
@@ -120,5 +111,5 @@ public class RenderManager extends AbstractManager {
         return null;
     }
 
-    
+
 }

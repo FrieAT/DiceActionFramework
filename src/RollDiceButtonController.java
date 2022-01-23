@@ -19,7 +19,7 @@ public class RollDiceButtonController extends AbstractComponent implements IInpu
 
     @Override
     public void start() {
-        if(this._dice == null) {
+        if (this._dice == null) {
             throw new NullPointerException("Please define a correct ADice component as a reference.");
         }
 
