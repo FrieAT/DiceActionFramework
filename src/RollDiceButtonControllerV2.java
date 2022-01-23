@@ -83,6 +83,7 @@ public class RollDiceButtonControllerV2 extends AbstractComponent implements IIn
                         }
                         wfar.play(playerNo);
                         dice.roll();
+                        //this.getGameObject().setEnabled(false);
                         //GameObject.find("Round_1").getComponent(WaitForAllRound.class).play(dice.getGameObject().getComponent(ControllerView.class));
                     }
                 }

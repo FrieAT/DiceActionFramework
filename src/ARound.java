@@ -1,13 +1,24 @@
 import DAF.Components.AbstractComponent;
+import DAF.Controller.Components.ControllerView;
+import DAF.Controller.Components.IController;
+import DAF.Controller.Components.PlayerController;
+import DAF.Dice.Components.ADice;
+import DAF.Dice.Components.ADiceBag;
+import DAF.GameObject;
+import DAF.Renderer.Components.LabelGraphic;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public abstract class ARound extends AbstractComponent {
 
     private ArrayList<RoundPlayer> players;
     private int currentPlayer;
     private int turns;
+    private int currentRound;
     private int rounds;
+
+    private java.util.Timer _timer;
 
     /**
      * Default round number = 3;
@@ -16,10 +27,12 @@ public abstract class ARound extends AbstractComponent {
         this.players = new ArrayList<>();
         currentPlayer = -1;
         turns = 0;
+        currentRound = 1;
         rounds = 3;
     }
 
     public void setRounds(int roundNumber) {
+        this.currentRound = 1;
         this.rounds = roundNumber;
     }
 
@@ -27,6 +40,13 @@ public abstract class ARound extends AbstractComponent {
         if (players.isEmpty())
             currentPlayer = playerId;
         players.add(new RoundPlayer(playerId, false));
+        turns++;
+    }
+
+    public void addPlayer(RoundPlayer player) {
+        if (players.isEmpty())
+            currentPlayer = player.getId();
+        players.add(player);
         turns++;
     }
 
@@ -47,19 +67,52 @@ public abstract class ARound extends AbstractComponent {
         if (currentPlayer == id) {
             int nextIdx = players.indexOf(findPlayer(id)) + 1;
             if (nextIdx >= players.size()) {
-                System.out.println(currentPlayer);
-                rounds--;
+                currentRound++;
                 turns--;
-                if (turns <= 0 && rounds > 0)
+                if (turns <= 0 && rounds - currentRound >= 0) {
+                    GameObject go_label = GameObject.find("Label_roundCount");
+                    LabelGraphic label = go_label.getComponent(LabelGraphic.class);
+                    label.setLabelText("Round " + currentRound + " of " + rounds);
+                    go_label.setEnabled(true);
+                    changeControllerIndexPublic();
+
                     restart();
+                }
                 if (gameHasEnded())
                     stop();
                 return;
             }
+            GameObject go_label = GameObject.find("Label_playerTurn");
+            LabelGraphic label = go_label.getComponent(LabelGraphic.class);
+            label.setLabelText("Player " + currentPlayer + "'s turn");
+
+            if (this._timer != null)
+                this._timer.cancel();
+            this._timer = new java.util.Timer();
+            this._timer.schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            go_label.setEnabled(false);
+                        }
+                    }, 1000*5, 1000*5);
+
+            go_label.setEnabled(true);
             currentPlayer = players.get(nextIdx).getId();
             turns--;
+            //currentPlayer = players.get(nextIdx).getId();
+            //turns--;
         }
     }
+
+    public void changeControllerIndexPublic() {
+        for (RoundPlayer p: players) {
+            p.getDice().getGameObject().getComponent(ControllerView.class).setController(0);
+
+        }
+    }
+
+
 
     public boolean isPlayersTurn(int playerId) {
         return playerId == currentPlayer;
@@ -78,13 +131,23 @@ public abstract class ARound extends AbstractComponent {
 
     @Override
     public void start() {
+        GameObject go_label = GameObject.find("Label_roundCount");
+        LabelGraphic label = go_label.getComponent(LabelGraphic.class);
+        label.setLabelText("Round " + currentRound + " of " + rounds);
+        go_label.setEnabled(true);
+
+        go_label = GameObject.find("Label_playerTurn");
+        label = go_label.getComponent(LabelGraphic.class);
+        label.setLabelText("Player " + currentPlayer + "'s turn");
+        go_label.setEnabled(true);
+
         RoundManager.getInstance().add(this);
     }
 
     @Override
     public void update() {
         if (roundHasEnded())
-            System.out.println("Round" + rounds + " has ended.");
+            System.out.println("Round " + rounds + " has ended.");
         if (gameHasEnded())
             System.out.println("Game has ended.");
 
@@ -95,7 +158,7 @@ public abstract class ARound extends AbstractComponent {
     }
 
     public boolean gameHasEnded() {
-        return rounds == 0 && turns == 0;
+        return currentRound == rounds && turns == 0;
     }
 
     public void restart() {

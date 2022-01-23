@@ -13,6 +13,8 @@ import DAF.Controller.Components.PlayerController;
 import DAF.Dice.DiceManager;
 import DAF.Input.InputManager;
 import DAF.Input.MouseServerHandler;
+import DAF.Math.Vector2;
+import DAF.Renderer.Components.LabelGraphic;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Server.ServerRenderer;
 import DAF.Serializer.ASerializer;
@@ -37,7 +39,7 @@ public class POTCDiceGame {
 
 
     public static void start() {
-        setUpStartScreen();
+        //setUpStartScreen();
         setUpInGameScreenV2();
         init();
     }
@@ -72,6 +74,7 @@ public class POTCDiceGame {
 
     public static void setUpInGameScreen() {
         GameObject inGameScreen = new GameObject("InGame");
+
         View view = inGameScreen.addComponent(View.class);
         GameObject obj;
 
@@ -111,6 +114,7 @@ public class POTCDiceGame {
 
     public static void setUpInGameScreenV2() {
         GameObject inGameScreen = new GameObject("InGame");
+
         View view = inGameScreen.addComponent(View.class);
         ControllerView cw;
         GameObject obj;
@@ -122,6 +126,34 @@ public class POTCDiceGame {
         );
         obj.addComponent(ControllerSocket.class);
 
+        obj = view.addLabel(
+                "Label_playerTurn",
+                "Player ",
+                "white",
+                260, 250,
+                250, 0,
+                40, true,
+                LabelGraphic.class
+        );
+        obj.setEnabled(false);
+        obj = view.addLabel(
+                "Label_roundCount",
+                "Round ",
+                "white",
+                275, 200,
+                250, 0,
+                40, true,
+                LabelGraphic.class
+        );
+        obj.setEnabled(false);
+
+        /***************************************************
+         *                     Game 1                      *
+         ***************************************************/
+
+        obj = new GameObject("Round_1");
+        ARound aRound = obj.addComponent(WaitForAllRound.class);
+
         /***************************************************
          *                     Dice 1                      *
          ***************************************************/
@@ -130,9 +162,13 @@ public class POTCDiceGame {
                 350, 450,
                 POTCDiceBag.class
         );
+
         obj.addComponent(PlayerController.class);
         cw = obj.addComponent(ControllerView.class);
         cw.setController(1);
+
+        aRound.addPlayer(new RoundPlayer(1, obj.getComponent(POTCDiceBag.class)));
+
         obj = view.addCup("DiceCup_1",
                 "Cup_1_open",
                 "images/dice_cup_open.png",
@@ -145,13 +181,7 @@ public class POTCDiceGame {
                 0, 0
         );
 
-        obj = view.addLabel("label_player_1",
-                "Player 1",
-                "white",
-                300, 100,
-                250, 0,
-                40, true
-        );
+
 
         /***************************************************
          *                     Dice 2                      *
@@ -164,6 +194,9 @@ public class POTCDiceGame {
         obj.addComponent(PlayerController.class);
         cw = obj.addComponent(ControllerView.class);
         cw.setController(2);
+
+        aRound.addPlayer(new RoundPlayer(2, obj.getComponent(POTCDiceBag.class)));
+
         obj = view.addCup("DiceCup_2",
                 "Cup_2_open",
                 "images/dice_cup_open.png",
@@ -187,6 +220,9 @@ public class POTCDiceGame {
         obj.addComponent(PlayerController.class);
         cw = obj.addComponent(ControllerView.class);
         cw.setController(3);
+
+        aRound.addPlayer(new RoundPlayer(3, obj.getComponent(POTCDiceBag.class)));
+
         obj = view.addCup("DiceCup_3",
                 "Cup_3_open",
                 "images/dice_cup_open.png",
@@ -210,6 +246,10 @@ public class POTCDiceGame {
         obj.addComponent(PlayerController.class);
         cw = obj.addComponent(ControllerView.class);
         cw.setController(4);
+
+        aRound.addPlayer(new RoundPlayer(4, obj.getComponent(POTCDiceBag.class)));
+
+        //DiceCup cup = obj.addComponent(DiceCup.class);
         obj = view.addCup("DiceCup_4",
                 "Cup_4_open",
                 "images/dice_cup_open.png",
@@ -222,14 +262,6 @@ public class POTCDiceGame {
                 0,0
 
         );
-
-        /***************************************************
-         *                  Round 1                      *
-         ***************************************************/
-
-
-        obj = new GameObject("Round_1");
-        ARound aRound = obj.addComponent(WaitForAllRound.class);
 
         /***************************************************
          *                  Buttons 1                      *
@@ -260,7 +292,7 @@ public class POTCDiceGame {
         obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_1");
         obj.addComponent(ControllerView.class).setController(1);
 
-        aRound.addPlayer(1);
+        //aRound.addPlayer(1);
 
         /***************************************************
          *                  Buttons 2                      *
@@ -290,7 +322,7 @@ public class POTCDiceGame {
         obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_2");
         obj.addComponent(ControllerView.class).setController(2);
 
-        aRound.addPlayer(2);
+        //aRound.addPlayer(2);
 
         /***************************************************
          *                  Buttons 3                      *
@@ -320,7 +352,7 @@ public class POTCDiceGame {
         obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_3");
         obj.addComponent(ControllerView.class).setController(3);
 
-        aRound.addPlayer(3);
+        //aRound.addPlayer(3);
 
         /***************************************************
          *                  Buttons 4                      *
@@ -350,10 +382,39 @@ public class POTCDiceGame {
         obj.getComponent(PeekDiceButtonController.class).addDiceCup("DiceCup_4");
         obj.addComponent(ControllerView.class).setController(4);
 
-        aRound.addPlayer(4);
+        //aRound.addPlayer(4);
 
         views.add(inGameScreen);
-        inGameScreen.setEnabled(false);
+    }
+
+    public void setUpInGameScreenV3() {
+        GameObject inGameScreen = new GameObject("InGame");
+        View view = inGameScreen.addComponent(View.class);
+        ControllerView cw;
+        GameObject obj;
+
+        obj = view.addBackground("InGameBackground",
+                "images/wooden_floor.jpg",
+                800, 600,
+                0, 0
+        );
+        obj.addComponent(ControllerSocket.class);
+
+        obj = new GameObject("Game_1");
+        ARound game = obj.addComponent(ARound.class);
+
+
+
+        GameObject player_one = new GameObject("Player_1");
+        ADice dice = player_one.addComponent(POTCDiceBag.class);
+        DiceCup dc = player_one.addComponent(DiceCup.class);
+        player_one.addComponent(POTCDiceBag.class);
+
+        RoundPlayer p1 = new RoundPlayer(2, dice);
+        game.addPlayer(1);
+        game.addPlayer(2);
+        game.addPlayer(3);
+        game.addPlayer(4);
     }
 
     public static void init() {
