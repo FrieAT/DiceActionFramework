@@ -1,11 +1,13 @@
 package RuneGame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import DAF.AbstractManager;
 import DAF.GameObject;
 import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
+import DAF.Dice.Components.ADice;
 import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.LabelGraphic;
@@ -21,16 +23,21 @@ public class RuneGameManager extends AbstractManager {
     enum GameState {
         AWAITING_READY,
         THROW_DICES,
+        MAKE_DECISION,
         AND_MORE,
     }
     
     LabelGraphic txtCurAction;
 
-    int _maxPlayers = 6;
+    int _maxPlayers = 2;
 
     GameState _state = GameState.AWAITING_READY;
 
     ArrayList<IController> _controllers = new ArrayList<>();
+
+    Random _randomGenerator = new Random();
+
+    double _waitTime;
     
     @Override
     public void init() {
@@ -56,19 +63,41 @@ public class RuneGameManager extends AbstractManager {
             case THROW_DICES:
                 stateThrowDices();
                 break;
+            case MAKE_DECISION:
+                stateMakeDecision();
+                break;
         }
     }
 
-    private void stateThrowDices() {
+    private void stateMakeDecision() {
 
+    }
+
+    private void stateThrowDices() {
+        
+        if(_waitTime <= 0) {
+            int endThrowing = _randomGenerator.nextInt(100);
+            if(endThrowing >= 80) {
+                _state = GameState.MAKE_DECISION;
+                return;
+            }
+        } else {
+            _waitTime -= 1.0 * RenderManager.getInstance().getDeltaTime();
+        }
+        
+        for (IController controller : _controllers) {
+            for(ADice dice : controller.getGameObject().getComponentsInChildren(ADice.class)) {
+                dice.roll();
+            }
+        }
     }
 
     private void stateAwaitingReady() {
         int playerCountReady = 0;
+
         for (IController controller : _controllers) {
-            for(GameObject child : controller.getGameObject().getChildren()) {
-                ReadyButtonComponent readyButton = child.getComponent(ReadyButtonComponent.class);
-                if(readyButton != null && readyButton.isReady()) {
+            for(ReadyButtonComponent readyButton : controller.getGameObject().getComponentsInChildren(ReadyButtonComponent.class)) {
+                if(readyButton.isReady()) {
                     playerCountReady++;
                     break;
                 }
@@ -77,11 +106,15 @@ public class RuneGameManager extends AbstractManager {
 
         if(playerCountReady == _maxPlayers) {
             txtCurAction.setLabelText("Es sind alle bereit, es geeeeht loooos!");
+            _waitTime = 3;
             _state = GameState.THROW_DICES;
             return;
         }
         else {
-            txtCurAction.setLabelText(String.format("Es sand %d von %d Spieler bereit... Oida bitte, duads weiter!", playerCountReady, _maxPlayers));
+            txtCurAction.setLabelText(String.format("Es sand %d von %d Spieler bereit... Oida bitte, duads weiter! Delta Time: %f", 
+                playerCountReady, 
+                _maxPlayers,
+                RenderManager.getInstance().getDeltaTime()));
         }
     }
 }
