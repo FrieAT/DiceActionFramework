@@ -21,11 +21,11 @@
         },
         {
             "type": "java",
-            "name": "Launch HelloFX",
+            "name": "Launch RuneGame",
             "request": "launch",
-            "mainClass": "HelloFX",
+            "mainClass": "RuneGame.RuneGame",
             "projectName": "DiceActionFramework",
-            "vmArgs": "--module-path ${workspaceFolder}/lib --add-modules javafx.controls,javafx.graphics,javafx.media",
+            //"vmArgs": "--module-path ${workspaceFolder}/lib --add-modules javafx.controls,javafx.graphics,javafx.media",
         }
     ]
 }

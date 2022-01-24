@@ -30,4 +30,8 @@ public class RuneDice extends ADice {
             this.addFace(new Face(i, "images/classic_dice_"+(i)+".png"));
         }
     }
+
+    public Rune getTopFaceRune() {
+        return Rune.values()[super.getTopFace().getValue()];
+    }
 }
