@@ -25,13 +25,27 @@ public class RuneDice extends ADice {
     @Override
     public void start() {
         super.start();
+
+        addCustomFaces();
+        /*
         for (int i = 1; i <= 6; i++) {
+
             //FIXME: Replace faces with custom images.
             this.addFace(new Face(i, "images/classic_dice_"+(i)+".png"));
         }
+        */
     }
 
     public Rune getTopFaceRune() {
         return Rune.values()[super.getTopFace().getValue()];
+    }
+
+    public void addCustomFaces() {
+        this.addFace(new Face(1, "images/shield_bearer.png"));
+        this.addFace(new Face(2, "images/archer.png"));
+        this.addFace(new Face(3, "images/stairs.png"));
+        this.addFace(new Face(4, "images/wall.png"));
+        this.addFace(new Face(5, "images/wall_and_stairs.png"));
+        this.addFace(new Face(6, "images/joker.png"));
     }
 }

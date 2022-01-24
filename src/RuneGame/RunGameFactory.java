@@ -38,6 +38,10 @@ public class RunGameFactory {
             .addComponent(ControllerView.class)
             .setController(controller);
         
+        GameObject rollbutton = addRollButton(playerObject);
+        rollbutton.addComponent(ControllerView.class).setController(controller);
+        rollbutton.setEnabled(false);
+        
         //Setze Spieler in einem Spielerkreis von {maxPlayers}-Spieler
         double playerAlpha = Math.toRadians(controller.getPlayerNo() * dAlpha);
         Vector2 circlePosition = new Vector2(r * Math.cos(playerAlpha), (r * Math.sin(playerAlpha)));
@@ -48,6 +52,12 @@ public class RunGameFactory {
 
     public static GameObject addReadyButton(GameObject forObject) {
         ButtonGraphic button = createButton("Bereit?", new Vector2(-20, 20), ReadyButtonComponent.class);
+        button.getGameObject().setParent(forObject);
+        return button.getGameObject();
+    }
+
+    public static GameObject addRollButton(GameObject forObject) {
+        ButtonGraphic button = createButton("Würfeln", new Vector2(-20, -20), RollButtonComponent.class);
         button.getGameObject().setParent(forObject);
         return button.getGameObject();
     }
