@@ -176,6 +176,27 @@ public class GameObject {
 
     public List<GameObject> getChildren() { return this.children; }
 
+    public <T extends AbstractComponent>
+    List<T> getComponentsInChildren(Class<T> componentClass) {
+        LinkedList<T> returnList = new LinkedList<>();
+        for (GameObject child : this.getChildren()) {
+            T childComp = child.getComponent(componentClass);
+            if(childComp != null) {
+                returnList.add(childComp);
+            }
+        }
+        return returnList;
+    }
+
+    public <T extends AbstractComponent>
+    T getComponentInChildren(Class<T> componentClass) {
+        List<T> returnList = this.getComponentsInChildren(componentClass);
+        if(returnList.size() == 0) {
+            return null;
+        }
+        return returnList.get(0);
+    }
+
     // TODO: Standard checks parent if enabled
     public boolean isEnabled() {
         if(this.parent != null) {

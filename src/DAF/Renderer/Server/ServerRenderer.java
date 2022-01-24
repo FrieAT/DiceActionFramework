@@ -1,11 +1,14 @@
 package DAF.Renderer.Server;
 
 import DAF.Renderer.AGraphicRenderer;
+import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.AGraphic;
 import DAF.Serializer.ASerializer;
 import DAF.Socket.IServerSocket;
 import DAF.Socket.HttpSocket.HttpServerSocket;
 import DAF.Socket.HttpSocket.Resource.JsonBufferResource;
+
+import java.time.Clock;
 import java.util.LinkedList;
 
 public class ServerRenderer extends AGraphicRenderer {
@@ -20,6 +23,8 @@ public class ServerRenderer extends AGraphicRenderer {
     private IServerSocket _socket;
 
     private LinkedList<Integer> _renderAcks;
+
+    private Clock _clock = Clock.systemDefaultZone();
 
     public ServerRenderer() {
         this.fetchFrame = new StringBuilder();
@@ -58,6 +63,9 @@ public class ServerRenderer extends AGraphicRenderer {
         this._socket.transmit(jsonBuffer, true);
 
         fetchFrame = new StringBuilder("");
+
+        RenderManager.getInstance().setRenderedTime(_clock.instant().getNano());
+
         return true;
     }
 
