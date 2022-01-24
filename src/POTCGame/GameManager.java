@@ -2,6 +2,8 @@ package POTCGame;
 
 import DAF.AbstractManager;
 import DAF.Controller.Components.IController;
+import DAF.Dice.Components.ADice;
+import DAF.Dice.Components.ADiceBag;
 import DAF.GameObject;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.LabelGraphic;
@@ -31,15 +33,20 @@ public class GameManager extends AbstractManager {
     PictureGraphic background;
 
     int _maxPlayers = 2;
+    int _playersTurn = 1;
+    int _counter = 0;
+
+    ArrayList<IController> _controllers = new ArrayList<>();
+    ArrayList<Integer> results = new ArrayList<>();
 
     GameState _state = GameState.READY_CHECK;
 
-    ArrayList<IController> _controllers = new ArrayList<>();
 
     @Override
     public void init() {
-        txtCurAction = GameFactory.createText("<<ActionText>>", new Vector2(512, 300));
-        background = GameFactory.createBackground("./images/wooden_floor.png", new Vector2(0, 0));
+        background = GameFactory.createBackground("images/wooden_floor.jpg", new Vector2(0, 0));
+        // old Vector: x = 340, y = 300
+        txtCurAction = GameFactory.createText("<<ActionText>>", new Vector2(340, 350));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
@@ -99,7 +106,7 @@ public class GameManager extends AbstractManager {
             _state = GameState.THROW_DICES;
         }
         else {
-            txtCurAction.setLabelText(String.format("Es sand %d von %d Spieler bereit... Oida bitte, duads weiter!", playerCountReady, _maxPlayers));
+            txtCurAction.setLabelText(String.format("Ready: %d / %d<br>Hurry up!", playerCountReady, _maxPlayers));
         }
     }
 
@@ -109,7 +116,7 @@ public class GameManager extends AbstractManager {
             for(GameObject child : controller.getGameObject().getChildren()) {
                 RollDiceButtonComponent rollButton = child.getComponent(RollDiceButtonComponent.class);
 
-                if (rollButton != null && rollButton.diceHasRolled()) {
+                if (rollButton != null && rollButton.hasRolled()) {
                     playerCountRolled++;
                     break;
                 }
@@ -117,9 +124,9 @@ public class GameManager extends AbstractManager {
         }
 
         if (playerCountRolled == _maxPlayers) {
-            txtCurAction.setLabelText("Alle haben gewürfelt!");
+            txtCurAction.setLabelText("All players<br>have rolled");
 
-            // test start
+            // test: enable the GuessButtons for next state
             for (IController controller: _controllers) {
                 for (GameObject child : controller.getGameObject().getChildren()) {
                     GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
@@ -133,32 +140,53 @@ public class GameManager extends AbstractManager {
 
             _state = GameState.GUESS_DICES;
         } else {
-            txtCurAction.setLabelText(String.format("%d von %d Spielern haben gewürfelt", playerCountRolled, _maxPlayers));
+            txtCurAction.setLabelText(String.format("Rolled: %d / %d", playerCountRolled, _maxPlayers));
         }
     }
 
     public void stateGuessDices() {
-        int currentPlayerIndex = 1;
-        for (IController controller : _controllers) {
-            for(GameObject child : controller.getGameObject().getChildren()) {
-                GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
 
-                if (guessButton != null && guessButton.isPlayersTurn(currentPlayerIndex)) {
-                    currentPlayerIndex++;
-                    break;
+        for (IController controller : _controllers) {
+            //System.out.println("Players Turn: " + _playersTurn + "\n");
+            if (controller.getPlayerNo() == _playersTurn) {
+                for (GameObject child : controller.getGameObject().getChildren()) {
+                    GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+
+                    if (guessButton != null && !child.isEnabled())
+                        child.setEnabled(true);
+                    if (guessButton != null && guessButton.hasGuessed()) {
+                        if (++_playersTurn > _maxPlayers)
+                            _playersTurn = 1;
+                        _counter++;
+                        child.setEnabled(false);
+                    }
+                }
+            } else {
+                for (GameObject child : controller.getGameObject().getChildren()) {
+                    GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+                    if (guessButton != null && child.isEnabled())
+                        child.setEnabled(false);
+
                 }
             }
         }
 
-        if (currentPlayerIndex == _maxPlayers) {
-            txtCurAction.setLabelText("All have guessed");
+        if (_counter == _maxPlayers) {
+            _counter = 0;
             _state = GameState.GET_RESULTS;
-        } else {
-            txtCurAction.setLabelText(String.format("%d of %d players have guessed", currentPlayerIndex, _maxPlayers));
         }
     }
 
     public void stateGetResults() {
+        for (IController controller : _controllers) {
+            int results = 0;
+            if (controller.getGameObject().getComponentInChildren(POTCDiceBag.class) != null) {
+                for (ADice dice : controller.getGameObject().getComponentInChildren(POTCDiceBag.class).getDices()) {
+                    results += dice.getTopFace().getValue();
+                }
+                System.out.println(results);
+            }
+        }
         System.out.println("State GET_RESULTS reached.");
     }
 }

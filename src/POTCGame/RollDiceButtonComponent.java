@@ -12,15 +12,24 @@ import DAF.Renderer.Components.ButtonGraphic;
 public class RollDiceButtonComponent extends AbstractComponent implements IInputListener {
 
     private ADice _dice;
-    private boolean _diceHasRolled;
+    private boolean _rolled;
+
+    private DiceCupComponent _cup;
 
     @Override
     public void start() {
 
+
+        this._cup = this.getGameObject().getParent().getComponent(DiceCupComponent.class);
         this._dice = this.getGameObject().getParent().getComponent(POTCDiceBag.class);
-        this._diceHasRolled = false;
+        this._rolled = false;
+
         if (this._dice == null) {
             throw new NullPointerException("Please define a correct ADice component as a reference");
+        }
+
+        if (this._cup == null) {
+            throw new NullPointerException("Please define a correct DiceCupComponent as a reference");
         }
 
         InputManager.getInstance().add(ButtonInputEvent.class, this);
@@ -32,21 +41,26 @@ public class RollDiceButtonComponent extends AbstractComponent implements IInput
         ButtonGraphic buttonGraphic = getGameObject().getComponent(ButtonGraphic.class);
         if (buttonEvent.getSource() == buttonGraphic) {
             rollDice();
+            flipCup();
         }
     }
 
-    public void setControllableDice (ADice dice) {
-        this._dice = dice;
+    public boolean hasRolled () {
+        return _rolled;
     }
 
-    public boolean diceHasRolled () {
-        return _diceHasRolled;
+    public void setRollState(boolean state) {
+        this._rolled = state;
     }
 
     public void rollDice() {
         this._dice.roll();
-        this._diceHasRolled = true;
+        setRollState(true);
         this.getGameObject().setEnabled(false);
     }
 
+    // set closed
+    public void flipCup() {
+        this._cup.setCupState(0);
+    }
 }

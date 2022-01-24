@@ -10,7 +10,7 @@ import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.PictureGraphic;
 
-public class DiceCupComponent extends AbstractComponent implements IInputListener {
+public class DiceCupComponent extends AbstractComponent {
 
     /**
      * Status
@@ -18,31 +18,47 @@ public class DiceCupComponent extends AbstractComponent implements IInputListene
      * 1: open
      * 2: peek
      */
-    private int _cupStatus;
+    private int _cupState;
+    private PictureGraphic _closedCup;
+    private PictureGraphic _openCup;
+    private PictureGraphic _peekCup;
 
     @Override
     public void start() {
-        InputManager.getInstance().add(ButtonInputEvent.class, this);
+        this._cupState = 1;
+        this._closedCup.getGameObject().setEnabled(false);
+        this._peekCup.getGameObject().setEnabled(false);
     }
 
     @Override
-    public void onInput(AInputEvent event) {
-        ButtonInputEvent buttonEvent = (ButtonInputEvent)event;
-        ButtonGraphic buttonGraphic = getGameObject().getComponent(ButtonGraphic.class);
-        if (buttonEvent.getSource() == buttonGraphic) {
-            switch (_cupStatus) {
-                case 0:
-                    ;
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-            }
-        }
+    public void update() {
+
     }
 
-    public void setCupStatus(int status) {
-        this._cupStatus = status;
+    public void setClosedCup(PictureGraphic picture) {
+        this._closedCup = picture;
+    }
+
+    public void setOpenCup(PictureGraphic picture) {
+        this._openCup = picture;
+    }
+
+    public void setPeekCup(PictureGraphic picture) {
+        this._peekCup = picture;
+    }
+
+    public void setCupState(int state) {
+        getCupState().getGameObject().setEnabled(false);
+        this._cupState = state;
+        getCupState().getGameObject().setEnabled(true);
+    }
+
+    public PictureGraphic getCupState() {
+        switch (_cupState) {
+            case 0: return _closedCup;
+            case 1: return _openCup;
+            case 2: return _peekCup;
+        }
+        return null;
     }
 }

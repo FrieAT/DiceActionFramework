@@ -1,7 +1,6 @@
 package POTCGame;
 
 import DAF.Components.AbstractComponent;
-import DAF.Controller.Components.ControllerView;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
@@ -10,10 +9,11 @@ import DAF.Renderer.Components.ButtonGraphic;
 
 public class GuessDiceButtonComponent extends AbstractComponent implements IInputListener {
 
-    private int _playerIndex;
+    private boolean _guessed;
+
     @Override
     public void start() {
-        _playerIndex = this.getGameObject().getComponent(ControllerView.class).getController().getPlayerNo();
+        this._guessed = false;
         InputManager.getInstance().add(ButtonInputEvent.class, this);
     }
 
@@ -23,15 +23,19 @@ public class GuessDiceButtonComponent extends AbstractComponent implements IInpu
         ButtonGraphic buttonGraphic = getGameObject().getComponent(ButtonGraphic.class);
         if (buttonEvent.getSource() == buttonGraphic) {
             guess();
+            setGuessState(true);
         }
     }
 
     public void guess() {
         System.out.println("guessed");
-        this.getGameObject().setEnabled(false);
     }
 
-    public boolean isPlayersTurn(int idx) {
-        return this._playerIndex == idx;
+    public boolean hasGuessed() {
+        return this._guessed;
+    }
+
+    public void setGuessState(boolean state) {
+        this._guessed = state;
     }
 }
