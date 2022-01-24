@@ -12,6 +12,8 @@ public class RenderManager extends AbstractManager {
 
     private long _currentRenderedTime;
 
+    private boolean _deltaTimeSet = false;
+
     protected static RenderManager _instance;
     public static RenderManager getInstance() {
         if (_instance == null)
@@ -33,6 +35,10 @@ public class RenderManager extends AbstractManager {
     }
 
     public synchronized void setRenderedTime(long now) {
+        if(_deltaTimeSet) {
+            return;
+        }
+        
         if(_lastRenderedTime == 0) {
             _lastRenderedTime = now;
         } else {
@@ -78,6 +84,8 @@ public class RenderManager extends AbstractManager {
 
     @Override
     public void update() {
+        _deltaTimeSet = false;
+        
         for(AGraphicRenderer renderer : this.renderer) {
             if(!renderer.beforeRender()) {
                 continue;
