@@ -1,6 +1,13 @@
 package RuneGame;
 
+import DAF.GameObject;
+import DAF.Controller.Components.AbstractController;
+import DAF.Controller.Components.ControllerView;
+import DAF.Controller.Components.IController;
 import DAF.Dice.Components.*;
+import DAF.Renderer.Components.ButtonGraphic;
+import DAF.Renderer.Components.PictureGraphic;
+import javafx.scene.control.Button;
 
 /**
  * 1: Bow man
@@ -22,6 +29,12 @@ public class RuneDice extends ADice {
         JOKER, // 6
     }
 
+    private GameObject _clickableDice;
+
+    private boolean _ready = false;
+
+    private boolean _persistent = false;
+
     @Override
     public void start() {
         super.start();
@@ -36,8 +49,56 @@ public class RuneDice extends ADice {
         */
     }
 
+    @Override
+    public void roll() {
+        if(this._ready) {
+            this._persistent = true;
+            return;
+        }
+
+        super.roll();
+    }
+
+    public void resetReady() {
+        this._ready = false;
+        this._persistent = false;
+    }
+
+    public boolean isReady() {
+        return this._ready;
+    }
+
+    public void setReady(boolean state) {
+        if(this._persistent) {
+            return;
+        }
+
+        this._ready = state;
+    }
+
     public Rune getTopFaceRune() {
         return Rune.values()[super.getTopFace().getValue()];
+    }
+
+    @Override
+    public GameObject addFace(Face face) {
+        GameObject faceObject = super.addFace(face);
+
+        GameObject faceClickableObject = new GameObject("Clickable", faceObject);
+        //PictureGraphic picture = faceObject.getComponent(PictureGraphic.class);
+        ButtonGraphic button = faceClickableObject.addComponent(ButtonGraphic.class);
+        button.bindWidthToParent(true);
+        button.bindHeightToParent(true);
+        button.setLabelText(" ");
+        //button.setWebColor("rgba(0, 0, 0, 0.0)");
+        button.setWebBgColor("rgba(0, 0, 0, 0.0)");
+
+        IController controller = this.getGameObject().getComponentInParent(AbstractController.class);
+        faceClickableObject.addComponent(ControllerView.class).setController(controller.getPlayerNo());
+
+        faceClickableObject.addComponent(ToggleReadyRuneDice.class);
+
+        return faceObject;
     }
 
     public void addCustomFaces() {
@@ -47,5 +108,6 @@ public class RuneDice extends ADice {
         this.addFace(new Face(4, "images/wall.png"));
         this.addFace(new Face(5, "images/wall_and_stairs.png"));
         this.addFace(new Face(6, "images/joker.png"));
+        this.setTopFace(null);
     }
 }
