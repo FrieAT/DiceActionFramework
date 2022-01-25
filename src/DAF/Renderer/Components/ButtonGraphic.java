@@ -18,7 +18,9 @@ public class ButtonGraphic extends AGraphic {
     Boolean bold = false;
     @JsonElement
 	String labelText ="Example Text";
-    
+    @JsonElement
+    double borderRadius = 0.0;
+
     @Override
     public void start() {
         super.start();
@@ -72,4 +74,10 @@ public class ButtonGraphic extends AGraphic {
 	public void setLabelText(String labelText) {
 		this.labelText = labelText;
 	}
+    public void setBorderRadius(double radius) {
+        this.borderRadius = radius;
+    }
+    public double getBorderRadius() {
+        return this.borderRadius;
+    }
 }

@@ -101,7 +101,7 @@ public class GameObject {
     private int id;
     @JsonElement
     private String name;
-
+    @JsonElement
     private GameObject parent;
 
     @JsonElement
@@ -195,6 +195,19 @@ public class GameObject {
             return null;
         }
         return returnList.get(0);
+    }
+
+    public <T extends AbstractComponent>
+    T getComponentInParent(Class<T> componentClass) {
+        GameObject parent = this.getParent();
+        while(parent != null) {
+            T reqComp = parent.getComponent(componentClass);
+            if(reqComp != null) {
+                return reqComp;
+            }
+            parent = parent.parent;
+        }
+        return null;
     }
 
     // TODO: Standard checks parent if enabled

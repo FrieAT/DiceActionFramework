@@ -33,6 +33,13 @@ public class ADiceBag extends ADice implements IDice {
 
     }
 
+    @Override
+    public void setTopFace(Face face) {
+        for(ADice dice : this.getDices()) {
+            dice.setTopFace(face);
+        }
+    }
+
     public <T extends ADice>
     boolean add(Class<T> dice) {
         GameObject go_dice = new GameObject("dice_" + dices.size() + 1, this.getGameObject());
