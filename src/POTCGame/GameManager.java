@@ -32,7 +32,7 @@ public class GameManager extends AbstractManager {
     LabelGraphic txtCurAction;
     PictureGraphic background;
 
-    int _maxPlayers = 2;
+    int _maxPlayers = 7;
     int _playersTurn = 1;
     int _counter = 0;
 
@@ -46,7 +46,7 @@ public class GameManager extends AbstractManager {
     public void init() {
         background = GameFactory.createBackground("images/wooden_floor.jpg", new Vector2(0, 0));
         // old Vector: x = 340, y = 300
-        txtCurAction = GameFactory.createText("<<ActionText>>", new Vector2(340, 350));
+        txtCurAction = GameFactory.createText("<<ActionText>>", 32, new Vector2(340, 350));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
@@ -150,21 +150,33 @@ public class GameManager extends AbstractManager {
             //System.out.println("Players Turn: " + _playersTurn + "\n");
             if (controller.getPlayerNo() == _playersTurn) {
                 for (GameObject child : controller.getGameObject().getChildren()) {
-                    GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+                    GuessFieldComponent guessField = child.getParent().getComponentInChildren(GuessFieldComponent.class);
+                    GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
+                    //System.out.println(guessField == controller.getGameObject().getComponentInChildren(GuessFieldComponent.class));
+                    //System.out.println(child.getComponentInChildren(GuessFieldComponent.class));
+                    //GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
 
-                    if (guessButton != null && !child.isEnabled())
-                        child.setEnabled(true);
+                    //if (guessButton != null && /*!child.isEnabled()*/) {
+                    if (guessButton != null && !guessField.getGameObject().isEnabled()) {
+                        guessField.getGameObject().setEnabled(true);
+                        //child.setEnabled(true);
+                    }
                     if (guessButton != null && guessButton.hasGuessed()) {
                         if (++_playersTurn > _maxPlayers)
                             _playersTurn = 1;
                         _counter++;
-                        child.setEnabled(false);
+                        guessField.getGameObject().setEnabled(false);
+                        //child.setEnabled(false);
                     }
                 }
             } else {
                 for (GameObject child : controller.getGameObject().getChildren()) {
-                    GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
-                    if (guessButton != null && child.isEnabled())
+                    GuessFieldComponent guessField = child.getParent().getComponentInChildren(GuessFieldComponent.class);
+                    GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
+                    //GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+
+                    //if (guessButton != null && child.isEnabled())
+                    if (guessButton != null && guessField.getGameObject().isEnabled())
                         child.setEnabled(false);
 
                 }

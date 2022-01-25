@@ -6,13 +6,16 @@ import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
 import DAF.Input.InputManager;
 import DAF.Renderer.Components.ButtonGraphic;
+import DAF.Renderer.Components.LabelGraphic;
 
 public class GuessDiceButtonComponent extends AbstractComponent implements IInputListener {
 
     private boolean _guessed;
+    LabelGraphic _counter;
 
     @Override
     public void start() {
+        this._counter = this.getGameObject().getParent().getComponentInChildren(LabelGraphic.class);
         this._guessed = false;
         InputManager.getInstance().add(ButtonInputEvent.class, this);
     }
@@ -28,7 +31,7 @@ public class GuessDiceButtonComponent extends AbstractComponent implements IInpu
     }
 
     public void guess() {
-        System.out.println("guessed");
+        System.out.println("Guessed: " + _counter.getLabelText());
     }
 
     public boolean hasGuessed() {

@@ -34,10 +34,16 @@ public class GameFactory {
                 .addComponent(ControllerView.class)
                 .setController(controller);
 
+        /*
         addGuessButton(playerObject)
                 .addComponent(ControllerView.class)
                 .setController(controller);
 
+         */
+
+        addGuessField(playerObject, controller)
+                .addComponent(ControllerView.class)
+                .setController(controller);
 
         //Setze Spieler in einem Spielerkreis von {maxPlayers}-Spieler
         double playerAlpha = Math.toRadians(controller.getPlayerNo() * dAlpha);
@@ -48,19 +54,18 @@ public class GameFactory {
     }
 
     public static LabelGraphic createTextHeading(String text, Vector2 position) {
-        LabelGraphic label = createText(text, position);
-        label.setFontSize(32);
+        LabelGraphic label = createText(text, 32, position);
         label.setBold(true);
         return label;
     }
 
-    public static LabelGraphic createText(String text, Vector2 position) {
+    public static LabelGraphic createText(String text, int fontSize, Vector2 position) {
         GameObject labelObject = new GameObject("Text");
         labelObject.getTransform().setPosition(position);
         LabelGraphic label = labelObject.addComponent(LabelGraphic.class);
         label.setLabelText(text);
-        label.setWebColor("beige");
-        label.setFontSize(32);
+        label.setWebColor("black");
+        label.setFontSize(fontSize);
         return label;
     }
 
@@ -85,21 +90,64 @@ public class GameFactory {
         return picture;
     }
 
+    public static GameObject addGuessField(GameObject forObject, IController controller) {
+        GameObject guessObject = new GameObject("GuessField");
+        guessObject.setParent(forObject);
+
+        GuessFieldComponent guessField = guessObject.addComponent(GuessFieldComponent.class);
+        LabelGraphic label = createText("0", 20, new Vector2(0, -40));
+        label.getGameObject().setParent(guessObject);
+
+        label.getGameObject()
+                .addComponent(ControllerView.class)
+                .setController(controller);
+        addPlusButton(guessObject)
+                .addComponent(ControllerView.class)
+                .setController(controller);
+        addMinusButton(guessObject)
+                .addComponent(ControllerView.class)
+                .setController(controller);
+        addGuessButton(guessObject)
+                .addComponent(ControllerView.class)
+                .setController(controller);
+
+        return guessObject;
+    }
+
+    public static GameObject addPlusButton(GameObject forObject) {
+        ButtonGraphic button = createButton(" + ", new Vector2(20, -40), PlusButtonComponent.class);
+        button.getGameObject().setParent(forObject);
+        button.setBorderRadius(10);
+        button.setFontSize(15);
+        return button.getGameObject();
+    }
+
+    public static GameObject addMinusButton(GameObject forObject) {
+        ButtonGraphic button = createButton(" - ", new Vector2(-20, -40), MinusButtonComponent.class);
+        button.getGameObject().setParent(forObject);
+        button.setBorderRadius(10);
+        button.setFontSize(15);
+        return button.getGameObject();
+    }
+
+    public static GameObject addGuessButton(GameObject forObject) {
+        ButtonGraphic button = createButton("Guess", new Vector2(-15, -75), GuessDiceButtonComponent.class);
+        button.getGameObject().setParent(forObject);
+        button.setFontSize(15);
+        return button.getGameObject();
+    }
+
     public static GameObject addReadyButton(GameObject forObject) {
         ButtonGraphic button = createButton("Ready", new Vector2(-20, 20), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setBorderRadius(10);
+        button.setFontSize(20);
+
         return button.getGameObject();
     }
 
     public static GameObject addRollButton(GameObject forObject) {
         ButtonGraphic button = createButton("Roll", new Vector2(20, 20), RollDiceButtonComponent.class);
-        button.getGameObject().setParent(forObject);
-        button.getGameObject().setEnabled(false);
-        return button.getGameObject();
-    }
-
-    public static GameObject addGuessButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Guess", new Vector2(-20, 40), GuessDiceButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.getGameObject().setEnabled(false);
         return button.getGameObject();
