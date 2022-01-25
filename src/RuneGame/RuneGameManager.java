@@ -5,6 +5,7 @@ import java.util.Random;
 
 import DAF.AbstractManager;
 import DAF.GameObject;
+import DAF.Controller.ControllerManager;
 import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
 import DAF.Dice.Components.ADice;
@@ -38,6 +39,10 @@ public class RuneGameManager extends AbstractManager {
     Random _randomGenerator = new Random();
 
     double _waitTime;
+
+    int _playersTurn = 0;
+
+    boolean _playersTurnIncreased = true;
     
     @Override
     public void init() {
@@ -70,7 +75,58 @@ public class RuneGameManager extends AbstractManager {
     }
 
     private void stateMakeDecision() {
+        if(_playersTurnIncreased) {
+            for (IController controller : _controllers) {
+                if(_playersTurn != controller.getPlayerNo()) {
+                    continue;
+                }
 
+                RollButtonComponent rollComp = controller.getGameObject().getComponentInChildren(RollButtonComponent.class);
+                if(rollComp == null) {
+                    continue;
+                }
+
+                rollComp.getGameObject().setEnabled(false);
+            }
+
+            if(++_playersTurn > _controllers.size()) {
+                _playersTurn = 1;
+            }
+
+            for (IController controller : _controllers) {
+                if(_playersTurn != controller.getPlayerNo()) {
+                    continue;
+                }
+
+                RollButtonComponent rollComp = controller.getGameObject().getComponentInChildren(RollButtonComponent.class);
+                if(rollComp == null) {
+                    continue;
+                }
+
+                rollComp.getGameObject().setEnabled(true);
+                rollComp.setRollState(false);
+            }
+
+            _playersTurnIncreased = false;
+        }
+
+        for (IController controller : _controllers) {
+            if(_playersTurn != controller.getPlayerNo()) {
+                continue;
+            }
+
+            RollButtonComponent rollComp = controller.getGameObject().getComponentInChildren(RollButtonComponent.class);
+            if(rollComp == null) {
+                _playersTurnIncreased = true;
+                continue;
+            }
+
+            if(rollComp.hasRolled()) {
+                _playersTurnIncreased = true;
+            }
+        }
+
+        
     }
 
     private void stateThrowDices() {

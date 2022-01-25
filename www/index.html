@@ -8,15 +8,43 @@
   * {
     margin: 0px;
     padding: 0px;
-}
+  }
+  html, body {
+    width:100%;
+    height:100%;
+    position: relative;
+  }
+  #scene, #mobile {
+    width:100%;
+    position: relative;
+  }
+  #mobile {
+    display: flex;
+    justify-content: center;
+  }
+  #scene {
+    overflow: hidden;
+  }
+  #mobile button {
+    padding:4% 35px;
+    box-sizing: border-box;
+    position: relative !important;
+    object-fit: fill;
+  }
   </style>
   
     <title>This is the title of the webpage!</title>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 
     <script>
+    window.addEventListener('resize', function() {
+ 	      scaleY = window.innerHeight / 768;
+        scaleX = document.body.clientWidth / 1024 ;
+  }  
+);
+
 
         
         
@@ -84,7 +112,7 @@
                                  updatedIds[""+AGraphicArray[i].owner.id] = true;
                             }
 
-                            $("#scene").find(".graphic").each(function(index, element){
+                            $("body").find(".graphic").each(function(index, element){
                                 var gameObjectId = $(element).attr("id");
                                 if(updatedIds[gameObjectId] === undefined) {
                                      $(element).remove();
@@ -110,38 +138,49 @@
 
 
   </head>
-  <body class="overflow:auto;">
-        <div id="scene" style="width: 1024px; height: 768px; position: relative; float:left;"></div> <!-- get width and height through json?-->
+  <body>
+        <div id="scene" style="width: 100%; height: 100%; position: relative;"></div>
+        <div id="mobile" style="display: none;"></div>
         <div style="width:200px;height:200px">
-                <p>Select Player:</p>
-                <select id="changePlayer">
-                        <option value="0">Watcher</option> 
-                        <option value="1">PlayerOne</option> 
-                        <option value="2">PlayerTwo</option> 
-                </select>
-        </div>      
+          <p>Select Player:</p>
+          <select id="changePlayer">
+                  <option value="0">Watcher</option> 
+                  <option value="1">PlayerOne</option> 
+                  <option value="2">PlayerTwo</option> 
+          </select>
+        </div>    
   </body>
 
   <script>
         var scaleY = window.innerHeight / 768;
         var scaleX = document.body.clientWidth / 1024 ;
-        $('#scene').height(768 * scaleY);
-        $('#scene').width(1024 * scaleX);
         
       function ObjectAlreadyExists(ObjectId) {
       var elementExists = !!document.getElementById(ObjectId);
       return elementExists;
       }
 
-        function setPosition(HTMLelement,AGraphic) {
-        HTMLelement.style.position = 'absolute';
-        HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x * scaleX +'px' ;
-        HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y * scaleY +'px';
+      function setPosition(HTMLelement,AGraphic) {
+        if ((smallScreenPosition == 'mobile') && AGraphic["@type"].endsWith("ButtonGraphic")) {
+          //HTMLelement.style.position = 'static';
+          //HTMLelement.minHeight = '1cm';
+          //HTMLelement.minWidth = '1cm';
+
+          if($(HTMLelement).parent("#mobile") == null) {
+            $(HTMLelement).detach().appendTo("#mobile");
+          }
+          HTMLelement.style.position = 'relative';
+        } else {
+          HTMLelement.style.position = 'absolute';
+          HTMLelement.style.left = AGraphic.owner.transform.globalPosition.x * scaleX +'px' ;
+          HTMLelement.style.top = AGraphic.owner.transform.globalPosition.y * scaleY +'px';
+        }
+        
         HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
         HTMLelement.style.zIndex = AGraphic.renderingLayer
         HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x * scaleX;
         HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y * scaleY;
-        }
+      }
 
       function renderPictureGraphic(pictureGraphic) {
           if (!ObjectAlreadyExists(pictureGraphic.owner.id)) {
@@ -242,56 +281,56 @@
 
       // [To do] picturepath, scale.
       function renderButtonGraphic(buttonGraphic) {
-      if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
-          var button = document.createElement('button');
-          document.getElementById('scene').appendChild(button);
-          $(button).addClass("graphic");
+        if (!ObjectAlreadyExists(buttonGraphic.owner.id)) {
+            var button = document.createElement('button');
+            document.getElementById(smallScreenPosition).appendChild(button);
+            $(button).addClass("graphic");
 
-          button.addEventListener('click', function(event) {
-              var target = event.target;
-              var elementId = target.getAttribute('id');
-              obj = {
-                  '@type': 'DAF.Event.ButtonInputEvent',
-                  'keycode': "0",
-                  'source': ""+elementId,
-                  'controller': ""+lastPlayer
-              }
+            button.addEventListener('click', function(event) {
+                var target = event.target;
+                var elementId = target.getAttribute('id');
+                obj = {
+                    '@type': 'DAF.Event.ButtonInputEvent',
+                    'keycode': "0",
+                    'source': ""+elementId,
+                    'controller': ""+lastPlayer
+                }
 
-              $.ajax({
-                  type: "POST",
-                  url: "api/event.json",
-                  contentType: "application/json; charset=UTF-8",
-                  dataType: "json",
-                  data: { data: JSON.stringify(obj) },
-                  success: function (data) {
-                      console.log("Success")
-                      console.log("Data: "+data);
-                  },
-                  error: function (jqXHR, textStatus, errorThrown) {
-                      console.log(jqXHR);
-                      console.log(textStatus);
-                      console.log(errorThrown);
-                      console.log('Error Event');
-                  }
-              });
-          }, false);
-      } else {
-        var button = document.getElementById(buttonGraphic.owner.id);
-      }
+                $.ajax({
+                    type: "POST",
+                    url: "api/event.json",
+                    contentType: "application/json; charset=UTF-8",
+                    dataType: "json",
+                    data: { data: JSON.stringify(obj) },
+                    success: function (data) {
+                        console.log("Success")
+                        console.log("Data: "+data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        console.log('Error Event');
+                    }
+                });
+            }, false);
+        } else {
+          var button = document.getElementById(buttonGraphic.owner.id);
+        }
 
-      var bold;
-      if (buttonGraphic.bold) {
-        bold = "bold";
-      } else {
-        bold = "";
-      }
+        var bold;
+        if (buttonGraphic.bold) {
+          bold = "bold";
+        } else {
+          bold = "";
+        }
 
-                button.style.fontWeight = bold;
-                button.innerHTML = buttonGraphic.labelText;
-                button.style.fontSize = buttonGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
-                button.type = "button";
-                button.id = buttonGraphic.owner.id;
-                setPosition(button,buttonGraphic);
+        button.style.fontWeight = bold;
+        button.innerHTML = buttonGraphic.labelText;
+        button.style.fontSize = buttonGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
+        button.type = "button";
+        button.id = buttonGraphic.owner.id;
+        setPosition(button,buttonGraphic);
       }
 
 
@@ -353,7 +392,19 @@
 
       }, false);
 
+var smallScreenCSS = "";
+var smallScreenPosition="scene"
 
+// If its a mobile device than make the buttons larger and but them at the bottem.
+// Mann kann den UserAgent vom Webview bei der Android App ändern.
+//alert(navigator.userAgent);
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent))
+{
+	smallScreenCSS = "min-height: 1cm; min-width: 1cm";
+  $('#mobile').css({"height": "20%", "display":"flex"});
+  $('#scene').css("height", "80%");
+	smallScreenPosition="mobile";
+}
   </script>
 
 </html>
