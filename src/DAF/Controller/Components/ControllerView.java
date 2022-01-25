@@ -51,25 +51,34 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
         GameObject current = this.getGameObject();
         while(current != null && current != obj) {
             current = current.getParent();
+        } 
+
+        boolean isEnabled = this.getGameObject().isEnabled();
+        if(current == null || !isEnabled) {
+            return;
         }
 
         this._cycled = true;
 
         if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
-            this._previousEnabledState = this.getGameObject().isEnabled();
+            this._previousEnabledState = isEnabled;
             this.getGameObject().setEnabled(false);
         }
     }
 
     @Override
     public void onAfterNext(GameObject obj) {
-        if(!this._cycled || this._forController == null) {
+        if(!this._cycled || this._forController == null || this.getGameObject() != obj) {
             return;
         }
         
         GameObject current = this.getGameObject();
         while(current != null && current != obj) {
             current = current.getParent();
+        }
+
+        if(current == null) {
+            return;
         }
 
         this._cycled = false;

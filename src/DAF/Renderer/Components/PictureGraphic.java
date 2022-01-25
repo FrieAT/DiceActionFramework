@@ -15,6 +15,12 @@ public class PictureGraphic extends AGraphic {
 	@JsonElement
 	String picturePath;
 	
+	public PictureGraphic() {
+		super();
+		
+		backgroundColor = "rgba(255, 255, 255, 0.0)";
+	}
+
 	@Override
 	public void start() {
 		super.start();
