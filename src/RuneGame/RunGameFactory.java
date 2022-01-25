@@ -4,6 +4,7 @@ import DAF.GameObject;
 import DAF.Controller.Components.ControllerView;
 import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
+import DAF.Dice.Components.ADice;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.*;
 import DAF.Components.*;
@@ -26,13 +27,24 @@ public class RunGameFactory {
         return label;
     }
 
+    public static PictureGraphic createBackground(String path, Vector2 position) {
+        GameObject pictureObject = new GameObject("Background");
+        pictureObject.getTransform().setPosition(position);
+        PictureGraphic background = pictureObject.addComponent(PictureGraphic.class);
+        background.setPicturePath(path);
+        background.setWidth(1024);
+        background.setHeight(768);
+        return background;
+    }
+
     public static IController createPlayer(int maxPlayers) {
         double r = 550 / 2.0;
         double dAlpha = 360.0 / maxPlayers;        
 
         GameObject playerObject = new GameObject("Player");
         IController controller = playerObject.addComponent(PlayerController.class);
-        playerObject.addComponent(RuneDiceBag.class);
+        ADice dice = playerObject.addComponent(RuneDiceBag.class);
+        dice.setTopFace(null);
         
         addReadyButton(playerObject)
             .addComponent(ControllerView.class)
@@ -51,8 +63,10 @@ public class RunGameFactory {
     }
 
     public static GameObject addReadyButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Bereit?", new Vector2(-20, 20), ReadyButtonComponent.class);
+        ButtonGraphic button = createButton("Bereit?", new Vector2(0, 80), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setBorderRadius(20.5);
+        button.setFontSize(32);
         return button.getGameObject();
     }
 
@@ -60,14 +74,6 @@ public class RunGameFactory {
         ButtonGraphic button = createButton("Würfeln", new Vector2(-20, -20), RollButtonComponent.class);
         button.getGameObject().setParent(forObject);
         return button.getGameObject();
-    }
-
-    public static PictureGraphic createBackground(String path, Vector2 position) {
-        GameObject pictureObject = new GameObject("Background");
-        pictureObject.getTransform().setPosition(position);
-        PictureGraphic background = pictureObject.addComponent(PictureGraphic.class);
-        background.setPicturePath(path);
-        return background;
     }
 
     public static <T extends AbstractComponent> ButtonGraphic createButton(String text, Vector2 position, Class<T> ...components) {

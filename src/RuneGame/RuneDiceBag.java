@@ -12,4 +12,15 @@ public class RuneDiceBag extends ADiceBag {
         }
         super.start();
     }
+
+    public void resetReady() {
+        for(ADice dice : this.getDices()) {
+            RuneDice runeDice = (RuneDice)dice;
+            if(runeDice == null) {
+                continue;
+            }
+
+            runeDice.resetReady();
+        }
+    }
 }

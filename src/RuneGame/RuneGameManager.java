@@ -12,6 +12,7 @@ import DAF.Dice.Components.ADice;
 import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Renderer.Components.LabelGraphic;
+import DAF.Renderer.Components.PictureGraphic;
 
 public class RuneGameManager extends AbstractManager {
     protected static RuneGameManager _instance;
@@ -29,6 +30,7 @@ public class RuneGameManager extends AbstractManager {
     }
     
     LabelGraphic txtCurAction;
+    PictureGraphic background;
 
     int _maxPlayers = 2;
 
@@ -46,6 +48,7 @@ public class RuneGameManager extends AbstractManager {
     
     @Override
     public void init() {
+        background = RunGameFactory.createBackground("images/background_2.png", new Vector2(0, 0));
         txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(512, 300));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
@@ -125,8 +128,6 @@ public class RuneGameManager extends AbstractManager {
                 _playersTurnIncreased = true;
             }
         }
-
-        
     }
 
     private void stateThrowDices() {
