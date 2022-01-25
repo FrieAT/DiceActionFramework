@@ -17,19 +17,26 @@
   #scene, #mobile {
     width:100%;
     position: relative;
+    overflow:auto;
   }
   #mobile {
     display: flex;
     justify-content: center;
+    overflow:auto;
   }
   #scene {
     overflow: hidden;
   }
   #mobile button {
-    padding:4% 35px;
+    padding:auto 35px;
+    height:100%;
     box-sizing: border-box;
     position: relative !important;
     object-fit: fill;
+  }
+  #mobile button > * {
+    width:100% !important;
+    height:100% !important;
   }
   </style>
   
@@ -169,7 +176,22 @@
 
           if($(HTMLelement).parent("#mobile") == null) {
             $(HTMLelement).detach().appendTo("#mobile");
+            $(HTMLelement).css({"width":"auto","height":"auto"});
           }
+
+          //$(HTMLelement).html("");
+
+          var parentGraphicReal = $(document).find("#"+AGraphic.owner.parent.id);
+          if(parentGraphicReal.length > 0) {
+            var copyId = $(parentGraphicReal).attr("id")+"_copy";
+            var parentGraphic = $(parentGraphicReal).clone();
+            $(parentGraphic).attr({"id":copyId,"width":"","height":""});
+            $(parentGraphic).removeClass("graphic");
+            $(parentGraphic).css({"position":"relative","top":"0","left":"0"});
+            
+            $(HTMLelement).html($(parentGraphic));
+          }
+          
           HTMLelement.style.position = 'relative';
         } else {
           HTMLelement.style.position = 'absolute';
@@ -179,8 +201,29 @@
         
         HTMLelement.style.transform = "rotateZ("+ AGraphic.owner.transform.zRotation+"deg)";
         HTMLelement.style.zIndex = AGraphic.renderingLayer
-        HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x * scaleX;
-        HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y * scaleY;
+        
+        if($(HTMLelement).parent("#scene").length > 0) { 
+          if(AGraphic.fillWidth == "true") { 
+            var parentId = $(document).find("#"+AGraphic.owner.parent.id);
+            $(HTMLelement).width(parentId.width());
+          }
+          else {
+            HTMLelement.width = AGraphic.width * AGraphic.owner.transform.scale.x * scaleX;
+          }
+        }
+
+        if($(HTMLelement).parent("#scene").length > 0) { 
+          if(AGraphic.fillHeight == "true") {
+            var parentId = $(document).find("#"+AGraphic.owner.parent.id);
+            $(HTMLelement).height(parentId.height());
+          }
+          else {
+            HTMLelement.height = AGraphic.height * AGraphic.owner.transform.scale.y * scaleY;
+          }
+        }
+
+        HTMLelement.style.color = AGraphic.color;
+        HTMLelement.style.backgroundColor = AGraphic.backgroundColor;
       }
 
       function renderPictureGraphic(pictureGraphic) {
@@ -220,7 +263,6 @@
       }
       p.style.fontFamily = labelGraphic.fontFamily;
       p.id = labelGraphic.owner.id;
-      p.style.color = labelGraphic.color;
       p.style.fontSize = labelGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
       setPosition(p,labelGraphic);
       }
@@ -273,8 +315,6 @@
           }
           input.id = inputGraphic.owner.id;
           input.value = inputGraphic.text;
-          input.style.width = inputGraphic.width+"px";
-          input.style.height = inputGraphic.height+"px";
           input.style.fontWeight = bold;
           input.style.fontSize = inputGraphic.fontsize+'px';
           setPosition(input,inputGraphic);
@@ -330,6 +370,7 @@
         button.style.fontWeight = bold;
         button.innerHTML = buttonGraphic.labelText;
         button.style.fontSize = buttonGraphic.fontSize * ((scaleY + scaleX) / 2) +'px';
+        button.style.borderRadius = buttonGraphic.borderRadius+'px';
         button.type = "button";
         button.id = buttonGraphic.owner.id;
         setPosition(button,buttonGraphic);

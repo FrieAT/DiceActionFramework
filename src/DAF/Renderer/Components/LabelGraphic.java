@@ -14,8 +14,6 @@ public class LabelGraphic extends AGraphic {
 	Boolean bold = false;
 	@JsonElement
 	String labelText ="Example Text";
-	@JsonElement
-	String color = "rgba(255, 255, 255, 1.0)";
 	
 	@Override
 	public void start() {
@@ -52,8 +50,7 @@ public class LabelGraphic extends AGraphic {
 	public void setLabelText(String labelText) {
 		this.labelText = labelText;
 	}
-	public String getWebColor() { return this.color; }
-	public void setWebColor(String color) { this.color = color; }
+
 	public String getFontFamily() { return this.fontFamily; }
 	public void setFontFamily(String family) { this.fontFamily = family; }
 }

@@ -22,9 +22,9 @@ public abstract class ADice extends AbstractComponent implements IDice {
         return this.topFace;
     }
 
-    public boolean addFace(Face face) {
+    public GameObject addFace(Face face) {
         if (diceFaces.size() == MAX_FACES)
-            return false;
+            return null;
         
         GameObject faceObject = new GameObject("Face", this.getGameObject());
         faceObject.addComponent(face.getPictureGraphic());
@@ -32,8 +32,9 @@ public abstract class ADice extends AbstractComponent implements IDice {
 
         if (topFace == null)
             this.setTopFace(face);
-        
-        return diceFaces.add(face);
+        diceFaces.add(face);
+
+        return faceObject;
     }
 
     public void setTopFace(Face face) {
@@ -44,7 +45,7 @@ public abstract class ADice extends AbstractComponent implements IDice {
         
         topFace = face;
         
-        //Activate old face.
+        //Activate new face.
         if(topFace != null) {
             topFace.getPictureGraphic().getGameObject().setEnabled(true);
         }
