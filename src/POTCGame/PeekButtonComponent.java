@@ -1,16 +1,25 @@
 package POTCGame;
 
 import DAF.Components.AbstractComponent;
+import DAF.Dice.Components.ADice;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
+import DAF.GameObject;
 import DAF.Input.InputManager;
 import DAF.Renderer.Components.ButtonGraphic;
 
 public class PeekButtonComponent extends AbstractComponent implements IInputListener {
 
+    DiceCupComponent _cup;
+
     @Override
     public void start() {
+
+        this._cup = this.getGameObject().getComponentInParent(DiceCupComponent.class);
+        if (this._cup == null)
+            throw new NullPointerException("There is no correct DiceCupComponent reference.");
+
         InputManager.getInstance().add(ButtonInputEvent.class, this);
     }
 
@@ -24,6 +33,13 @@ public class PeekButtonComponent extends AbstractComponent implements IInputList
     }
 
     public void peek() {
-        this.getGameObject().getComponent(DiceCupComponent.class);
+        // state peek
+        if (this._cup.isClosed()) {
+            this._cup.setCupState(2);
+        }
+        // state close cup
+        else if (this._cup.isPeek()) {
+            this._cup.setCupState(0);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package POTCGame;
 
 import DAF.Components.AbstractComponent;
+import DAF.Dice.Components.ADice;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
@@ -18,6 +19,7 @@ public class DiceCupComponent extends AbstractComponent {
      * 1: open
      * 2: peek
      */
+    private ADice _dice;
     private int _cupState;
     private PictureGraphic _closedCup;
     private PictureGraphic _openCup;
@@ -25,6 +27,10 @@ public class DiceCupComponent extends AbstractComponent {
 
     @Override
     public void start() {
+        this._dice = this.getGameObject().getParent().getComponentInChildren(POTCDiceBag.class);
+        if (this._dice == null)
+            throw new NullPointerException("There is no correct ADice reference.");
+
         this._cupState = 1;
         this._closedCup.getGameObject().setEnabled(false);
         this._peekCup.getGameObject().setEnabled(false);
@@ -32,7 +38,6 @@ public class DiceCupComponent extends AbstractComponent {
 
     @Override
     public void update() {
-
     }
 
     public void setClosedCup(PictureGraphic picture) {
@@ -51,6 +56,19 @@ public class DiceCupComponent extends AbstractComponent {
         getCupState().getGameObject().setEnabled(false);
         this._cupState = state;
         getCupState().getGameObject().setEnabled(true);
+
+        switch (_cupState) {
+            case 0:
+                System.out.println("CupState " + _cupState);
+                toggleVisibilityOfDices(false);
+            case 1:
+                System.out.println("CupState " + _cupState);
+                toggleVisibilityOfDices(true);
+            case 2:
+                System.out.println("CupState " + _cupState);
+                toggleVisibilityOfDices(true);
+        }
+
     }
 
     public PictureGraphic getCupState() {
@@ -60,5 +78,27 @@ public class DiceCupComponent extends AbstractComponent {
             case 2: return _peekCup;
         }
         return null;
+    }
+
+    public boolean isClosed() {
+        return _cupState == 0;
+    }
+
+    public boolean isOpen() {
+        return _cupState == 1;
+    }
+
+    public boolean isPeek() {
+        return _cupState == 2;
+    }
+
+    public void toggleVisibilityOfDices(boolean visible) {
+        System.out.println("toggleVisibilityOfDices");
+        for (GameObject child : this._dice.getGameObject().getChildren()) {
+            if (child.getComponent(ADice.class) != null) {
+                System.out.println(child.getName());
+                child.setEnabled(visible);
+            }
+        }
     }
 }

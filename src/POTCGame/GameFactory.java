@@ -20,7 +20,10 @@ public class GameFactory {
 
         GameObject playerObject = new GameObject("Player");
         IController controller = playerObject.addComponent(PlayerController.class);
-        playerObject.addComponent(POTCDiceBag.class);
+        POTCDiceBag diceBag = playerObject.addComponent(POTCDiceBag.class);
+        diceBag.getGameObject()
+                .addComponent(ControllerView.class)
+                .setController(controller);
 
         addDiceCup(playerObject);
 
@@ -34,12 +37,10 @@ public class GameFactory {
                 .addComponent(ControllerView.class)
                 .setController(controller);
 
-        /*
-        addGuessButton(playerObject)
+        addPeekButton(playerObject)
                 .addComponent(ControllerView.class)
                 .setController(controller);
 
-         */
 
         addGuessField(playerObject, controller)
                 .addComponent(ControllerView.class)
@@ -154,23 +155,30 @@ public class GameFactory {
         return button.getGameObject();
     }
 
+    public static GameObject addPeekButton(GameObject forObject) {
+        ButtonGraphic button = createButton("Peek", new Vector2(0, 130), PeekButtonComponent.class);
+        button.getGameObject().setParent(forObject);
+        //button.getGameObject().setEnabled(true);
+        return button.getGameObject();
+    }
+
     public static GameObject addDiceCup(GameObject forObject) {
         GameObject cupObject = new GameObject("Cup");
-        cupObject.getTransform().setPosition(new Vector2(0, 50));
+        cupObject.getTransform().setPosition(new Vector2(-10, 70));
         cupObject.setParent(forObject);
 
         DiceCupComponent cup = forObject.addComponent(DiceCupComponent.class);
         PictureGraphic cupState;
 
-        cupState = createPicture("images/dice_cup_closed.png", new Vector2(0, 50));
+        cupState = createPicture("images/dice_cup_closed.png", new Vector2(-10, 70));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setClosedCup(cupState);
 
-        cupState = createPicture("images/dice_cup_open.png", new Vector2(0, 50));
+        cupState = createPicture("images/dice_cup_open.png", new Vector2(-10, 70));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setOpenCup(cupState);
 
-        cupState = createPicture("images/dice_cup_peek.png", new Vector2(0, 50));
+        cupState = createPicture("images/dice_cup_peek.png", new Vector2(-10, 70));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setPeekCup(cupState);
 
