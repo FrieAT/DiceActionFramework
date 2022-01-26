@@ -19,6 +19,8 @@ import javafx.scene.control.Button;
  */
 
 public class RuneDice extends ADice {
+    private static final int MAX_ROLLS = 3;
+    
     enum Rune {
         UNKNOWN, // 0
         BOW_MAN, // 1
@@ -34,6 +36,8 @@ public class RuneDice extends ADice {
     private boolean _ready = false;
 
     private boolean _persistent = false;
+
+    private int _rollCount = 0;
 
     @Override
     public void start() {
@@ -51,10 +55,14 @@ public class RuneDice extends ADice {
 
     @Override
     public void roll() {
+        this._rollCount++;
+        
         if(this._ready) {
             this._persistent = true;
             return;
         }
+
+        this._rollCount++;
 
         super.roll();
     }
@@ -62,6 +70,7 @@ public class RuneDice extends ADice {
     public void resetReady() {
         this._ready = false;
         this._persistent = false;
+        this._rollCount = 0;
     }
 
     public boolean isReady() {
@@ -69,11 +78,22 @@ public class RuneDice extends ADice {
     }
 
     public void setReady(boolean state) {
-        if(this._persistent) {
-            return;
+        if(!this._persistent) {
+            this._ready = state;
         }
 
-        this._ready = state;
+        ButtonGraphic faceGraphic = getTopFace().getPictureGraphic().getGameObject().getComponentInChildren(ButtonGraphic.class);
+        if(faceGraphic != null) {
+            if(isReady()) {
+                faceGraphic.setWebBgColor("rgba(0, 255, 255, 0.2)");
+            } else {
+                faceGraphic.setWebBgColor("rgba(255, 255, 255, 0.0)");
+            }
+        }
+    }
+
+    public int getRollCount() {
+        return this._rollCount;
     }
 
     public Rune getTopFaceRune() {

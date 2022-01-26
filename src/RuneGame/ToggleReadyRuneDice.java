@@ -22,13 +22,12 @@ public class ToggleReadyRuneDice extends AbstractComponent implements IInputList
         if(buttonEvent.getSource() == buttonGraphic) {
             RuneDice runeComp = this.getGameObject().getComponentInParent(RuneDice.class);
             if(runeComp != null) {
-                runeComp.setReady(!runeComp.isReady());
-
-                if(runeComp.isReady()) {
-                    buttonGraphic.setWebBgColor("rgba(0, 255, 255, 0.2)");
-                } else {
-                    buttonGraphic.setWebBgColor("rgba(255, 255, 255, 0.0)");
-                } 
+                switch(RuneGameManager.getInstance().getGameState()) {
+                    case MAKE_DECISION: {
+                        runeComp.setReady(!runeComp.isReady());
+                        break;
+                    }
+                }
             }
         }
     }

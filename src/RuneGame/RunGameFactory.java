@@ -44,7 +44,7 @@ public class RunGameFactory {
         GameObject playerObject = new GameObject("Player");
         IController controller = playerObject.addComponent(PlayerController.class);
         ADice dice = playerObject.addComponent(RuneDiceBag.class);
-        dice.setTopFace(null);
+        playerObject.addComponent(PlayerLabelGraphic.class);
         
         addReadyButton(playerObject)
             .addComponent(ControllerView.class)
