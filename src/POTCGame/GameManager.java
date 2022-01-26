@@ -26,6 +26,7 @@ public class GameManager extends AbstractManager {
         THROW_DICES,
         GUESS_DICES,
         GET_RESULTS,
+        PREPARE_NEXT_ROUND,
         END_DRAW,
         END_GAME,
         AND_MORE,
@@ -37,7 +38,9 @@ public class GameManager extends AbstractManager {
 
     int _maxPlayers = 2;
     int _playersTurn = 1;
-    int _counter = 0;
+
+    int _maxRounds = 3;
+    int _currentRound = 1;
 
     ArrayList<IController> _controllers = new ArrayList<>();
     int[] _roundResults = new int[6];
@@ -85,6 +88,9 @@ public class GameManager extends AbstractManager {
             case GET_RESULTS:
                 stateGetResults();
                 break;
+            case PREPARE_NEXT_ROUND:
+                statePrepareNextRound();
+                break;
             case END_DRAW:
                 stateEndDraw();
                 break;
@@ -123,7 +129,8 @@ public class GameManager extends AbstractManager {
             _state = GameState.THROW_DICES;
         }
         else {
-            txtCurAction.setLabelText(String.format("Ready: %d / %d<br>Hurry up!", playerCountReady, _maxPlayers));
+            txtCurAction.setLabelText(String.format("Round %d / %d<br>Ready: %d / %d",
+                    _currentRound, _maxRounds, playerCountReady, _maxPlayers));
         }
     }
 
@@ -159,6 +166,8 @@ public class GameManager extends AbstractManager {
 
     public void stateGuessDices() {
 
+        int counter = 0;
+
         for (IController controller : _controllers) {
             if (controller.getPlayerNo() == _playersTurn) {
                 GuessFieldComponent guessField = controller.getGameObject().getComponentInChildren(GuessFieldComponent.class);
@@ -171,7 +180,7 @@ public class GameManager extends AbstractManager {
                 if (guessButton != null && guessButton.hasGuessed()) {
                     if (++_playersTurn > _maxPlayers)
                         _playersTurn = 1;
-                    _counter++;
+                    counter++;
 
                     guessField.setGuess(1, Integer.parseInt(guessField.getGameObject().getComponentInChildren(LabelGraphic.class).getLabelText()));
 
@@ -186,8 +195,9 @@ public class GameManager extends AbstractManager {
             }
         }
 
-        if (_counter == _maxPlayers) {
-            _counter = 0;
+        if (counter == _maxPlayers) {
+            if (++_playersTurn > _maxPlayers)
+                _playersTurn = 1;
             _state = GameState.GET_RESULTS;
         }
     }
@@ -222,17 +232,28 @@ public class GameManager extends AbstractManager {
         }
 
         // no correct guesses
-        if (correctGuesses.size() == 0)
-            _state = GameState.END_DRAW;
+        if (correctGuesses.isEmpty()) {
+            if (_currentRound == _maxRounds) {
+                txtCurAction.setLabelText(resultsToWebString(_endResults));
+                _state = GameState.END_GAME;
+            } else {
+                _state = GameState.PREPARE_NEXT_ROUND;
+            }
+        }
 
-        // one Player won the game
+        // one Player won the round
         if (correctGuesses.size() == 1) {
             _endResults[correctGuesses.get(0)[0] - 1]++;
 
             txtCurAction.setLabelText(String.format("Player %d won.", correctGuesses.get(0)[0]));
             txtResults.setLabelText(resultsToWebString(_endResults));
 
-            _state = GameState.END_GAME;
+            if (_currentRound == _maxRounds) {
+                txtCurAction.setLabelText(resultsToWebString(_endResults));
+                _state = GameState.END_GAME;
+            } else {
+                _state = GameState.PREPARE_NEXT_ROUND;
+            }
         }
 
         // more than one player had correct guesses
@@ -253,26 +274,61 @@ public class GameManager extends AbstractManager {
                 }
             }
 
+            System.out.println("    Highest Guesses: " + highestGuesses.size());
+            System.out.println("    Current Round:   " + _currentRound);
+
             if (highestGuesses.size() == 1) {
                 _endResults[correctGuesses.get(0)[0] - 1]++;
 
                 txtCurAction.setLabelText(String.format("Player %d won.", highestGuesses.get(0)[0]));
+
                 txtResults.setLabelText(resultsToWebString(_endResults));
+
+                if (_currentRound == _maxRounds) {
+                    txtCurAction.setLabelText(resultsToWebString(_endResults));
+                    _state = GameState.END_GAME;
+                } else {
+                    _state = GameState.PREPARE_NEXT_ROUND;
+                }
             }
-            if (highestGuesses.size() > 1) {
+
+            //System.out.println("Highest Guesses: " + highestGuesses.size());
+            else if (highestGuesses.size() > 1) {
                 for (int[] highestGuess : highestGuesses) {
                     _endResults[highestGuess[0]]++;
                 }
 
                 txtResults.setLabelText(resultsToWebString(_endResults));
-                txtCurAction.setLabelText(resultsToWebString(_endResults));
-                _state = GameState.END_GAME;
+
+                if (_currentRound == _maxRounds) {
+                    txtCurAction.setLabelText(resultsToWebString(_endResults));
+                    _state = GameState.END_GAME;
+                }
+
+                if (_currentRound < _maxRounds) {
+                    _state = GameState.PREPARE_NEXT_ROUND;
+                }
             }
         }
 
         System.out.println("State GET_RESULTS reached.");
     }
 
+    public void statePrepareNextRound() {
+        for (IController controller : _controllers) {
+            ReadyButtonComponent readyButton = controller.getGameObject().getComponentInChildren(ReadyButtonComponent.class);
+            RollDiceButtonComponent rollButton = controller.getGameObject().getComponentInChildren(RollDiceButtonComponent.class);
+            GuessDiceButtonComponent guessButton = controller.getGameObject().getComponentInChildren(GuessFieldComponent.class)
+                    .getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
+
+            readyButton.setReady(false);
+            rollButton.setRollState(false);
+            guessButton.setGuessState(false);
+        }
+        _currentRound++;
+        System.out.println("State PREPARE_NEXT_ROUND reached.");
+        _state = GameState.READY_CHECK;
+    }
     public void stateEndDraw() {
         System.out.println("State END_DRAW reached.");
         txtCurAction.setLabelText("DRAW");
