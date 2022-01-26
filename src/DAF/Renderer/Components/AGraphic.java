@@ -1,5 +1,6 @@
 package DAF.Renderer.Components;
 import DAF.Components.AbstractComponent;
+import DAF.Math.Vector2;
 import DAF.Renderer.RenderManager;
 import DAF.Serializer.Init;
 import DAF.Serializer.JsonElement;
@@ -16,6 +17,12 @@ public abstract class AGraphic extends AbstractComponent {
 
 	@JsonElement
 	boolean fillHeight = false;
+
+    @JsonElement
+    private Integer width = 0;
+    
+	@JsonElement
+    private Integer height = 0;
 
 	@JsonElement
 	String color = "rgba(0, 0, 0, 1.0)";
@@ -52,9 +59,33 @@ public abstract class AGraphic extends AbstractComponent {
 
 	public void setWebBgColor(String color) { this.backgroundColor = color; }
 
-	@Init
-	private void initValues() {
-		this.RenderingLayer = 0;
+	public Integer getWidth() {
+        return width;
+    }
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+    public Integer getHeight() {
+        return height;
+    }
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+	public Integer getTop() {
+		return (int)this.getTransform().getGlobalPosition().y.intValue();
+	}
+
+	public void setTop(Integer top) {
+		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
+	}
+
+	public Integer getLeft() {
+		return this.getTransform().getGlobalPosition().x.intValue();
+	}
+	
+	public void setLeft(Integer left) {
+		this.getTransform().setPosition(new Vector2(left.doubleValue(), this.getTop().doubleValue()));
 	}
 }
 
