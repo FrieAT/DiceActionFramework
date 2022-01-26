@@ -111,6 +111,7 @@ public class GameFactory {
                 .addComponent(ControllerView.class)
                 .setController(controller);
 
+        guessObject.setEnabled(false);
         return guessObject;
     }
 

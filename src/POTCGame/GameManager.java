@@ -3,13 +3,13 @@ package POTCGame;
 import DAF.AbstractManager;
 import DAF.Controller.Components.IController;
 import DAF.Dice.Components.ADice;
-import DAF.Dice.Components.ADiceBag;
 import DAF.GameObject;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.LabelGraphic;
 import DAF.Renderer.Components.PictureGraphic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameManager extends AbstractManager {
 
@@ -26,27 +26,38 @@ public class GameManager extends AbstractManager {
         THROW_DICES,
         GUESS_DICES,
         GET_RESULTS,
+        END_DRAW,
+        END_GAME,
         AND_MORE,
     }
 
     LabelGraphic txtCurAction;
+    LabelGraphic txtResults;
     PictureGraphic background;
 
-    int _maxPlayers = 7;
+    int _maxPlayers = 2;
     int _playersTurn = 1;
     int _counter = 0;
 
     ArrayList<IController> _controllers = new ArrayList<>();
-    ArrayList<Integer> results = new ArrayList<>();
+    int[] _roundResults = new int[6];
+    int[] _endResults = new int[6];
+
 
     GameState _state = GameState.READY_CHECK;
 
 
     @Override
     public void init() {
+
         background = GameFactory.createBackground("images/wooden_floor.jpg", new Vector2(0, 0));
         // old Vector: x = 340, y = 300
         txtCurAction = GameFactory.createText("<<ActionText>>", 32, new Vector2(340, 350));
+
+        Arrays.fill(_roundResults, 0);
+        Arrays.fill(_endResults, 0);
+
+        txtResults = GameFactory.createText(resultsToWebString(_endResults), 10, new Vector2(800, 600));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
@@ -74,6 +85,12 @@ public class GameManager extends AbstractManager {
             case GET_RESULTS:
                 stateGetResults();
                 break;
+            case END_DRAW:
+                stateEndDraw();
+                break;
+            case END_GAME:
+                stateEndGame();
+                break;
         }
     }
 
@@ -90,7 +107,7 @@ public class GameManager extends AbstractManager {
         }
 
         if(playerCountReady == _maxPlayers) {
-            txtCurAction.setLabelText("Es sind alle bereit, es geeeeht loooos!");
+            txtCurAction.setLabelText("All players are ready!");
 
             // test start
             for (IController controller: _controllers) {
@@ -112,11 +129,18 @@ public class GameManager extends AbstractManager {
 
     public void stateThrowDices() {
         int playerCountRolled = 0;
+        int [] result = new int[6];
+        Arrays.fill(result, 0);
+
         for (IController controller : _controllers) {
             for(GameObject child : controller.getGameObject().getChildren()) {
                 RollDiceButtonComponent rollButton = child.getComponent(RollDiceButtonComponent.class);
 
                 if (rollButton != null && rollButton.hasRolled()) {
+                    ArrayList<ADice> dices = controller.getGameObject().getComponent(POTCDiceBag.class).getDices();
+                    for (ADice dice : dices) {
+                        result[dice.getTopFace().getValue() - 1]++;
+                    }
                     playerCountRolled++;
                     break;
                 }
@@ -126,18 +150,7 @@ public class GameManager extends AbstractManager {
         if (playerCountRolled == _maxPlayers) {
             txtCurAction.setLabelText("All players<br>have rolled");
 
-            // test: enable the GuessButtons for next state
-            for (IController controller: _controllers) {
-                for (GameObject child : controller.getGameObject().getChildren()) {
-                    GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
-
-                    if (guessButton != null) {
-                        guessButton.getGameObject().setEnabled(true);
-                    }
-                }
-            }
-            // test end
-
+            _roundResults = result;
             _state = GameState.GUESS_DICES;
         } else {
             txtCurAction.setLabelText(String.format("Rolled: %d / %d", playerCountRolled, _maxPlayers));
@@ -147,39 +160,29 @@ public class GameManager extends AbstractManager {
     public void stateGuessDices() {
 
         for (IController controller : _controllers) {
-            //System.out.println("Players Turn: " + _playersTurn + "\n");
             if (controller.getPlayerNo() == _playersTurn) {
-                for (GameObject child : controller.getGameObject().getChildren()) {
-                    GuessFieldComponent guessField = child.getParent().getComponentInChildren(GuessFieldComponent.class);
-                    GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
-                    //System.out.println(guessField == controller.getGameObject().getComponentInChildren(GuessFieldComponent.class));
-                    //System.out.println(child.getComponentInChildren(GuessFieldComponent.class));
-                    //GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+                GuessFieldComponent guessField = controller.getGameObject().getComponentInChildren(GuessFieldComponent.class);
+                GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
 
-                    //if (guessButton != null && /*!child.isEnabled()*/) {
-                    if (guessButton != null && !guessField.getGameObject().isEnabled()) {
-                        guessField.getGameObject().setEnabled(true);
-                        //child.setEnabled(true);
-                    }
-                    if (guessButton != null && guessButton.hasGuessed()) {
-                        if (++_playersTurn > _maxPlayers)
-                            _playersTurn = 1;
-                        _counter++;
-                        guessField.getGameObject().setEnabled(false);
-                        //child.setEnabled(false);
-                    }
+                if (guessButton != null && !guessField.getGameObject().isEnabled()) {
+                    guessField.getGameObject().setEnabled(true);
+                }
+
+                if (guessButton != null && guessButton.hasGuessed()) {
+                    if (++_playersTurn > _maxPlayers)
+                        _playersTurn = 1;
+                    _counter++;
+
+                    guessField.setGuess(1, Integer.parseInt(guessField.getGameObject().getComponentInChildren(LabelGraphic.class).getLabelText()));
+
+                    guessField.getGameObject().setEnabled(false);
                 }
             } else {
-                for (GameObject child : controller.getGameObject().getChildren()) {
-                    GuessFieldComponent guessField = child.getParent().getComponentInChildren(GuessFieldComponent.class);
-                    GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
-                    //GuessDiceButtonComponent guessButton = child.getComponent(GuessDiceButtonComponent.class);
+                GuessFieldComponent guessField = controller.getGameObject().getComponentInChildren(GuessFieldComponent.class);
+                GuessDiceButtonComponent guessButton = guessField.getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
 
-                    //if (guessButton != null && child.isEnabled())
-                    if (guessButton != null && guessField.getGameObject().isEnabled())
-                        child.setEnabled(false);
-
-                }
+                if (guessButton != null && guessField.getGameObject().isEnabled())
+                    guessField.getGameObject().setEnabled(false);
             }
         }
 
@@ -190,15 +193,101 @@ public class GameManager extends AbstractManager {
     }
 
     public void stateGetResults() {
-        for (IController controller : _controllers) {
-            int results = 0;
-            if (controller.getGameObject().getComponentInChildren(POTCDiceBag.class) != null) {
-                for (ADice dice : controller.getGameObject().getComponentInChildren(POTCDiceBag.class).getDices()) {
-                    results += dice.getTopFace().getValue();
-                }
-                System.out.println(results);
+
+        // each entry contains [playerIndex, guessDice]
+        ArrayList<int[]> correctGuesses = new ArrayList<>();
+
+        GuessFieldComponent guessField;
+        for (int i = 0; i < _controllers.size(); i++) {
+            guessField = _controllers.get(i).getGameObject().getComponentInChildren(GuessFieldComponent.class);
+            int guessDice = guessField.getGuessDice();
+            int guessCount = guessField.getGuessCount();
+            System.out.println("GuessDice: " + guessDice + "; GuessCount: " + guessCount);
+
+            // Case 1: 0 > guessCount < total amount of dices
+            // check if guess is in greater than the total amount of dices
+            if (guessCount < 0 || guessCount >= _roundResults.length * _maxPlayers){
+                continue;
+            }
+
+            // Case 2: guessDice not correct
+            if (_roundResults[guessDice - 1] != guessCount) {
+                continue;
+            }
+
+            // Case 3: guessDice is correct
+            if (_roundResults[guessDice - 1] == guessCount) {
+                correctGuesses.add(new int[]{i+1, guessDice});
             }
         }
+
+        // no correct guesses
+        if (correctGuesses.size() == 0)
+            _state = GameState.END_DRAW;
+
+        // one Player won the game
+        if (correctGuesses.size() == 1) {
+            _endResults[correctGuesses.get(0)[0] - 1]++;
+
+            txtCurAction.setLabelText(String.format("Player %d won.", correctGuesses.get(0)[0]));
+            txtResults.setLabelText(resultsToWebString(_endResults));
+
+            _state = GameState.END_GAME;
+        }
+
+        // more than one player had correct guesses
+        if (correctGuesses.size() > 1) {
+
+            ArrayList<int[]> highestGuesses = new ArrayList<>();
+            highestGuesses.add(correctGuesses.get(0));
+
+            for (int i = 1; i < correctGuesses.size(); i++) {
+                // the player had the same guess as another player
+                if (correctGuesses.get(i)[1] == highestGuesses.get(0)[1]) {
+                    highestGuesses.add(correctGuesses.get(i));
+                }
+                // the player had a higher guess than the players before
+                if (correctGuesses.get(i)[1] > highestGuesses.get(0)[1]) {
+                    highestGuesses.clear();
+                    highestGuesses.add(correctGuesses.get(i));
+                }
+            }
+
+            if (highestGuesses.size() == 1) {
+                _endResults[correctGuesses.get(0)[0] - 1]++;
+
+                txtCurAction.setLabelText(String.format("Player %d won.", highestGuesses.get(0)[0]));
+                txtResults.setLabelText(resultsToWebString(_endResults));
+            }
+            if (highestGuesses.size() > 1) {
+                for (int[] highestGuess : highestGuesses) {
+                    _endResults[highestGuess[0]]++;
+                }
+
+                txtResults.setLabelText(resultsToWebString(_endResults));
+                txtCurAction.setLabelText(resultsToWebString(_endResults));
+                _state = GameState.END_GAME;
+            }
+        }
+
         System.out.println("State GET_RESULTS reached.");
+    }
+
+    public void stateEndDraw() {
+        System.out.println("State END_DRAW reached.");
+        txtCurAction.setLabelText("DRAW");
+    }
+
+    public void stateEndGame() {
+        System.out.println("State END_GAME reached.");
+        //txtCurAction.setLabelText("Game has ended.");
+    }
+
+    public String resultsToWebString(int[] results) {
+        StringBuilder s = new StringBuilder("Player index / Rounds won<br>");
+        for (int i = 0; i < results.length; i++) {
+            s.append(i + 1).append(" / ").append(results[i]).append("<br>");
+        }
+        return s.toString();
     }
 }

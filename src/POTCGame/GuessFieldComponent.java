@@ -7,25 +7,29 @@ import DAF.Renderer.Components.LabelGraphic;
 
 public class GuessFieldComponent extends AbstractComponent {
 
-    private int _count;
+    private int _guessDice;
+    private int _guessCount;
 
     @Override
     public void start() {
-        this._count = 0;
-        //_counterLabel = GameFactory.createText(String.valueOf(_count), 20, new Vector2(0, -75));
-
+        this._guessDice = 0;
+        this._guessCount = 0;
     }
 
-    public void increment() {
-        this._count++;
+    public int getGuessDice() {
+        return this._guessDice;
     }
 
-    public void decrement() {
-        this._count--;
+    public int getGuessCount() {
+        return this._guessCount;
     }
 
-    public int getCount() {
-        return this._count;
+    public int[] getGuess() {
+        return new int[]{_guessDice, _guessCount};
     }
 
+    public void setGuess(int guessDice, int guessCount) {
+        this._guessDice = guessDice;
+        this._guessCount = guessCount;
+    }
 }
