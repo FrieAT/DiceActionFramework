@@ -19,19 +19,7 @@ public class LabelGraphic extends AGraphic {
 	public void start() {
 		super.start();
 	}
-
-	public Integer getTop() {
-		return this.getTransform().getPosition().y.intValue();
-	}
-	public void setTop(Integer top) {
-		this.getTransform().setPosition(new Vector2(this.getLeft(), top));
-	}
-	public Integer getLeft() {
-		return this.getTransform().getPosition().x.intValue();
-	}
-	public void setLeft(Integer left) {
-		this.getTransform().setPosition(new Vector2(left, this.getTop()));
-	}
+	
 	public Integer getFontSize() {
 		return fontSize;
 	}

@@ -15,7 +15,9 @@ import DAF.Serializer.Serializable;
 @Serializable
 public class GameObject {
 
-    private static LinkedList<GameObject> _gameObjects;
+    private static LinkedList<GameObject> _gameObjects = new LinkedList<>();
+
+    private static LinkedList<GameObject> _newGameObjects = new LinkedList<>();
 
     public static LinkedList<AnyEvent<GameObject>> _eventDelegates = null;
 
@@ -75,25 +77,31 @@ public class GameObject {
     }
 
     public static void startAll() {
-        if(_gameObjects != null) {
-            //FIXME: Switched from iterator to array due to ConcurrentModificationException
-            //FIXME: Please think about future "create/deletion"-Lists to work on after start.
-            for(int i = 0; i < _gameObjects.size(); i++) {
-                _gameObjects.get(i).start();
-            }
+        if(_newGameObjects.size() > 0) {
+            _gameObjects.addAll(_newGameObjects);
+            _newGameObjects.clear();
+        }
+        for(GameObject g : _gameObjects) {
+            g.start();
         }
     }
 
     public static void updateAll() {
-        if(_gameObjects != null) {
-            //FIXME: Switched from iterator to array due to ConcurrentModificationException
-            //FIXME: Please think about future "create/deletion"-Lists to work on after update cycle.
-            for(int i = 0; i < _gameObjects.size(); i++) {
-                GameObject g = _gameObjects.get(i);
-                if (!g.enabled)
-                    continue;
-                g.update();
+        if(_newGameObjects.size() > 0) {
+            _gameObjects.addAll(_newGameObjects);
+
+            LinkedList<GameObject> newGameObjects = new LinkedList<>(_newGameObjects);
+            
+            _newGameObjects.clear();
+
+            for(GameObject newObject : newGameObjects) {
+                newObject.start();
             }
+        }
+        for(GameObject g : _gameObjects) {
+            if (!g.enabled)
+                continue;
+            g.update();
         }
     }
 
@@ -113,14 +121,12 @@ public class GameObject {
 
     public GameObject() {
         this.parent = null;
-        this.transform = null;
         this.components = new ArrayList<>();
         this.children = new LinkedList<>();
 
-        if(_gameObjects == null) {
-            _gameObjects = new LinkedList<>();
-        }
-        _gameObjects.add(this);
+        this.transform = null;
+
+        _newGameObjects.add(this);
     }
 
     public GameObject (String name) {
