@@ -44,7 +44,7 @@ public class GameManager extends AbstractManager {
 
     ArrayList<IController> _controllers = new ArrayList<>();
     int[] _roundResults = new int[6];
-    int[] _endResults = new int[6];
+    int[] _endResults = new int[_maxPlayers];
 
 
     GameState _state = GameState.READY_CHECK;
@@ -295,7 +295,7 @@ public class GameManager extends AbstractManager {
             //System.out.println("Highest Guesses: " + highestGuesses.size());
             else if (highestGuesses.size() > 1) {
                 for (int[] highestGuess : highestGuesses) {
-                    _endResults[highestGuess[0]]++;
+                    _endResults[highestGuess[0] - 1]++;
                 }
 
                 txtResults.setLabelText(resultsToWebString(_endResults));
