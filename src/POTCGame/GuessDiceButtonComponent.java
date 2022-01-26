@@ -1,6 +1,7 @@
 package POTCGame;
 
 import DAF.Components.AbstractComponent;
+import DAF.Dice.Components.ADice;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
@@ -8,10 +9,12 @@ import DAF.Input.InputManager;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.LabelGraphic;
 
+import java.util.Arrays;
+
 public class GuessDiceButtonComponent extends AbstractComponent implements IInputListener {
 
     private boolean _guessed;
-    LabelGraphic _counter;
+    private LabelGraphic _counter;
 
     @Override
     public void start() {
@@ -31,7 +34,10 @@ public class GuessDiceButtonComponent extends AbstractComponent implements IInpu
     }
 
     public void guess() {
-        System.out.println("Guessed: " + _counter.getLabelText());
+        //this.getGameObject().getComponentInParent(POTCDiceBag.class);
+        GuessFieldComponent guessField = this.getGameObject().getComponentInParent(GuessFieldComponent.class);
+        guessField.setGuessCount(Integer.parseInt(_counter.getLabelText()));
+        System.out.println("Guessed: " + Arrays.toString(guessField.getGuess()));
     }
 
     public boolean hasGuessed() {

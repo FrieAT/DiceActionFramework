@@ -96,8 +96,10 @@ public class GameFactory {
         guessObject.setParent(forObject);
 
         GuessFieldComponent guessField = guessObject.addComponent(GuessFieldComponent.class);
-        LabelGraphic label = createText("0", 20, new Vector2(0, -40));
+        LabelGraphic label = createText("0", 20, new Vector2(60, 90));
         label.getGameObject().setParent(guessObject);
+        label.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        label.setWebColor("white");
 
         label.getGameObject()
                 .addComponent(ControllerView.class)
@@ -117,68 +119,81 @@ public class GameFactory {
     }
 
     public static GameObject addPlusButton(GameObject forObject) {
-        ButtonGraphic button = createButton(" + ", new Vector2(20, -40), PlusButtonComponent.class);
+        ButtonGraphic button = createButton(" + ", new Vector2(80, 90), PlusButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setFontSize(20);
         button.setBorderRadius(10);
-        button.setFontSize(15);
+        button.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        button.setWebColor("white");
+
         return button.getGameObject();
     }
 
     public static GameObject addMinusButton(GameObject forObject) {
-        ButtonGraphic button = createButton(" - ", new Vector2(-20, -40), MinusButtonComponent.class);
+        ButtonGraphic button = createButton(" - ", new Vector2(35, 90), MinusButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setFontSize(20);
         button.setBorderRadius(10);
-        button.setFontSize(15);
+        button.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        button.setWebColor("white");
+
         return button.getGameObject();
     }
 
     public static GameObject addGuessButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Guess", new Vector2(-15, -75), GuessDiceButtonComponent.class);
+        ButtonGraphic button = createButton("Guess", new Vector2(-60, 90), GuessDiceButtonComponent.class);
         button.getGameObject().setParent(forObject);
-        button.setFontSize(15);
+        button.setFontSize(20);
+        button.setBorderRadius(10);
         return button.getGameObject();
     }
 
     public static GameObject addReadyButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Ready", new Vector2(-20, 20), ReadyButtonComponent.class);
+        ButtonGraphic button = createButton("Ready", new Vector2(-20, 90), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
-        button.setBorderRadius(10);
         button.setFontSize(20);
+        button.setBorderRadius(10);
 
         return button.getGameObject();
     }
 
     public static GameObject addRollButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Roll", new Vector2(20, 20), RollDiceButtonComponent.class);
+        ButtonGraphic button = createButton("Roll", new Vector2(-5, 90), RollDiceButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setFontSize(20);
+        button.setBorderRadius(10);
         button.getGameObject().setEnabled(false);
         return button.getGameObject();
     }
 
     public static GameObject addPeekButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Peek", new Vector2(0, 130), PeekButtonComponent.class);
+        ButtonGraphic button = createButton("Peek", new Vector2(-60, 10), PeekButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setFontSize(20);
+        button.setBorderRadius(10);
+        button.setWebBgColor("rgba(43, 31, 9)");
+        button.setWebColor("white");
         //button.getGameObject().setEnabled(true);
         return button.getGameObject();
     }
 
     public static GameObject addDiceCup(GameObject forObject) {
         GameObject cupObject = new GameObject("Cup");
-        cupObject.getTransform().setPosition(new Vector2(-10, 70));
+        cupObject.getTransform().setPosition(new Vector2(10, -20));
         cupObject.setParent(forObject);
 
         DiceCupComponent cup = forObject.addComponent(DiceCupComponent.class);
         PictureGraphic cupState;
 
-        cupState = createPicture("images/dice_cup_closed.png", new Vector2(-10, 70));
+        cupState = createPicture("images/dice_cup_closed.png", new Vector2(10, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setClosedCup(cupState);
 
-        cupState = createPicture("images/dice_cup_open.png", new Vector2(-10, 70));
+        cupState = createPicture("images/dice_cup_open.png", new Vector2(10, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setOpenCup(cupState);
 
-        cupState = createPicture("images/dice_cup_peek.png", new Vector2(-10, 70));
+        cupState = createPicture("images/dice_cup_peek.png", new Vector2(10, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setPeekCup(cupState);
 

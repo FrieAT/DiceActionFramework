@@ -59,23 +59,6 @@ public class ADiceBag extends ADice implements IDice {
     @Override
     public void start() {
         DiceManager.getInstance().add(this);
-
-        if (this.getTransform().getPosition().x < 200
-                || this.getTransform().getPosition().x > 600) {
-            int y = 0;
-            for (ADice dice : dices) {
-                //dice.start();
-                dice.getTransform().setPosition(new Vector2(50, y));
-                y += 30;
-            }
-        } else {
-            int x = 0;
-            for (ADice dice : dices) {
-                //dice.start();
-                dice.getTransform().setPosition(new Vector2(x, 50));
-                x += 30;
-            }
-        }
     }
 
     public void setNewPosition(ADice dice, Vector2 previousPos) {

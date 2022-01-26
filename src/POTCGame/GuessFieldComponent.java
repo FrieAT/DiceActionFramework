@@ -32,4 +32,12 @@ public class GuessFieldComponent extends AbstractComponent {
         this._guessDice = guessDice;
         this._guessCount = guessCount;
     }
+
+    public void setGuessDice(int value) {
+        this._guessDice = value;
+    }
+
+    public void setGuessCount (int value) {
+        this._guessCount = value;
+    }
 }

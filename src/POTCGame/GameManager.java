@@ -55,12 +55,17 @@ public class GameManager extends AbstractManager {
 
         background = GameFactory.createBackground("images/wooden_floor.jpg", new Vector2(0, 0));
         // old Vector: x = 340, y = 300
-        txtCurAction = GameFactory.createText("<<ActionText>>", 32, new Vector2(340, 350));
+        txtCurAction = GameFactory.createText("<<ActionText>>", 32, new Vector2(380, 310));
+        txtCurAction.setWebColor("white");
+        txtCurAction.setWebBgColor("rgb(38, 38, 38, 0.7)");
+        txtCurAction.setWidth(1024);
 
         Arrays.fill(_roundResults, 0);
         Arrays.fill(_endResults, 0);
 
-        txtResults = GameFactory.createText(resultsToWebString(_endResults), 10, new Vector2(800, 600));
+        txtResults = GameFactory.createText(resultsToWebString(_endResults), 15, new Vector2(750, 600));
+        txtResults.setWebColor("white");
+        txtResults.setWebBgColor("rgb(38, 38, 38, 0.7)");
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
@@ -182,8 +187,8 @@ public class GameManager extends AbstractManager {
                         _playersTurn = 1;
                     counter++;
 
-                    guessField.setGuess(1, Integer.parseInt(guessField.getGameObject().getComponentInChildren(LabelGraphic.class).getLabelText()));
-
+                    //guessField.setGuess(1, Integer.parseInt(guessField.getGameObject().getComponentInChildren(LabelGraphic.class).getLabelText()));
+                    System.out.println("Player " + controller.getPlayerNo() + " guess: " + Arrays.toString(guessField.getGuess()));
                     guessField.getGameObject().setEnabled(false);
                 }
             } else {
