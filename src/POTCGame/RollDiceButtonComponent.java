@@ -6,6 +6,7 @@ import DAF.Dice.Components.ADice;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
+import DAF.GameObject;
 import DAF.Input.InputManager;
 import DAF.Renderer.Components.ButtonGraphic;
 
@@ -19,15 +20,14 @@ public class RollDiceButtonComponent extends AbstractComponent implements IInput
     @Override
     public void start() {
 
-
-        this._cup = this.getGameObject().getParent().getComponent(DiceCupComponent.class);
-        this._dice = this.getGameObject().getParent().getComponent(POTCDiceBag.class);
         this._rolled = false;
 
+        this._dice = this.getGameObject().getParent().getComponent(POTCDiceBag.class);
         if (this._dice == null) {
             throw new NullPointerException("Please define a correct ADice component as a reference");
         }
 
+        this._cup = this.getGameObject().getParent().getComponent(DiceCupComponent.class);
         if (this._cup == null) {
             throw new NullPointerException("Please define a correct DiceCupComponent as a reference");
         }
@@ -56,6 +56,7 @@ public class RollDiceButtonComponent extends AbstractComponent implements IInput
     public void rollDice() {
         this._dice.roll();
         setRollState(true);
+
         this.getGameObject().setEnabled(false);
     }
 

@@ -4,6 +4,7 @@ import DAF.Components.AbstractComponent;
 import DAF.Controller.Components.ControllerView;
 import DAF.Controller.Components.IController;
 import DAF.Controller.Components.PlayerController;
+import DAF.Dice.Components.ADice;
 import DAF.GameObject;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
@@ -20,7 +21,8 @@ public class GameFactory {
 
         GameObject playerObject = new GameObject("Player");
         IController controller = playerObject.addComponent(PlayerController.class);
-        POTCDiceBag diceBag = playerObject.addComponent(POTCDiceBag.class);
+
+        ADice diceBag = playerObject.addComponent(POTCDiceBag.class);
         diceBag.getGameObject()
                 .addComponent(ControllerView.class)
                 .setController(controller);
@@ -96,9 +98,9 @@ public class GameFactory {
         guessObject.setParent(forObject);
 
         GuessFieldComponent guessField = guessObject.addComponent(GuessFieldComponent.class);
-        LabelGraphic label = createText("0", 20, new Vector2(60, 90));
+        LabelGraphic label = createText("0", 20, new Vector2(60, 93));
         label.getGameObject().setParent(guessObject);
-        label.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        label.setWebBgColor("rgba(38, 38, 38, 0.5)");
         label.setWebColor("white");
 
         label.getGameObject()
@@ -123,7 +125,7 @@ public class GameFactory {
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
         button.setBorderRadius(10);
-        button.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        button.setWebBgColor("rgba(106, 138, 94)");
         button.setWebColor("white");
 
         return button.getGameObject();
@@ -134,7 +136,7 @@ public class GameFactory {
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
         button.setBorderRadius(10);
-        button.setWebBgColor("rgba(38, 38, 38, 0.2)");
+        button.setWebBgColor("rgba(145, 101, 100)");
         button.setWebColor("white");
 
         return button.getGameObject();
@@ -144,7 +146,8 @@ public class GameFactory {
         ButtonGraphic button = createButton("Guess", new Vector2(-60, 90), GuessDiceButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
-        button.setBorderRadius(10);
+        button.setBorderRadius(5);
+        button.setWebBgColor("rgba(191, 175, 147)");
         return button.getGameObject();
     }
 
@@ -152,7 +155,8 @@ public class GameFactory {
         ButtonGraphic button = createButton("Ready", new Vector2(-20, 90), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
-        button.setBorderRadius(10);
+        button.setBorderRadius(5);
+        button.setWebBgColor("rgba(153, 184, 140)");
 
         return button.getGameObject();
     }
@@ -161,39 +165,39 @@ public class GameFactory {
         ButtonGraphic button = createButton("Roll", new Vector2(-5, 90), RollDiceButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
-        button.setBorderRadius(10);
+        button.setBorderRadius(5);
+        button.setWebBgColor("rgba(191, 175, 147)");
         button.getGameObject().setEnabled(false);
         return button.getGameObject();
     }
 
     public static GameObject addPeekButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Peek", new Vector2(-60, 10), PeekButtonComponent.class);
+        ButtonGraphic button = createButton(" Peek ", new Vector2(-60, 10), PeekButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setFontSize(20);
-        button.setBorderRadius(10);
-        button.setWebBgColor("rgba(43, 31, 9)");
-        button.setWebColor("white");
+        button.setBorderRadius(5);
+        button.setWebBgColor("rgba(191, 175, 147)");
         //button.getGameObject().setEnabled(true);
         return button.getGameObject();
     }
 
     public static GameObject addDiceCup(GameObject forObject) {
         GameObject cupObject = new GameObject("Cup");
-        cupObject.getTransform().setPosition(new Vector2(10, -20));
+        cupObject.getTransform().setPosition(new Vector2(35, -20));
         cupObject.setParent(forObject);
 
         DiceCupComponent cup = forObject.addComponent(DiceCupComponent.class);
         PictureGraphic cupState;
 
-        cupState = createPicture("images/dice_cup_closed.png", new Vector2(10, -20));
+        cupState = createPicture("images/dice_cup_closed.png", new Vector2(35, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setClosedCup(cupState);
 
-        cupState = createPicture("images/dice_cup_open.png", new Vector2(10, -20));
+        cupState = createPicture("images/dice_cup_open.png", new Vector2(35, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setOpenCup(cupState);
 
-        cupState = createPicture("images/dice_cup_peek.png", new Vector2(10, -20));
+        cupState = createPicture("images/dice_cup_peek.png", new Vector2(35, -20));
         cupState.getGameObject().setParent(cup.getGameObject());
         cup.setPeekCup(cupState);
 

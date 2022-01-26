@@ -56,16 +56,12 @@ public class GameManager extends AbstractManager {
         background = GameFactory.createBackground("images/wooden_floor.jpg", new Vector2(0, 0));
         // old Vector: x = 340, y = 300
         txtCurAction = GameFactory.createText("<<ActionText>>", 32, new Vector2(380, 310));
-        txtCurAction.setWebColor("white");
+        txtCurAction.setWebColor("rgb(255, 255, 255)");
         txtCurAction.setWebBgColor("rgb(38, 38, 38, 0.7)");
         txtCurAction.setWidth(1024);
 
         Arrays.fill(_roundResults, 0);
         Arrays.fill(_endResults, 0);
-
-        txtResults = GameFactory.createText(resultsToWebString(_endResults), 15, new Vector2(750, 600));
-        txtResults.setWebColor("white");
-        txtResults.setWebBgColor("rgb(38, 38, 38, 0.7)");
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
@@ -76,6 +72,10 @@ public class GameManager extends AbstractManager {
             Vector2 position = playerController.getGameObject().getTransform().getPosition();
             System.out.println("Position: "+position.x+" / "+position.y);
         }
+
+        txtResults = GameFactory.createText(resultsToWebString(_endResults), 15, new Vector2(750, 600));
+        txtResults.setWebColor("white");
+        txtResults.setWebBgColor("rgb(38, 38, 38, 0.7)");
     }
 
     @Override
@@ -225,6 +225,9 @@ public class GameManager extends AbstractManager {
                 continue;
             }
 
+            if (guessDice <= 0)
+                continue;
+
             // Case 2: guessDice not correct
             if (_roundResults[guessDice - 1] != guessCount) {
                 continue;
@@ -259,6 +262,7 @@ public class GameManager extends AbstractManager {
             } else {
                 _state = GameState.PREPARE_NEXT_ROUND;
             }
+
         }
 
         // more than one player had correct guesses
@@ -279,16 +283,19 @@ public class GameManager extends AbstractManager {
                 }
             }
 
+            System.out.println("    Correct Guesses: " + correctGuesses.size());
             System.out.println("    Highest Guesses: " + highestGuesses.size());
             System.out.println("    Current Round:   " + _currentRound);
 
+
             if (highestGuesses.size() == 1) {
-                _endResults[correctGuesses.get(0)[0] - 1]++;
+                _endResults[highestGuesses.get(0)[0] - 1]++;
 
                 txtCurAction.setLabelText(String.format("Player %d won.", highestGuesses.get(0)[0]));
 
                 txtResults.setLabelText(resultsToWebString(_endResults));
 
+                System.out.println("[Player, GuessDice, GuessCount]\n" + Arrays.toString(highestGuesses.get(0)));
                 if (_currentRound == _maxRounds) {
                     txtCurAction.setLabelText(resultsToWebString(_endResults));
                     _state = GameState.END_GAME;
@@ -325,10 +332,12 @@ public class GameManager extends AbstractManager {
             RollDiceButtonComponent rollButton = controller.getGameObject().getComponentInChildren(RollDiceButtonComponent.class);
             GuessDiceButtonComponent guessButton = controller.getGameObject().getComponentInChildren(GuessFieldComponent.class)
                     .getGameObject().getComponentInChildren(GuessDiceButtonComponent.class);
+            //POTCDiceBag diceBag = controller.getGameObject().getComponentInParent(POTCDiceBag.class);
 
             readyButton.setReady(false);
             rollButton.setRollState(false);
             guessButton.setGuessState(false);
+            //diceBag.deactivateGuesses();
         }
         _currentRound++;
         System.out.println("State PREPARE_NEXT_ROUND reached.");
@@ -341,14 +350,28 @@ public class GameManager extends AbstractManager {
 
     public void stateEndGame() {
         System.out.println("State END_GAME reached.");
-        //txtCurAction.setLabelText("Game has ended.");
+        txtCurAction.getGameObject().getTransform().setPosition(new Vector2(330, 260));
     }
 
     public String resultsToWebString(int[] results) {
-        StringBuilder s = new StringBuilder("Player index / Rounds won<br>");
-        for (int i = 0; i < results.length; i++) {
-            s.append(i + 1).append(" / ").append(results[i]).append("<br>");
+        StringBuilder s = new StringBuilder("<b>Leaderboard</b><br><br>");
+
+        s.append("<table>").append("<tr>");
+
+        System.out.println(_controllers);
+        for (IController controller : _controllers) {
+            s.append("<th>Player ").append(controller.getPlayerNo()).append("</th>");
         }
+        s.append("</tr>");
+
+
+        s.append("<tr>");
+        for (int result : results) {
+            s.append("<td>").append(result).append("</td>");
+        }
+        s.append("</tr>").append("</table>");
+
+        System.out.println("Results: " + Arrays.toString(results));
         return s.toString();
     }
 }

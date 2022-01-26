@@ -16,14 +16,6 @@ public class GuessFieldComponent extends AbstractComponent {
         this._guessCount = 0;
     }
 
-    public int getGuessDice() {
-        return this._guessDice;
-    }
-
-    public int getGuessCount() {
-        return this._guessCount;
-    }
-
     public int[] getGuess() {
         return new int[]{_guessDice, _guessCount};
     }
@@ -31,6 +23,14 @@ public class GuessFieldComponent extends AbstractComponent {
     public void setGuess(int guessDice, int guessCount) {
         this._guessDice = guessDice;
         this._guessCount = guessCount;
+    }
+
+    public int getGuessDice() {
+        return this._guessDice;
+    }
+
+    public int getGuessCount() {
+        return this._guessCount;
     }
 
     public void setGuessDice(int value) {

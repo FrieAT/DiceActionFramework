@@ -27,6 +27,7 @@ public class DiceCupComponent extends AbstractComponent {
 
     @Override
     public void start() {
+
         this._dice = this.getGameObject().getParent().getComponentInChildren(POTCDiceBag.class);
         if (this._dice == null)
             throw new NullPointerException("There is no correct ADice reference.");
