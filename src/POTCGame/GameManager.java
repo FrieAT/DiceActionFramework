@@ -36,7 +36,7 @@ public class GameManager extends AbstractManager {
     LabelGraphic txtResults;
     PictureGraphic background;
 
-    int _maxPlayers = 2;
+    int _maxPlayers = 4;
     int _playersTurn = 1;
 
     int _maxRounds = 3;
@@ -356,22 +356,35 @@ public class GameManager extends AbstractManager {
     public String resultsToWebString(int[] results) {
         StringBuilder s = new StringBuilder("<b>Leaderboard</b><br><br>");
 
-        s.append("<table>").append("<tr>");
+        if (_maxPlayers <= 2) {
+            s.append("<table>").append("<tr>");
 
-        System.out.println(_controllers);
-        for (IController controller : _controllers) {
-            s.append("<th>Player ").append(controller.getPlayerNo()).append("</th>");
+            System.out.println(_controllers);
+            for (IController controller : _controllers) {
+                s.append("<th>Player ").append(controller.getPlayerNo()).append("</th>");
+            }
+            s.append("</tr>");
+
+
+            s.append("<tr>");
+            for (int result : results) {
+                s.append("<td>").append(result).append("</td>");
+            }
+            s.append("</tr>").append("</table>");
+
+            System.out.println("Results: " + Arrays.toString(results));
+            return s.toString();
+        } else {
+            s.append("<table>");
+
+            for (int i = 0; i < _controllers.size(); i++) {
+                s.append("<tr>");
+                s.append("<th>Player").append(_controllers.get(i).getPlayerNo()).append(": </th>");
+                s.append("<td>").append(results[i]).append("</td>");
+                s.append("</tr>");
+            }
+            s.append("</table>");
+            return s.toString();
         }
-        s.append("</tr>");
-
-
-        s.append("<tr>");
-        for (int result : results) {
-            s.append("<td>").append(result).append("</td>");
-        }
-        s.append("</tr>").append("</table>");
-
-        System.out.println("Results: " + Arrays.toString(results));
-        return s.toString();
     }
 }
