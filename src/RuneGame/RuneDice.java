@@ -84,7 +84,7 @@ public class RuneDice extends ADice {
             setReady(false);
             i++;
         }
-        setTopFace(null);
+        //setTopFace(null);
     }
 
     public boolean isReady() {
@@ -140,12 +140,12 @@ public class RuneDice extends ADice {
     }
 
     public void addCustomFaces() {
-        this.addFace(new Face(1, "images/shield_bearer.png"));
-        this.addFace(new Face(2, "images/archer.png"));
+        this.addFace(new Face(1, "images/archer.png"));
+        this.addFace(new Face(2, "images/shield_bearer.png"));
         this.addFace(new Face(3, "images/stairs.png"));
         this.addFace(new Face(4, "images/wall.png"));
         this.addFace(new Face(5, "images/wall_and_stairs.png"));
         this.addFace(new Face(6, "images/joker.png"));
-        this.setTopFace(null);
+        //this.setTopFace(null);
     }
 }

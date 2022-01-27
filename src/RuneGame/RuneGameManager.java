@@ -41,11 +41,16 @@ public class RuneGameManager extends AbstractManager {
         FIGHT_OPPONENT,
         VICTORY_SCREEN
     }
-    
-    LabelGraphic txtCurAction;
-    PictureGraphic background;
 
-    int _maxPlayers = 4;
+    //CONFIG BEGIN
+    int _maxPlayers = 2;
+
+    int _maxRounds = 3;
+    //CONFIG END
+
+    LabelGraphic txtCurAction, txtStatistics;
+
+    PictureGraphic background;
 
     GameState _state = GameState.AWAITING_READY;
 
@@ -65,10 +70,14 @@ public class RuneGameManager extends AbstractManager {
 
     ArrayList<AttackButtonComponent> _controllersAttack;
 
+    ArrayList<Integer> _statControllerWins;
+
     int _curDice = 0;
     
     @Override
     public void init() {
+        _statControllerWins = new ArrayList<>();
+
         background = RunGameFactory.createBackground("images/background_2.png", new Vector2(0, 0));
         txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(400, 350));
 
@@ -80,6 +89,8 @@ public class RuneGameManager extends AbstractManager {
             _controllers.add(playerController);
             Vector2 position = playerController.getGameObject().getTransform().getPosition();
             System.out.println("Position: "+position.x+" / "+position.y);
+
+            _statControllerWins.add(0);
         }
 
         for(GameObject player : playerCenter.getChildren()) {
@@ -98,10 +109,15 @@ public class RuneGameManager extends AbstractManager {
                 attackPlayer.setEnabled(false);
             }
         }
+
+        txtStatistics = RunGameFactory.createText("Leaderboard:", new Vector2(0, 0));
+
+        refreshStatistics();
     }
 
     @Override
     public void update() {
+        
         switch(_state) {
             case AWAITING_READY:
                 stateAwaitingReady();
@@ -120,8 +136,37 @@ public class RuneGameManager extends AbstractManager {
                 break;
             case VICTORY_SCREEN:
                 stateVictoryScreen();
+                refreshStatistics();
                 break;
         }
+    }
+
+    public int getBestPlayer() {
+        int bestPlayer = 0;
+        int lastWins = 0;
+        int i = 0;
+        for(int wins : this._statControllerWins) {
+            if(wins > lastWins) {
+                lastWins = wins;
+                bestPlayer = i;
+            }
+            i++;
+        }
+        return bestPlayer + 1;
+    }
+
+    public void refreshStatistics() {
+        int playedRounds = 0;
+        for(int wins : this._statControllerWins) {
+            playedRounds += wins;
+        }
+
+        String strLeaderBoard = "Runde: "+playedRounds+" von "+_maxRounds+"<br><br>Leaderboard:";
+        int playerId = 1;
+        for(int wins : this._statControllerWins) {
+            strLeaderBoard += "<br>Spieler "+(playerId++)+": "+wins+" Siege";
+        }
+        txtStatistics.setLabelText(strLeaderBoard);
     }
 
     public GameState getGameState() {
@@ -192,26 +237,43 @@ public class RuneGameManager extends AbstractManager {
     }
 
     private void stateVictoryScreen() {
+        int playedRounds = 0;
+        for(int wins : this._statControllerWins) {
+            playedRounds += wins;
+        }
+
         _waitTime -= 1.0 * RenderManager.getInstance().getDeltaTime();
         if(_waitTime <= 0.0) {
-            for (IController controller : _controllers) {
-                for(ReadyButtonComponent readyButton : controller.getGameObject().getComponentsInChildren(ReadyButtonComponent.class)) {
-                    readyButton.setReady(false);
+            if(playedRounds < _maxRounds) {
+                for (IController controller : _controllers) {
+                    for(ReadyButtonComponent readyButton : controller.getGameObject().getComponentsInChildren(ReadyButtonComponent.class)) {
+                        readyButton.setReady(false);
+                    }
+    
+                    RuneDiceBag runeBag = controller.getGameObject().getComponent(RuneDiceBag.class);
+                    runeBag.resetReadyAndFace();
                 }
 
-                RuneDiceBag runeBag = controller.getGameObject().getComponent(RuneDiceBag.class);
-                runeBag.resetReadyAndFace();
+                _state = GameState.AWAITING_READY;
+            } else {
+                
             }
-
-            _state = GameState.AWAITING_READY;
             return;
         }
 
         for (IController controller : _controllers) {
             PlayerLabelGraphic playerText = controller.getGameObject().getComponent(PlayerLabelGraphic.class);
             if(playerText != null) {
-                playerText.setLabelText("Nächste Runde startet in "+Math.round(_waitTime)+" Sekunden ...");
+                if(playedRounds < _maxRounds) {
+                    playerText.setLabelText("Nächste Runde startet in "+Math.round(_waitTime)+" Sekunden ...");
+                } else {
+                    playerText.setLabelText("Spiel-Ende!");
+                }
             }
+        }
+
+        if(playedRounds >= _maxRounds) {
+            txtCurAction.setLabelText("Spieler "+this.getBestPlayer()+" ist Spiel-Sieger!");
         }
     }   
 
@@ -225,6 +287,9 @@ public class RuneGameManager extends AbstractManager {
                 _state = GameState.VICTORY_SCREEN;
                 _waitTime = 10.0;
                 txtCurAction.setLabelText("Sieg für Spieler "+_curAttacker.getPlayerNo());
+
+                _statControllerWins.set(_curAttacker.getPlayerNo() - 1, _statControllerWins.get(_curAttacker.getPlayerNo() - 1) + 1);
+
                 return;
             }
             _curAttacker = _attackQueue.poll();
@@ -284,7 +349,7 @@ public class RuneGameManager extends AbstractManager {
             _controllersAttack.sort(new Comparator<AttackButtonComponent>() {
                 @Override
                 public int compare(AttackButtonComponent o1, AttackButtonComponent o2) {
-                    return (int)(o1.getAttackTime() - o2.getAttackTime());
+                    return (int)(o2.getAttackTime() - o1.getAttackTime());
                 }
             });
 
