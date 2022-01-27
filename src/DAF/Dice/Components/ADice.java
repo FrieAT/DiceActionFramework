@@ -56,6 +56,9 @@ public abstract class ADice extends AbstractComponent implements IDice {
     }
 
     public Face getFace(int idx) {
+        if(idx >= diceFaces.size()) {
+            return null;
+        }
         return diceFaces.get(idx);
     }
 
