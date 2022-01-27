@@ -71,6 +71,20 @@ public class RuneDice extends ADice {
         this._ready = false;
         this._persistent = false;
         this._rollCount = 0;
+
+
+    }
+
+    public void resetReadyAndFace() {
+        this.resetReady();
+
+        int i = 0;
+        while(getFace(i) != null) {
+            setTopFace(getFace(i));
+            setReady(false);
+            i++;
+        }
+        setTopFace(null);
     }
 
     public boolean isReady() {
@@ -97,7 +111,11 @@ public class RuneDice extends ADice {
     }
 
     public Rune getTopFaceRune() {
-        return Rune.values()[super.getTopFace().getValue()];
+        if(getTopFace() == null) {
+            return Rune.UNKNOWN;
+        }
+
+        return Rune.values()[getTopFace().getValue()];
     }
 
     @Override
