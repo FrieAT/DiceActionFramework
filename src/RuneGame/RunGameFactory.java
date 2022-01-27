@@ -73,6 +73,7 @@ public class RunGameFactory {
     public static GameObject addRollButton(GameObject forObject) {
         ButtonGraphic button = createButton("Würfeln", new Vector2(-20, -20), RollButtonComponent.class);
         button.getGameObject().setParent(forObject);
+        button.setFontSize(32);
         return button.getGameObject();
     }
 

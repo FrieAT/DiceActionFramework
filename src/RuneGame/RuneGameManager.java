@@ -103,7 +103,8 @@ public class RuneGameManager extends AbstractManager {
                 GameObject attackPlayer = new GameObject("Attack_"+controller.getPlayerNo()+"_"+otherController.getPlayerNo(), other);
                 attackPlayer.addComponent(ControllerView.class).setController(controller);
                 ButtonGraphic label = attackPlayer.addComponent(ButtonGraphic.class);
-                label.setLabelText("Angreifen");
+                label.setLabelText("Spieler "+otherController.getPlayerNo()+"<br>Angreifen");
+                label.setFontSize(32);
                 attackPlayer.addComponent(AttackButtonComponent.class);
 
                 attackPlayer.setEnabled(false);
