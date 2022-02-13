@@ -99,7 +99,7 @@ public class RuneDice extends ADice {
         ButtonGraphic faceGraphic = getTopFace().getPictureGraphic().getGameObject().getComponentInChildren(ButtonGraphic.class);
         if(faceGraphic != null) {
             if(isReady()) {
-                faceGraphic.setWebBgColor("rgba(0, 255, 255, 0.2)");
+                faceGraphic.setWebBgColor("rgba(179, 23, 11, 0.2)");
             } else {
                 faceGraphic.setWebBgColor("rgba(255, 255, 255, 0.0)");
             }

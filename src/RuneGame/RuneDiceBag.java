@@ -7,6 +7,7 @@ import java.util.List;
 import DAF.GameObject;
 import DAF.Dice.Components.ADice;
 import DAF.Dice.Components.ADiceBag;
+import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.PictureGraphic;
 import RuneGame.RuneDice.Rune;
@@ -18,6 +19,11 @@ public class RuneDiceBag extends ADiceBag {
     public void start() {
         for(int i = 0; i < 6; i++) {
             this.add(RuneDice.class);
+        }
+        int x = -50;
+        for (ADice dice : getDices()) {
+            dice.getTransform().setPosition(new Vector2(x, 50));
+            x += 30;
         }
         super.start();
     }

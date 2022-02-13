@@ -63,17 +63,20 @@ public class RunGameFactory {
     }
 
     public static GameObject addReadyButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Bereit?", new Vector2(0, 80), ReadyButtonComponent.class);
+        ButtonGraphic button = createButton("Ready", new Vector2(0, 80), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
-        button.setBorderRadius(20.5);
-        button.setFontSize(32);
+        button.setBorderRadius(5);
+        button.setFontSize(30);
+        button.setWebBgColor("rgb(173, 196, 171)");
         return button.getGameObject();
     }
 
     public static GameObject addRollButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Würfeln", new Vector2(-20, -20), RollButtonComponent.class);
+        ButtonGraphic button = createButton("Roll", new Vector2(0, 80), RollButtonComponent.class);
         button.getGameObject().setParent(forObject);
-        button.setFontSize(32);
+        button.setBorderRadius(5);
+        button.setFontSize(30);
+        button.setWebBgColor("rgb(230, 217, 202)");
         return button.getGameObject();
     }
 

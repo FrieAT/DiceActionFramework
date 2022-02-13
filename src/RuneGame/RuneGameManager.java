@@ -103,15 +103,21 @@ public class RuneGameManager extends AbstractManager {
                 GameObject attackPlayer = new GameObject("Attack_"+controller.getPlayerNo()+"_"+otherController.getPlayerNo(), other);
                 attackPlayer.addComponent(ControllerView.class).setController(controller);
                 ButtonGraphic label = attackPlayer.addComponent(ButtonGraphic.class);
-                label.setLabelText("Spieler "+otherController.getPlayerNo()+"<br>Angreifen");
-                label.setFontSize(32);
+                label.setLabelText("Attack <br>player "+otherController.getPlayerNo());
+                label.setFontSize(30);
                 attackPlayer.addComponent(AttackButtonComponent.class);
 
                 attackPlayer.setEnabled(false);
             }
         }
 
-        txtStatistics = RunGameFactory.createText("Leaderboard:", new Vector2(0, 0));
+        txtStatistics = RunGameFactory.createText("Leaderboard", new Vector2(0, 0));
+
+        txtStatistics.setFontSize(20);
+        txtStatistics.setWebBgColor("rgb(230, 217, 202, 0.5)");
+        txtCurAction.setFontSize(20);
+        txtCurAction.setWebBgColor("rgb(230, 217, 202, 0.5)");
+
 
         refreshStatistics();
     }
@@ -162,11 +168,17 @@ public class RuneGameManager extends AbstractManager {
             playedRounds += wins;
         }
 
-        String strLeaderBoard = "Runde: "+playedRounds+" von "+_maxRounds+"<br><br>Leaderboard:";
+        String strLeaderBoard = "Round "+playedRounds+" / "+_maxRounds+"<br><br>Leaderboard";
         int playerId = 1;
+        strLeaderBoard += "<table>";
         for(int wins : this._statControllerWins) {
-            strLeaderBoard += "<br>Spieler "+(playerId++)+": "+wins+" Siege";
+            strLeaderBoard += "<tr>";
+            strLeaderBoard += "<th>Player " + (playerId++) + ": </th>";
+            strLeaderBoard += "<td>" + wins + "<td>";
+            strLeaderBoard += "</tr>";
+            //strLeaderBoard += "<br>Player "+(playerId++)+": "+wins+" wins";
         }
+        strLeaderBoard += "</table>";
         txtStatistics.setLabelText(strLeaderBoard);
     }
 
@@ -180,7 +192,7 @@ public class RuneGameManager extends AbstractManager {
             //attacker.markRuneDice(attackerBow, true, false);
             attackHappened = true;
             if(defender.getRuneDice(Rune.JOKER) != null) {
-                txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Bogenschütze tötet Joker");
+                txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Archer kills Joker");
                 defender.getRuneDice(Rune.JOKER).setTopFace(null);
             } else if(defender.getRuneDice(Rune.BOW_MAN) != null) {
                 int height = defender.getRuneDices(Rune.STAIRSANDWALLS).size();
@@ -192,17 +204,17 @@ public class RuneGameManager extends AbstractManager {
                 height -= -1 + defender.getRuneDices(Rune.BOW_MAN).size();
 
                 if(_randomGenerator.nextInt(100) <= 100.0/height) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Bogenschütze tötet Bögenschütze");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Archer kills Archer");
                     defender.getRuneDices(Rune.BOW_MAN).get(0).setTopFace(null);
                 } else {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Bogenschütze verfehlt Bögenschütze");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Archer misses Archer");
                 }
             } else if(defender.getRuneDice(Rune.SHIELD_BEARER) != null) {
                 if(_randomGenerator.nextInt(100) <= 25) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Bogenschütze tötet Lanzenträger");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Archer kills Shieldbearer");
                     defender.getRuneDice(Rune.SHIELD_BEARER).setTopFace(null);
                 } else {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Bogenschütze verfehlt Lanzenträger");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Archer misses Shieldbearer");
                 }
             }
             break;
@@ -213,23 +225,23 @@ public class RuneGameManager extends AbstractManager {
                 //attacker.markRuneDice(attackerShieldBearer, true, false);
                 
                 if(defender.getRuneDice(Rune.JOKER) != null) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger tötet Joker");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer kills Joker");
                     defender.getRuneDice(Rune.JOKER).setTopFace(null);
                 } else if(defender.getRuneDice(Rune.SHIELD_BEARER) != null) {
                     if(_randomGenerator.nextInt(100) <= 50) {
-                        txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger tötet Lanzenträger");
+                        txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer kills Shieldbearer");
                         defender.getRuneDice(Rune.SHIELD_BEARER).setTopFace(null);
                     } else {
-                        txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger verfehlt Lanzenträger");
+                        txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer misses Shieldbearer");
                     }
                 } else if(defender.getRuneDice(Rune.STAIRSANDWALLS) != null) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger klettert auf Mauerstiege");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer climbs on towers stairs");
                     defender.getRuneDice(Rune.STAIRSANDWALLS).setTopFace(null);
                 } else if(defender.getRuneDice(Rune.STAIRS) != null && defender.getRuneDice(Rune.WALLS) != null) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger klettert einen Turm hoch");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer climbs up tower");
                     defender.getRuneDice(Rune.WALLS).setTopFace(null);
                 } else if(defender.getRuneDice(Rune.BOW_MAN) != null) {
-                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Lanzenträger tötet Bogenschützen");
+                    txtCurAction.setLabelText(txtCurAction.getLabelText()+"<br>Shieldbearer kills Archer");
                     defender.getRuneDice(Rune.BOW_MAN).setTopFace(null);
                 }
                 break;
@@ -266,28 +278,28 @@ public class RuneGameManager extends AbstractManager {
             PlayerLabelGraphic playerText = controller.getGameObject().getComponent(PlayerLabelGraphic.class);
             if(playerText != null) {
                 if(playedRounds < _maxRounds) {
-                    playerText.setLabelText("Nächste Runde startet in "+Math.round(_waitTime)+" Sekunden ...");
+                    playerText.setLabelText("Preparing next round. "+Math.round(_waitTime)+" s");
                 } else {
-                    playerText.setLabelText("Spiel-Ende!");
+                    playerText.setLabelText("Game ended.");
                 }
             }
         }
 
         if(playedRounds >= _maxRounds) {
-            txtCurAction.setLabelText("Spieler "+this.getBestPlayer()+" ist Spiel-Sieger!");
+            txtCurAction.setLabelText("Player "+this.getBestPlayer()+" wins the war!");
         }
     }   
 
     private void stateFightOpponent() {
         _waitTime -= 1.0 * RenderManager.getInstance().getDeltaTime();
         if(_waitTime <= 0.0) {
-            _waitTime = 3.0;
+            _waitTime = 5.0;
 
             if(_attackQueue.size() <= 1) {
                 _curAttacker = _attackQueue.poll();
                 _state = GameState.VICTORY_SCREEN;
-                _waitTime = 10.0;
-                txtCurAction.setLabelText("Sieg für Spieler "+_curAttacker.getPlayerNo());
+                _waitTime = 15.0;
+                txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" won the battle<br>...but not the war.");
 
                 _statControllerWins.set(_curAttacker.getPlayerNo() - 1, _statControllerWins.get(_curAttacker.getPlayerNo() - 1) + 1);
 
@@ -318,12 +330,12 @@ public class RuneGameManager extends AbstractManager {
                     target = _controllers.get(_randomGenerator.nextInt(_controllers.size()));
                 }
                 if(target != _curAttacker) {
-                    txtCurAction.setLabelText("Spieler "+_curAttacker.getPlayerNo()+" greift Spieler "+target.getPlayerNo()+" an!");
+                    txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" attacks Player "+target.getPlayerNo()+"!");
 
                     RuneDiceBag defenderBag = target.getGameObject().getComponent(RuneDiceBag.class);
                     this.fight(attackerBag, defenderBag);
                 } else {
-                    txtCurAction.setLabelText("Spieler "+_curAttacker.getPlayerNo()+" macht nichts ...");
+                    txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" refuses to fight...");
                 }
             }
 
@@ -333,12 +345,12 @@ public class RuneGameManager extends AbstractManager {
 
     private void stateChooseOpponent() {
         _waitTime -= 1.0 * RenderManager.getInstance().getDeltaTime();
-        txtCurAction.setLabelText("Wählt euren Gegner in "+Math.round(_waitTime)+" Sekunden!");
+        txtCurAction.setLabelText("Choose opponent in "+Math.round(_waitTime)+" seconds!");
 
         if(_waitTime <= 0.0) {
             this._waitTime = 3.0;
             this._state = GameState.FIGHT_OPPONENT;
-            txtCurAction.setLabelText("Der Kampf beginnt!");
+            txtCurAction.setLabelText("May the battle begin!");
             
             _controllersAttack = new ArrayList<>();
             for (IController controller : _controllers) {
@@ -399,11 +411,11 @@ public class RuneGameManager extends AbstractManager {
 
             if(controllerDone) {
                 playersAreDone++;
-                playerText.setLabelText("Warten auf andere Spieler ....");
+                playerText.setLabelText("Waiting for other players...");
             } else if(rollCount == 0) {
-                playerText.setLabelText("Wähle Figuren zum Behalten, bevor du weiter würfelst!");
+                playerText.setLabelText("Choose characters to keep.");
             }else {
-                playerText.setLabelText("Letzte Entscheidung, bevor der Kampf beginnt!");
+                playerText.setLabelText("Last decision, before the battle begins!");
             }
             
             for(RuneDice d : dices) {
@@ -413,12 +425,12 @@ public class RuneGameManager extends AbstractManager {
             }
         }
 
-        txtCurAction.setLabelText("Trifft eure Entscheidungen in "+Math.round(_waitTime)+" Sekunden!");
+        txtCurAction.setLabelText("Make your decision! "+Math.round(_waitTime)+" s");
 
         if(_waitTime <= 0.0 || playersAreDone == ControllerManager.getInstance().GetPlayerCount()) {
             for (IController controller : _controllers) {
                 PlayerLabelGraphic playerText = controller.getGameObject().getComponent(PlayerLabelGraphic.class);
-                playerText.setLabelText("Welcher Spieler soll angegriffen werden?");
+                playerText.setLabelText("Which player do you wish to attack?");
             
                 AttackButtonComponent attack = controller.getGameObject().getComponentInChildren(AttackButtonComponent.class);
                 attack.getGameObject().setEnabled(true);
@@ -426,7 +438,7 @@ public class RuneGameManager extends AbstractManager {
             }
 
             _state = GameState.CHOOSE_OPPONENT;
-            _waitTime = 10.0;
+            _waitTime = 20.0;
         }
     }
 
@@ -441,9 +453,9 @@ public class RuneGameManager extends AbstractManager {
                     }
                 }
                 
-                txtCurAction.setLabelText("Trifft eure Entscheidungen!");
+                txtCurAction.setLabelText("Make your decisions!");
                 _state = GameState.MAKE_DECISION;
-                _waitTime = 20.0;
+                _waitTime = 30.0;
                 return;
             }
         } else {
@@ -473,21 +485,21 @@ public class RuneGameManager extends AbstractManager {
             PlayerLabelGraphic playerText = controller.getGameObject().getComponent(PlayerLabelGraphic.class);
             if(playerText != null) {
                 if(isReady) {
-                    playerText.setLabelText("Warten auf andere Spieler ...");
+                    playerText.setLabelText("Waiting for other players...");
                 } else {
-                    playerText.setLabelText("Bestätigen Sie mit Bereit, dass das Spiel beginnen kann!");
+                    playerText.setLabelText("Ready Check");
                 }
             }
         }
 
         if(playerCountReady == _maxPlayers) {
-            txtCurAction.setLabelText("Es sind alle bereit, es geeeeht loooos!");
+            txtCurAction.setLabelText("All players ready.<br>The battle is about to begin.");
             _waitTime = 3;
             _state = GameState.THROW_DICES;
             return;
         }
         else {
-            txtCurAction.setLabelText(String.format("Es sind %d von %d Spieler bereit...<br>FPS: %f", 
+            txtCurAction.setLabelText(String.format("%d / %d players ready...<br>FPS: %f",
                 playerCountReady, 
                 _maxPlayers,
                 RenderManager.getInstance().getDeltaTime()*1000));
