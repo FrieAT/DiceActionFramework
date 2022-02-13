@@ -23,7 +23,7 @@ public class RuneDiceBag extends ADiceBag {
         int x = -50;
         for (ADice dice : getDices()) {
             dice.getTransform().setPosition(new Vector2(x, 50));
-            x += 30;
+            x += 35;
         }
         super.start();
     }

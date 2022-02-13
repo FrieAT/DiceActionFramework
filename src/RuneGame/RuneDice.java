@@ -141,12 +141,12 @@ public class RuneDice extends ADice {
     }
 
     public void addCustomFaces() {
-        this.addFace(new Face(1, "images/archer.png"));
-        this.addFace(new Face(2, "images/shield_bearer.png"));
-        this.addFace(new Face(3, "images/stairs.png"));
-        this.addFace(new Face(4, "images/wall.png"));
-        this.addFace(new Face(5, "images/wall_and_stairs.png"));
-        this.addFace(new Face(6, "images/joker.png"));
+        this.addFace(new Face(1, "images/archer-64x64.png"));
+        this.addFace(new Face(2, "images/shield_bearer-64x64.png"));
+        this.addFace(new Face(3, "images/stairs-64x64.png"));
+        this.addFace(new Face(4, "images/wall-64x64.png"));
+        this.addFace(new Face(5, "images/wall_and_stairs-64x64.png"));
+        this.addFace(new Face(6, "images/joker-64x64.png"));
         //this.setTopFace(null);
     }
 }

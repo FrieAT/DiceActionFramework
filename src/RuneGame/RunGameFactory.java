@@ -63,7 +63,7 @@ public class RunGameFactory {
     }
 
     public static GameObject addReadyButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Ready", new Vector2(0, 80), ReadyButtonComponent.class);
+        ButtonGraphic button = createButton("Ready", new Vector2(0, 90), ReadyButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setBorderRadius(5);
         button.setFontSize(30);
@@ -72,7 +72,7 @@ public class RunGameFactory {
     }
 
     public static GameObject addRollButton(GameObject forObject) {
-        ButtonGraphic button = createButton("Roll", new Vector2(0, 80), RollButtonComponent.class);
+        ButtonGraphic button = createButton("Roll", new Vector2(0, 90), RollButtonComponent.class);
         button.getGameObject().setParent(forObject);
         button.setBorderRadius(5);
         button.setFontSize(30);

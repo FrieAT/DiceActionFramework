@@ -11,8 +11,8 @@ public class Face {
     public Face(int value, String faceResPath) {
         PictureGraphic picture = new PictureGraphic();
         picture.setPicturePath(faceResPath);
-        picture.setWidth(20);
-        picture.setHeight(20);
+        picture.setWidth(32);
+        picture.setHeight(32);
 
         this.value = value;
         this.picture = picture;

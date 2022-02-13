@@ -79,7 +79,7 @@ public class RuneGameManager extends AbstractManager {
         _statControllerWins = new ArrayList<>();
 
         background = RunGameFactory.createBackground("images/background-treasure.png", new Vector2(0, 0));
-        txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(400, 350));
+        txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(420, 350));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
         playerCenter.getTransform().setPosition(new Vector2(450, 300));
