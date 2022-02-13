@@ -78,7 +78,7 @@ public class RuneGameManager extends AbstractManager {
     public void init() {
         _statControllerWins = new ArrayList<>();
 
-        background = RunGameFactory.createBackground("images/background_2.png", new Vector2(0, 0));
+        background = RunGameFactory.createBackground("images/background-treasure.png", new Vector2(0, 0));
         txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(400, 350));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
@@ -116,7 +116,7 @@ public class RuneGameManager extends AbstractManager {
         txtStatistics.setFontSize(20);
         txtStatistics.setWebBgColor("rgb(230, 217, 202, 0.5)");
         txtCurAction.setFontSize(20);
-        txtCurAction.setWebBgColor("rgb(230, 217, 202, 0.5)");
+        txtCurAction.setWebBgColor("rgb(230, 217, 202, 0.7)");
 
 
         refreshStatistics();

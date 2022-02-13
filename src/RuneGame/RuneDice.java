@@ -5,6 +5,7 @@ import DAF.Controller.Components.AbstractController;
 import DAF.Controller.Components.ControllerView;
 import DAF.Controller.Components.IController;
 import DAF.Dice.Components.*;
+import DAF.Math.Vector2;
 import DAF.Renderer.Components.ButtonGraphic;
 import DAF.Renderer.Components.PictureGraphic;
 import javafx.scene.control.Button;
