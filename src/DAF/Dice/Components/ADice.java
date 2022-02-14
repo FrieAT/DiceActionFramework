@@ -62,6 +62,16 @@ public abstract class ADice extends AbstractComponent implements IDice {
         return diceFaces.get(idx);
     }
 
+    public void setFaceDimensions(int val) {
+        for (Face face : diceFaces)
+            face.setFaceDimensions(val);
+    }
+
+    public void setFaceDimensions(int height, int width) {
+        for (Face face : diceFaces)
+            face.setFaceDimensions(height, width);
+    }
+
     @Override
     public void roll() {
         Face rolledFace = diceFaces.get((int) (Math.random() * diceFaces.size()));

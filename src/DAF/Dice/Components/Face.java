@@ -11,11 +11,12 @@ public class Face {
     public Face(int value, String faceResPath) {
         PictureGraphic picture = new PictureGraphic();
         picture.setPicturePath(faceResPath);
-        picture.setWidth(32);
-        picture.setHeight(32);
 
         this.value = value;
         this.picture = picture;
+        this.faceResPath = faceResPath;
+
+        setFaceDimensions(32, 32);
     }
 
     public Face(int value, PictureGraphic g) {
@@ -33,6 +34,21 @@ public class Face {
 
     public String getPath() {
         return this.faceResPath;
+    }
+
+    public void setFaceResPath(String path) {
+        this.picture.setPicturePath(path);
+        this.faceResPath = faceResPath;
+    }
+
+    public void setFaceDimensions(int val) {
+        this.picture.setWidth(val);
+        this.picture.setHeight(val);
+    }
+
+    public void setFaceDimensions(int height, int width) {
+        this.picture.setHeight(height);
+        this.picture.setWidth(width);
     }
 
     public void setPictureGraphic(PictureGraphic g) {
