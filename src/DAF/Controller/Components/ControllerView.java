@@ -17,6 +17,8 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     private boolean _isStarted = false;
 
+    private boolean _hideFromEveryone = false;
+
     public void setController(IController controller) {
         this._forControllerIndex = -1;
         this._forController = controller;
@@ -27,6 +29,10 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
         this._forControllerIndex = controllerIndex;
         this._forController = null;
         this.registerController();
+    }
+
+    public void setHideFromEveryone(boolean state) {
+        this._hideFromEveryone = state;
     }
 
     public IController getController() {
@@ -44,47 +50,59 @@ public class ControllerView extends AbstractComponent implements NextEvent<GameO
 
     @Override
     public void onBeforeNext(GameObject obj) {
-        if(this._cycled || this._forController == null) {
+        if(this._cycled || this._forController == null && !this._hideFromEveryone) {
             return;
         }
-        
-        GameObject current = this.getGameObject();
-        while(current != null && current != obj) {
-            current = current.getParent();
-        } 
 
-        boolean isEnabled = this.getGameObject().isEnabled();
-        if(current == null || !isEnabled) {
+        ControllerView otherView = obj.getComponent(ControllerView.class);
+        while(obj != null && otherView == null) {
+            obj = obj.getParent();
+            if(obj != null) {
+                otherView = obj.getComponent(ControllerView.class);
+            }
+        }
+
+        if(this != otherView) {
+            return;
+        }
+
+        boolean isEnabled = obj.isEnabled();
+        if(!isEnabled) {
             return;
         }
 
         this._cycled = true;
 
-        if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
+        if(this._hideFromEveryone || !ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
             this._previousEnabledState = isEnabled;
-            this.getGameObject().setEnabled(false);
+            obj.setEnabled(false);
         }
     }
 
     @Override
     public void onAfterNext(GameObject obj) {
-        if(!this._cycled || this._forController == null || this.getGameObject() != obj) {
+        if(!this._cycled || this._forController == null && !this._hideFromEveryone) {
             return;
         }
-        
-        GameObject current = this.getGameObject();
-        while(current != null && current != obj) {
-            current = current.getParent();
+
+        ControllerView otherView = obj.getComponent(ControllerView.class);
+        while(obj != null && otherView == null) {
+            obj = obj.getParent();
+            if(obj != null) {
+                otherView = obj.getComponent(ControllerView.class);
+            }
         }
 
-        if(current == null) {
+        if(this != otherView) {
             return;
         }
 
         this._cycled = false;
 
-        if(!ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
-            this.getGameObject().setEnabled(this._previousEnabledState);
+        if(this._hideFromEveryone || !ControllerManager.getInstance().IsControllerAtCycle(this._forController.getPlayerNo())) {
+            if(!obj.isEnabled()) {
+                obj.setEnabled(true);
+            }
         }
     }
 
