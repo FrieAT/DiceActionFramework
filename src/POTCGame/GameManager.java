@@ -36,7 +36,7 @@ public class GameManager extends AbstractManager {
     LabelGraphic txtResults;
     PictureGraphic background;
 
-    int _maxPlayers = 4;
+    int _maxPlayers = 2;
     int _playersTurn = 1;
 
     int _maxRounds = 3;
