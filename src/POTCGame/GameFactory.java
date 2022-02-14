@@ -22,12 +22,15 @@ public class GameFactory {
         GameObject playerObject = new GameObject("Player");
         IController controller = playerObject.addComponent(PlayerController.class);
 
-        ADice diceBag = playerObject.addComponent(POTCDiceBag.class);
-        diceBag.getGameObject()
-                .addComponent(ControllerView.class)
-                .setController(controller);
+        GameObject playerDices = new GameObject("Dices", playerObject);
+        ADice diceBag = playerDices.addComponent(POTCDiceBag.class);
+        playerDices.addComponent(ControllerView.class).setController(controller);
 
         addDiceCup(playerObject);
+
+        LabelGraphic label =  createText("Hier könnte Ihre Werbung stehen!", 16, new Vector2(-70, -80));
+        label.getGameObject().setParent(playerObject);
+        label.getGameObject().addComponent(PlayerSaysComponent.class);
 
         //addDiceCup(playerObject);
 
@@ -67,7 +70,8 @@ public class GameFactory {
         labelObject.getTransform().setPosition(position);
         LabelGraphic label = labelObject.addComponent(LabelGraphic.class);
         label.setLabelText(text);
-        label.setWebColor("black");
+        label.setWebBgColor("rgba(38, 38, 38, 0.5)");
+        label.setWebColor("white");
         label.setFontSize(fontSize);
         return label;
     }

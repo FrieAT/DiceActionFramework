@@ -56,7 +56,7 @@ public class POTCDice extends ADice {
         if (faceGraphic != null) {
             if (isSelected()) {
                 POTCDiceBag diceBag = this.getGameObject().getComponentInParent(POTCDiceBag.class);
-                GuessFieldComponent guessField = this.getGameObject().getParent().getComponentInChildren(GuessFieldComponent.class);
+                GuessFieldComponent guessField = this.getGameObject().getComponentInParent(AbstractController.class).getGameObject().getComponentInChildren(GuessFieldComponent.class);
                 if (diceBag != null) {
                     diceBag.deactivateGuesses();
                     guessField.setGuessDice(this.getTopFace().getValue());

@@ -1,7 +1,11 @@
 package POTCGame;
 
 import DAF.Components.AbstractComponent;
+import DAF.Controller.Components.AbstractController;
+import DAF.Controller.Components.ControllerView;
+import DAF.Controller.Components.IController;
 import DAF.Dice.Components.ADice;
+import DAF.Dice.Components.ADiceBag;
 import DAF.Event.AInputEvent;
 import DAF.Event.ButtonInputEvent;
 import DAF.Event.IInputListener;
@@ -28,13 +32,14 @@ public class DiceCupComponent extends AbstractComponent {
     @Override
     public void start() {
 
-        this._dice = this.getGameObject().getParent().getComponentInChildren(POTCDiceBag.class);
+        this._dice = this.getGameObject().getComponentInChildren(POTCDiceBag.class);
         if (this._dice == null)
             throw new NullPointerException("There is no correct ADice reference.");
 
-        this._cupState = 1;
         this._closedCup.getGameObject().setEnabled(false);
         this._peekCup.getGameObject().setEnabled(false);
+
+        setCupState(1);
     }
 
     @Override
@@ -61,13 +66,16 @@ public class DiceCupComponent extends AbstractComponent {
         switch (_cupState) {
             case 0:
                 System.out.println("CupState " + _cupState);
-                toggleVisibilityOfDices(false);
+                toggleVisibilityOfDices(false, false);
+                break;
             case 1:
                 System.out.println("CupState " + _cupState);
-                toggleVisibilityOfDices(true);
+                toggleVisibilityOfDices(true, true);
+                break;
             case 2:
                 System.out.println("CupState " + _cupState);
-                toggleVisibilityOfDices(true);
+                toggleVisibilityOfDices(true, false);
+                break;
         }
 
     }
@@ -93,12 +101,15 @@ public class DiceCupComponent extends AbstractComponent {
         return _cupState == 2;
     }
 
-    public void toggleVisibilityOfDices(boolean visible) {
+    public void toggleVisibilityOfDices(boolean visible, boolean publicVisible) {
         System.out.println("toggleVisibilityOfDices");
-        for (GameObject child : this._dice.getGameObject().getChildren()) {
-            if (child.getComponent(ADice.class) != null) {
-                System.out.println(child.getName());
-                child.setEnabled(visible);
+        ADiceBag diceBag = this.getGameObject().getComponentInChildren(ADiceBag.class);
+        if(diceBag != null) {
+            ControllerView diceView = diceBag.getGameObject().getComponent(ControllerView.class);
+            IController controllerOwner = this.getGameObject().getComponent(AbstractController.class);
+            if (diceView != null && controllerOwner != null) {
+                diceView.setHideFromEveryone(!visible);
+                diceView.setController(publicVisible ? null : controllerOwner);
             }
         }
     }

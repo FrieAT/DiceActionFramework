@@ -1,8 +1,10 @@
 package POTCGame;
 
 import DAF.AbstractManager;
+import DAF.Controller.Components.ControllerView;
 import DAF.Controller.Components.IController;
 import DAF.Dice.Components.ADice;
+import DAF.Dice.Components.ADiceBag;
 import DAF.GameObject;
 import DAF.Math.Vector2;
 import DAF.Renderer.Components.LabelGraphic;
@@ -145,17 +147,15 @@ public class GameManager extends AbstractManager {
         Arrays.fill(result, 0);
 
         for (IController controller : _controllers) {
-            for(GameObject child : controller.getGameObject().getChildren()) {
-                RollDiceButtonComponent rollButton = child.getComponent(RollDiceButtonComponent.class);
+            RollDiceButtonComponent rollButton = controller.getGameObject().getComponentInChildren(RollDiceButtonComponent.class);
 
-                if (rollButton != null && rollButton.hasRolled()) {
-                    ArrayList<ADice> dices = controller.getGameObject().getComponent(POTCDiceBag.class).getDices();
-                    for (ADice dice : dices) {
-                        result[dice.getTopFace().getValue() - 1]++;
-                    }
-                    playerCountRolled++;
-                    break;
+            if (rollButton != null && rollButton.hasRolled()) {
+                ArrayList<ADice> dices = controller.getGameObject().getComponentInChildren(POTCDiceBag.class).getDices();
+                for (ADice dice : dices) {
+                    result[dice.getTopFace().getValue() - 1]++;
                 }
+                playerCountRolled++;
+                //break;
             }
         }
 
@@ -214,6 +214,9 @@ public class GameManager extends AbstractManager {
 
         GuessFieldComponent guessField;
         for (int i = 0; i < _controllers.size(); i++) {
+            DiceCupComponent diceCup = _controllers.get(i).getGameObject().getComponent(DiceCupComponent.class);
+            diceCup.setCupState(1); //set to open
+
             guessField = _controllers.get(i).getGameObject().getComponentInChildren(GuessFieldComponent.class);
             int guessDice = guessField.getGuessDice();
             int guessCount = guessField.getGuessCount();

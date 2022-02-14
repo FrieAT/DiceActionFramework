@@ -22,7 +22,7 @@ public class RollDiceButtonComponent extends AbstractComponent implements IInput
 
         this._rolled = false;
 
-        this._dice = this.getGameObject().getParent().getComponent(POTCDiceBag.class);
+        this._dice = this.getGameObject().getParent().getComponentInChildren(POTCDiceBag.class);
         if (this._dice == null) {
             throw new NullPointerException("Please define a correct ADice component as a reference");
         }
