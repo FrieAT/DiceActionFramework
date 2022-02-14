@@ -21,9 +21,9 @@
         },
         {
             "type": "java",
-            "name": "Launch HelloFX",
+            "name": "Launch POTCGame",
             "request": "launch",
-            "mainClass": "HelloFX",
+            "mainClass": "POTCGameDemo",
             "projectName": "DiceActionFramework",
             "vmArgs": "--module-path ${workspaceFolder}/lib --add-modules javafx.controls,javafx.graphics,javafx.media",
         }
