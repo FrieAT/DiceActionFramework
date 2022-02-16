@@ -21,10 +21,17 @@ public class RuneDiceBag extends ADiceBag {
             this.add(RuneDice.class);
         }
         int x = -50;
+
+        setDiceSeparator(35, 0);
+
+        /*
         for (ADice dice : getDices()) {
             dice.getTransform().setPosition(new Vector2(x, 50));
             x += 35;
         }
+
+         */
+        setFaceDimensions(20);
         super.start();
     }
 

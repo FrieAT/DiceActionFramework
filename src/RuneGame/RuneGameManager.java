@@ -82,7 +82,7 @@ public class RuneGameManager extends AbstractManager {
         txtCurAction = RunGameFactory.createText("<<ActionText>>", new Vector2(420, 350));
 
         GameObject playerCenter = new GameObject("PlayerRoot");
-        playerCenter.getTransform().setPosition(new Vector2(450, 300));
+        playerCenter.getTransform().setPosition(new Vector2(450, 350));
         for(int i = 0; i < _maxPlayers; i++) {
             IController playerController = RunGameFactory.createPlayer(_maxPlayers);
             playerController.getGameObject().setParent(playerCenter);
@@ -293,7 +293,7 @@ public class RuneGameManager extends AbstractManager {
     private void stateFightOpponent() {
         _waitTime -= 1.0 * RenderManager.getInstance().getDeltaTime();
         if(_waitTime <= 0.0) {
-            _waitTime = 5.0;
+            _waitTime = 3.0;
 
             if(_attackQueue.size() <= 1) {
                 _curAttacker = _attackQueue.poll();

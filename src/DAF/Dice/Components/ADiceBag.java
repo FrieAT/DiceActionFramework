@@ -61,6 +61,26 @@ public class ADiceBag extends ADice implements IDice {
         DiceManager.getInstance().add(this);
     }
 
+    public void setDiceSeparator(double x, double y) {
+        for (int i = 0; i < dices.size(); i++) {
+            dices.get(i).getTransform().setPosition(new Vector2(
+                    dices.get(i).getTransform().getPosition().x + i*x,
+                    dices.get(i).getTransform().getPosition().y + i*y));
+        }
+    }
+
+    @Override
+    public void setFaceDimensions(int val) {
+        for (ADice dice : dices)
+            dice.setFaceDimensions(val);
+    }
+
+    @Override
+    public void setFaceDimensions(int height, int width) {
+        for (ADice dice : dices)
+            dice.setFaceDimensions(height, width);
+    }
+
     public void setNewPosition(ADice dice, Vector2 previousPos) {
         dice.getTransform().setPosition(new Vector2(previousPos.x + 30, previousPos.y));
     }
