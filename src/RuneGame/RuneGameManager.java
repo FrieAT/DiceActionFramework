@@ -43,7 +43,7 @@ public class RuneGameManager extends AbstractManager {
     }
 
     //CONFIG BEGIN
-    int _maxPlayers = 2;
+    int _maxPlayers = 3;
 
     int _maxRounds = 3;
     //CONFIG END
@@ -99,7 +99,7 @@ public class RuneGameManager extends AbstractManager {
                     continue;
                 }
                 IController controller = player.getComponent(AbstractController.class);
-                IController otherController = player.getComponent(AbstractController.class);
+                IController otherController = other.getComponent(AbstractController.class);
                 GameObject attackPlayer = new GameObject("Attack_"+controller.getPlayerNo()+"_"+otherController.getPlayerNo(), other);
                 attackPlayer.addComponent(ControllerView.class).setController(controller);
                 ButtonGraphic label = attackPlayer.addComponent(ButtonGraphic.class);
@@ -323,21 +323,28 @@ public class RuneGameManager extends AbstractManager {
                 attackInfo = attackComp;
                }
             }
-
+            IController target = null;
             if(attackInfo != null) {
-                IController target = attackInfo.getTarget();
-                if(target == null) {
-                    target = _controllers.get(_randomGenerator.nextInt(_controllers.size()));
-                }
-                if(target != _curAttacker) {
-                    txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" attacks Player "+target.getPlayerNo()+"!");
-
-                    RuneDiceBag defenderBag = target.getGameObject().getComponent(RuneDiceBag.class);
-                    this.fight(attackerBag, defenderBag);
-                } else {
-                    txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" refuses to fight...");
-                }
+                target = attackInfo.getTarget();
             }
+            if(target == null) {
+                RuneDiceBag bag = null;
+                int index = _randomGenerator.nextInt(_controllers.size());
+                do {
+                    index = index % _controllers.size();
+                    target = _controllers.get(index++);
+                    bag = target.getGameObject().getComponent(RuneDiceBag.class);
+                } while(target == _curAttacker || bag.getRuneDices(Rune.BOW_MAN).size() == 0 && bag.getRuneDices(Rune.SHIELD_BEARER).size() == 0 && bag.getRuneDices(Rune.JOKER).size() == 0);
+            }
+            if(target != _curAttacker) {
+                txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" attacks Player "+target.getPlayerNo()+"!");
+
+                RuneDiceBag defenderBag = target.getGameObject().getComponent(RuneDiceBag.class);
+                this.fight(attackerBag, defenderBag);
+            } else {
+                txtCurAction.setLabelText("Player "+_curAttacker.getPlayerNo()+" refuses to fight...");
+            }
+
 
             _attackQueue.offer(_curAttacker);
         }
