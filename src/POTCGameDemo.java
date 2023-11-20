@@ -34,7 +34,7 @@ public class POTCGameDemo {
 
         ASerializer jsonSerializer = new JsonSerializer();
 
-        HttpServerSocket socket = new HttpServerSocket("localhost:1337");
+        HttpServerSocket socket = new HttpServerSocket("0.0.0.0:2022");
         try {
             socket.bind();
             DirectoryResource dir = (DirectoryResource)socket.addResource(DirectoryResource.class, "/images", new File("images/"));
