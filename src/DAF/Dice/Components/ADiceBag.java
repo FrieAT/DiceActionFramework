@@ -47,6 +47,10 @@ public class ADiceBag extends ADice implements IDice {
 
         return dices.add(diceComp);
     }
+    
+    public boolean add(GameObject dice) {
+    	return dices.add(dice.getComponent(ADice.class));
+    }
 
     public boolean remove(ADice dice) {
         return dices.remove(dice);
