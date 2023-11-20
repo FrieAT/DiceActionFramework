@@ -23,9 +23,6 @@ public abstract class ADice extends AbstractComponent implements IDice {
     }
 
     public GameObject addFace(Face face) {
-        if (diceFaces.size() == MAX_FACES)
-            return null;
-        
         GameObject faceObject = new GameObject("Face", this.getGameObject());
         faceObject.addComponent(face.getPictureGraphic());
         faceObject.setEnabled(false);
